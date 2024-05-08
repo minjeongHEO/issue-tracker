@@ -6,21 +6,21 @@ import NotFound from '../components/NotFound';
 import ProtectedRoute from './ProtectedRoute';
 
 export const AppRoutes = () => {
-  return (
-    <Router>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/join" element={<Join />} />
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <Main />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </Router>
-  );
+    return (
+        <Router>
+            <Routes>
+                <Route path="/members/login" element={<Login />} />
+                <Route path="/members/join" element={<Join />} />
+                <Route
+                    path="/"
+                    element={
+                        <ProtectedRoute>
+                            <Main />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route path="*" element={<NotFound />} />
+            </Routes>
+        </Router>
+    );
 };
