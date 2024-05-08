@@ -7,7 +7,7 @@ export default function Login() {
             <Logo>Issue Tracker</Logo>
 
             <StyledButton style={{ marginBottom: '20px' }}>GitHub 계정으로 로그인</StyledButton>
-            <span style={{ marginBottom: '20px' }}>or</span>
+            <StyledSpan style={{ marginBottom: '20px' }}>or</StyledSpan>
             <InputContainer>
                 <StyledInput type="text" />
                 <StyledPlaceHolder>아이디</StyledPlaceHolder>
@@ -17,10 +17,16 @@ export default function Login() {
                 <StyledPlaceHolder>비밀번호</StyledPlaceHolder>
             </InputContainer>
             <StyledButton style={{ marginBottom: '30px' }}>아이디로 로그인</StyledButton>
-            <span>회원가입</span>
+            <StyledSpan>회원가입</StyledSpan>
         </MembersContainer>
     );
 }
+
+const StyledSpan = styled.span`
+    font-weight: 500;
+    color: #6e7191;
+    font-size: 16px;
+`;
 const InputContainer = styled.div`
     position: relative;
     margin-bottom: 20px;
@@ -42,6 +48,7 @@ const StyledPlaceHolder = styled.span`
 `;
 
 const StyledInput = styled.input`
+    box-sizing: border-box;
     width: 320px;
     height: 56px;
     font-size: 16px;
@@ -51,7 +58,6 @@ const StyledInput = styled.input`
     border: none;
     border-radius: 12px;
     padding: 15px 20px 5px 20px;
-    box-sizing: border-box;
 `;
 
 const StyledButton = styled.button`
