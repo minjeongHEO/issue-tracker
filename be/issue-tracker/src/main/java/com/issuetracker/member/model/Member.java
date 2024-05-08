@@ -1,13 +1,17 @@
 package com.issuetracker.member.model;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Table("member")
 @Getter
 @RequiredArgsConstructor
+@ToString
+@EqualsAndHashCode
 public class Member {
     @Id
     private final String id;
