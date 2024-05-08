@@ -1,14 +1,12 @@
 package com.issuetracker.member.controller;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-
 import com.issuetracker.member.dto.MemberCreateDto;
 import com.issuetracker.member.model.Member;
 import com.issuetracker.member.service.MemberService;
+import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,14 +21,9 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping
-    public ResponseEntity<Member> createMember(@Validated @RequestBody MemberCreateDto memberCreateDto,
-                                               BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            log.info("필드 오류가 발생하였습니다. {}", bindingResult);
-            return ResponseEntity.status(BAD_REQUEST).build();
-        }
-
+    public ResponseEntity<Member> createMember(@Validated @RequestBody MemberCreateDto memberCreateDto) {
         Member member = memberService.create(memberCreateDto);
-        return ResponseEntity.ok().body(member);
+        URI location = URI.create(String.format("/api/members/%s", member.getId()));
+        return ResponseEntity.created(location).body(member);
     }
 }
