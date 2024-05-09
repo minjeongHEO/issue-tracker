@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { StyledButton } from '../styles/theme';
 import { Link } from 'react-router-dom';
@@ -7,7 +7,17 @@ export default function Login() {
     const [idInput, setIdInput] = useState('');
     const [pwInput, setPwInput] = useState('');
 
-    const handleChange = ({ target }) => {};
+    const matchingSetter = {
+        membersId: setIdInput,
+        membersPw: setPwInput,
+    };
+
+    const handleChange = ({ target }) => {
+        const { value } = target;
+        const type = target.dataset.inputtype;
+        const setter = matchingSetter[type];
+        if (action) setter(value);
+    };
 
     return (
         <MembersContainer>
@@ -17,11 +27,11 @@ export default function Login() {
             </StyledButton>
             <StyledSpan style={{ marginBottom: '20px' }}>or</StyledSpan>
             <InputContainer>
-                <StyledInput type="text" onChange={handleChange} value={idInput} inputType="membersId" />
+                <StyledInput type="text" onChange={handleChange} value={idInput} data-inputtype="membersId" />
                 <StyledPlaceHolder>아이디</StyledPlaceHolder>
             </InputContainer>
             <InputContainer>
-                <StyledInput type="password" onChange={handleChange} value={pwInput} inputType="membersPw" />
+                <StyledInput type="password" onChange={handleChange} value={pwInput} data-inputtype="membersPw" />
                 <StyledPlaceHolder>비밀번호</StyledPlaceHolder>
             </InputContainer>
             <StyledButton $bgcolor="#007AFF" $textcolor="#fff" style={{ marginBottom: '30px' }}>
