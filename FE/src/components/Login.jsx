@@ -1,22 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
+import { StyledButton } from '../styles/theme';
 
 export default function Login() {
+    const [idInput, setIdInput] = useState('');
+    const [pwInput, setPwInput] = useState('');
+
+    const handleChange = ({ target }) => {};
+
     return (
         <MembersContainer>
             <Logo>Issue Tracker</Logo>
-
-            <StyledButton style={{ marginBottom: '20px' }}>GitHub 계정으로 로그인</StyledButton>
+            <StyledButton $bgcolor="#fff" $textcolor="#007AFF" style={{ marginBottom: '20px' }}>
+                GitHub 계정으로 로그인
+            </StyledButton>
             <StyledSpan style={{ marginBottom: '20px' }}>or</StyledSpan>
             <InputContainer>
-                <StyledInput type="text" />
+                <StyledInput type="text" onChange={handleChange} value={idInput} inputType="membersId" />
                 <StyledPlaceHolder>아이디</StyledPlaceHolder>
             </InputContainer>
             <InputContainer>
-                <StyledInput type="password" />
+                <StyledInput type="password" onChange={handleChange} value={pwInput} inputType="membersPw" />
                 <StyledPlaceHolder>비밀번호</StyledPlaceHolder>
             </InputContainer>
-            <StyledButton style={{ marginBottom: '30px' }}>아이디로 로그인</StyledButton>
+            <StyledButton $bgcolor="#007AFF" $textcolor="#fff" style={{ marginBottom: '30px' }}>
+                아이디로 로그인
+            </StyledButton>
+
             <StyledSpan>회원가입</StyledSpan>
         </MembersContainer>
     );
@@ -26,6 +36,7 @@ const StyledSpan = styled.span`
     font-weight: 500;
     color: #6e7191;
     font-size: 16px;
+    cursor: pointer;
 `;
 const InputContainer = styled.div`
     position: relative;
@@ -58,33 +69,6 @@ const StyledInput = styled.input`
     border: none;
     border-radius: 12px;
     padding: 15px 20px 5px 20px;
-`;
-
-const StyledButton = styled.button`
-    width: 320px;
-    height: 56px;
-    font-size: 16px;
-    padding: 10px 20px;
-    border: 1px;
-    border-color: 'var(--primary-color)';
-    border-radius: 12px;
-    background-color: 'var(--primary-color)';
-    color: ${(props) => props.color || 'white'};
-    cursor: pointer;
-
-    transition: opacity 0.3s;
-    &:hover {
-        opacity: 80%;
-    }
-    &:active {
-        opacity: 64%;
-    }
-    &:disabled {
-        opacity: 32%;
-    }
-    &:focus {
-        filter: brightness(110%);
-    }
 `;
 
 const MembersContainer = styled.div`

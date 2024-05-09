@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { AppRoutes } from './router/routes';
 import styled, { ThemeProvider } from 'styled-components';
 import { lightTheme, darkTheme } from './styles/theme.js';
+import { GlobalStyle } from './styles/GlobalStyle.js';
 
 function App() {
     const userTheme = useState('lightTheme');
@@ -9,6 +10,7 @@ function App() {
 
     return (
         <ThemeProvider theme={lightTheme}>
+            <GlobalStyle />
             <Root>
                 <AppRoutes />
             </Root>
