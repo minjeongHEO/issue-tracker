@@ -1,17 +1,19 @@
 import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { StyledButton, StyledInput } from '../styles/theme';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import DarkLogotypeLarge from '../assets/DarkLogotypeLarge.svg';
 import LightLogotypeLarge from '../assets/LightLogotypeLarge.svg';
 import { DarkModeContext } from '../context/DarkModeContext';
+import { fetchLogin } from '../api/fetchMembers';
 
 export default function Login() {
     const { isDarkMode } = useContext(DarkModeContext);
     const [idInput, setIdInput] = useState('');
     const [pwInput, setPwInput] = useState('');
     const [isDisabled, setIsDisabled] = useState(true);
-
+    const [loginCheck, setLoginCheck] = useState(false);
+    const navigate = useNavigate();
     const matchingSetter = {
         membersId: setIdInput,
         membersPw: setPwInput,
@@ -27,6 +29,25 @@ export default function Login() {
     const isInputValidation = () => {
         if (idInput.length >= 6 && idInput.length <= 12 && pwInput.length >= 6 && pwInput.length <= 12) return false;
         return true;
+    };
+
+    const handleIdLogin = async (e) => {
+        e.preventDefault();
+
+        try {
+            const loginResult = await fetchLogin({ id: idInput, password: pwInput });
+
+            if (loginResult.result === 'ok') {
+                setLoginCheck(true);
+                sessionStorage.setItem('storeid', loginResult.data.id);
+                sessionStorage.setItem('storenickname', loginResult.data.nickname);
+                navigate('/');
+            }
+        } catch (error) {
+            setLoginCheck(false);
+            console.error('Login Failed:', error);
+            alert('다시 로그인해주세요!');
+        }
     };
 
     useEffect(() => {
@@ -50,19 +71,21 @@ export default function Login() {
             </StyledButton>
             <StyledSpan style={{ marginBottom: '20px' }}>or</StyledSpan>
 
-            <InputContainer>
-                <StyledInput type="text" onChange={handleChange} value={idInput} data-inputtype="membersId" autoComplete="off" />
-                <StyledPlaceHolder>아이디</StyledPlaceHolder>
-            </InputContainer>
+            <form onSubmit={handleIdLogin}>
+                <InputContainer>
+                    <StyledInput type="text" onChange={handleChange} value={idInput} data-inputtype="membersId" autoComplete="off" />
+                    <StyledPlaceHolder>아이디</StyledPlaceHolder>
+                </InputContainer>
 
-            <InputContainer>
-                <StyledInput type="password" onChange={handleChange} value={pwInput} data-inputtype="membersPw" autoComplete="off" />
-                <StyledPlaceHolder>비밀번호</StyledPlaceHolder>
-            </InputContainer>
+                <InputContainer>
+                    <StyledInput type="password" onChange={handleChange} value={pwInput} data-inputtype="membersPw" autoComplete="off" />
+                    <StyledPlaceHolder>비밀번호</StyledPlaceHolder>
+                </InputContainer>
 
-            <StyledButton $bgcolor="#007AFF" $textcolor="#fff" style={{ marginBottom: '30px' }} disabled={isDisabled}>
-                아이디로 로그인
-            </StyledButton>
+                <StyledButton onClick={handleIdLogin} $bgcolor="#007AFF" $textcolor="#fff" style={{ marginBottom: '30px' }} disabled={isDisabled}>
+                    아이디로 로그인
+                </StyledButton>
+            </form>
 
             <StyledSpan>
                 <Link to="/members/join" style={linkStyle}>
@@ -72,6 +95,8 @@ export default function Login() {
         </MembersContainer>
     );
 }
+
+//TODO: className props 지정하고, StyledButton 상속 받아서 margin 커스텀하기
 
 const linkStyle = {
     textDecorationLine: 'none',
@@ -93,9 +118,7 @@ const InputContainer = styled.div`
 
 const StyledPlaceHolder = styled.span`
     color: #6e7191;
-
     position: absolute;
-
     top: 10px;
     left: 10px;
     font-size: 12px;
