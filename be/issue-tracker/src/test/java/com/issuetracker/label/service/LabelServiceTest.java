@@ -35,36 +35,59 @@ class LabelServiceTest {
 
     @DisplayName("유효한 색상 코드를 가진 라벨 생성 요청이면 새 라벨을 생성할 수 있다.")
     @Test
-    public void createNewLabel_WithValidBgColor() {
-        // 유효한 색상 코드를 가진 LabelCreateDto 설정
-        labelDto.setName("검정");
-        labelDto.setBgColor("#000000");
-
-        // save 메소드가 호출될 때 리턴할 가짜 Label 객체 생성
-        Label savedLabel = new Label("검정", null, "#000000");
-        savedLabel.setId(1L);
-        when(labelRepository.save(any(Label.class))).thenReturn(savedLabel);
-
-        // createNewLabel 메소드 호출 및 반환값 검증
+    public void createLabel_WithValidBgColor() {
+        setupLabelDto("검정", "#000000");
+        createAndReturnMockLabel("검정", "#000000", 1L);
         Label createdLabel = labelService.createLabel(labelDto);
-        assertThat(createdLabel).isNotNull();
-        assertThat(createdLabel.getName()).isEqualTo("검정");
-        assertThat(createdLabel.getBgColor()).isEqualTo("#000000");
+        verifyLabelProperties(createdLabel, 1L, "검정", "#000000");
     }
 
     @DisplayName("유효하지 않은 색상 코드를 가진 라벨 생성 요청이면 새 라벨을 생성할 수 없다.")
     @Test
-    public void createNewLabel_WithInvalidBgColor() {
-        // 유효하지 않은 색상 코드를 가진 LabelCreateDto 생성
-        labelDto.setName("올바르지 않은 색상");
-        labelDto.setBgColor("#dasdad");
-
-        // createNewLabel 메소드 호출 시 InvalidBgColorException이 발생하는지 검증
+    public void createLabel_WithInvalidBgColor() {
+        setupLabelDto("올바르지 않은 색상", "#dasdad");
         assertThatThrownBy(() -> {
             labelService.createLabel(labelDto);
         }).isInstanceOf(InvalidBgColorException.class);
-
-        // save 메소드가 호출되지 않았는지 검증
         verify(labelRepository, never()).save(any(Label.class));
+    }
+
+    @DisplayName("유효한 색상 코드를 가진 라벨 수정 요청이면 라벨을 수정할 수 있다.")
+    @Test
+    public void modifyLabel_WithValidBgColor() {
+        setupLabelDto("검정", "#000000");
+        Label mockLabel = createAndReturnMockLabel("검정", "#000000", 1L);
+        Label modifiedLabel = labelService.modifyLabel(labelDto, mockLabel.getId());
+        verifyLabelProperties(modifiedLabel, 1L, "검정", "#000000");
+    }
+
+    @DisplayName("유효하지 않은 색상 코드를 가진 라벨 수정 요청이면 라벨을 수정할 수 없다.")
+    @Test
+    public void modifyLabel_WithInvalidBgColor() {
+        setupLabelDto("올바르지 않은 색상", "#dasdad");
+        assertThatThrownBy(() -> {
+            labelService.modifyLabel(labelDto, 1L);
+        }).isInstanceOf(InvalidBgColorException.class);
+        verify(labelRepository, never()).save(any(Label.class));
+    }
+
+    private void setupLabelDto(String name, String bgColor) {
+        labelDto.setName(name);
+        labelDto.setBgColor(bgColor);
+    }
+
+    private Label createAndReturnMockLabel(String name, String bgColor, Long id) {
+        Label label = new Label(name, null, bgColor);
+        label.setId(id);
+        when(labelRepository.save(any(Label.class))).thenReturn(label);
+        return label;
+    }
+
+    private void verifyLabelProperties(Label label, Long expectedId, String expectedName, String expectedBgColor) {
+        assertThat(label).isNotNull();
+        assertThat(label.getId()).isEqualTo(expectedId);
+        assertThat(label.getName()).isEqualTo(expectedName);
+        assertThat(label.getDescription()).isNull();
+        assertThat(label.getBgColor()).isEqualTo(expectedBgColor);
     }
 }
