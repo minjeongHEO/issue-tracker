@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -31,5 +32,11 @@ public class LabelController {
     public ResponseEntity<Label> modifyLabel(@Valid @RequestBody LabelDto labelDto, @PathVariable Long id) {
         Label label = labelService.modifyLabel(labelDto, id);
         return ResponseEntity.ok().body(label);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Label> deleteLabel(@PathVariable Long id) {
+        labelService.deleteLabel(id);
+        return ResponseEntity.ok().build();
     }
 }
