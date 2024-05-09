@@ -17,8 +17,7 @@ function App() {
     return (
         <ThemeProvider theme={darkModeTheme}>
             <GlobalStyle />
-
-            <DarkThemeBtn onClick={toggleDarkMode}>🧸</DarkThemeBtn>
+            <DarkThemeBtn onClick={toggleDarkMode}>{isDarkMode ? '🌞' : '🌚'}</DarkThemeBtn>
             <Root>
                 <AppRoutes />
             </Root>
