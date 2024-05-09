@@ -24,6 +24,7 @@ class MemberRepositoryTest {
     @Test
     @DisplayName("새로운 멤버를 저장할 수 있다.")
     void insert() {
+
         Member member = new Member("sangchu", "123", "상추", "sangchu@gmail.com");
         Member saved = memberRepository.insert(member);
         Member find = memberRepository.findById("sangchu").get();
@@ -38,7 +39,7 @@ class MemberRepositoryTest {
         memberRepository.insert(member);
 
         Member updated = new Member("sangchu", "123", "배추", "baechu@gmail.com");
-        memberRepository.update(updated);
+        memberRepository.save(updated);
 
         Member find = memberRepository.findById("sangchu").get();
 
