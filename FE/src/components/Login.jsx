@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import { StyledButton, StyledInput } from '../styles/theme';
 import { Link } from 'react-router-dom';
+import DarkLogotypeLarge from '../assets/DarkLogotypeLarge.svg';
+import LightLogotypeLarge from '../assets/LightLogotypeLarge.svg';
 
 export default function Login() {
     const [idInput, setIdInput] = useState('');
@@ -36,13 +38,15 @@ export default function Login() {
 
     return (
         <MembersContainer>
-            <Logo>Issue Tracker</Logo>
+            <Logo>
+                <img src={LightLogotypeLarge} className="logo" alt="logo" />
+            </Logo>
             <StyledButton $bgcolor="#fff" $textcolor="#007AFF" style={{ marginBottom: '20px' }} disabled>
                 GitHub 계정으로 로그인
             </StyledButton>
             <StyledSpan style={{ marginBottom: '20px' }}>or</StyledSpan>
             <InputContainer>
-                <StyledInput type="text" onChange={handleChange} value={idInput} data-inputtype="membersId" />
+                <StyledInput type="text" onChange={handleChange} value={idInput} data-inputtype="membersId" autoComplete="off" />
                 <StyledPlaceHolder>아이디</StyledPlaceHolder>
             </InputContainer>
             <InputContainer>
@@ -106,12 +110,5 @@ const MembersContainer = styled.div`
 const Logo = styled.div`
     width: 342px;
     height: 72px;
-    font-family: 'Montserrat';
-    font-style: italic;
-    font-weight: 400;
-    font-size: 56px;
-    line-height: 72px;
-    letter-spacing: -0.04em;
-    color: #14142b;
     margin-bottom: 60px;
 `;
