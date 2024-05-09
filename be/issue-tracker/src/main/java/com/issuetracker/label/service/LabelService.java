@@ -20,19 +20,20 @@ public class LabelService {
      */
     public Label createLabel(LabelDto labelDto) {
         // 유효하지 않은 색상인 경우
-        if (!isValidBgColor(labelDto)) {
-            throw new InvalidBgColorException();
-        }
+        validateBgColor(labelDto);
 
         Label label = getLabel(labelDto);
-        log.info("새로운 라벨이 생성되었습니다. - {}", label);
-        return labelRepository.insert(label);
+        Label savedLabel = labelRepository.save(label);
+        log.info("새로운 라벨이 생성되었습니다. - {}", savedLabel);
+        return savedLabel;
     }
 
-    private boolean isValidBgColor(LabelDto labelDto) {
+    private void validateBgColor(LabelDto labelDto) {
         String bgColor = labelDto.getBgColor();
         // 배경 색상 코드 유효성을 검증
-        return BackgroundColorValidator.isHex(bgColor);
+        if (!BackgroundColorValidator.isHex(bgColor)) {
+            throw new InvalidBgColorException();
+        }
     }
 
     private Label getLabel(LabelDto labelDto) {

@@ -47,6 +47,7 @@ class LabelControllerTest {
                 }
                 """;
         Label label = new Label("버그", null, "#ff0000");
+        label.setId(1L);
 
         given(labelService.createLabel(any(LabelDto.class))).willReturn(label);
 
@@ -58,6 +59,7 @@ class LabelControllerTest {
         // Then
         resultActions
                 .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value(label.getId().toString()))
                 .andExpect(jsonPath("$.name").value(label.getName()))
                 .andExpect(jsonPath("$.description").isEmpty())
                 .andExpect(jsonPath("$.bgColor").value(label.getBgColor()));

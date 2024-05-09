@@ -42,7 +42,8 @@ class LabelServiceTest {
 
         // save 메소드가 호출될 때 리턴할 가짜 Label 객체 생성
         Label savedLabel = new Label("검정", null, "#000000");
-        when(labelRepository.insert(any(Label.class))).thenReturn(savedLabel);
+        savedLabel.setId(1L);
+        when(labelRepository.save(any(Label.class))).thenReturn(savedLabel);
 
         // createNewLabel 메소드 호출 및 반환값 검증
         Label createdLabel = labelService.createLabel(labelDto);
