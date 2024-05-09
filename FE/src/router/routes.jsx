@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Join from '../components/Join';
 import Login from '../components/Login';
-import Main from '../components/Main';
+import Index from '../components/Index';
 import NotFound from '../components/NotFound';
 import ProtectedRoute from './ProtectedRoute';
 
@@ -15,7 +15,7 @@ export const AppRoutes = () => {
                     path="/"
                     element={
                         <ProtectedRoute>
-                            <Main />
+                            <Index />
                         </ProtectedRoute>
                     }
                 />
