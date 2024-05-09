@@ -39,3 +39,16 @@ export const StyledButton = styled.button`
         filter: brightness(110%);
     }
 `;
+
+export const StyledInput = styled.input`
+    box-sizing: border-box;
+    width: 320px;
+    height: 56px;
+    font-size: 16px;
+    color: #4e4b66;
+    /* background-color: #fefefe; */
+    background-color: #eff0f6;
+    border: none;
+    border-radius: 12px;
+    padding: 15px 20px 5px 20px;
+`;

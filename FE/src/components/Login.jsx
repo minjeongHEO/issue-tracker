@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
-import { StyledButton } from '../styles/theme';
+import { StyledButton, StyledInput } from '../styles/theme';
 import { Link } from 'react-router-dom';
 
 export default function Login() {
     const [idInput, setIdInput] = useState('');
     const [pwInput, setPwInput] = useState('');
+    const [isDisabled, setIsDisabled] = useState(true);
 
     const matchingSetter = {
         membersId: setIdInput,
@@ -16,13 +17,27 @@ export default function Login() {
         const { value } = target;
         const type = target.dataset.inputtype;
         const setter = matchingSetter[type];
-        if (action) setter(value);
+        if (setter) setter(value);
     };
+
+    const isInputValidation = () => {
+        if (idInput.length >= 6 && idInput.length <= 12 && pwInput.length >= 6 && pwInput.length <= 12) return false;
+        return true;
+    };
+
+    useEffect(() => {
+        setIdInput('');
+        setPwInput('');
+    }, []);
+
+    useEffect(() => {
+        if (!isInputValidation()) setIsDisabled(false);
+    }, [idInput, pwInput]);
 
     return (
         <MembersContainer>
             <Logo>Issue Tracker</Logo>
-            <StyledButton $bgcolor="#fff" $textcolor="#007AFF" style={{ marginBottom: '20px' }}>
+            <StyledButton $bgcolor="#fff" $textcolor="#007AFF" style={{ marginBottom: '20px' }} disabled>
                 GitHub 계정으로 로그인
             </StyledButton>
             <StyledSpan style={{ marginBottom: '20px' }}>or</StyledSpan>
@@ -31,10 +46,10 @@ export default function Login() {
                 <StyledPlaceHolder>아이디</StyledPlaceHolder>
             </InputContainer>
             <InputContainer>
-                <StyledInput type="password" onChange={handleChange} value={pwInput} data-inputtype="membersPw" />
+                <StyledInput type="password" onChange={handleChange} value={pwInput} data-inputtype="membersPw" autoComplete="off" />
                 <StyledPlaceHolder>비밀번호</StyledPlaceHolder>
             </InputContainer>
-            <StyledButton $bgcolor="#007AFF" $textcolor="#fff" style={{ marginBottom: '30px' }}>
+            <StyledButton $bgcolor="#007AFF" $textcolor="#fff" style={{ marginBottom: '30px' }} disabled={isDisabled}>
                 아이디로 로그인
             </StyledButton>
 
@@ -78,19 +93,6 @@ const StyledPlaceHolder = styled.span`
     /* top: 17px;
     left: 10px;
     font-size: 24px; */
-`;
-
-const StyledInput = styled.input`
-    box-sizing: border-box;
-    width: 320px;
-    height: 56px;
-    font-size: 16px;
-    color: #4e4b66;
-    /* background-color: #fefefe; */
-    background-color: #eff0f6;
-    border: none;
-    border-radius: 12px;
-    padding: 15px 20px 5px 20px;
 `;
 
 const MembersContainer = styled.div`
