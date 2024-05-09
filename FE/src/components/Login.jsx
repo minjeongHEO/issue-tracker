@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
 import { StyledButton } from '../styles/theme';
+import { Link } from 'react-router-dom';
 
 export default function Login() {
     const [idInput, setIdInput] = useState('');
@@ -27,10 +28,21 @@ export default function Login() {
                 아이디로 로그인
             </StyledButton>
 
-            <StyledSpan>회원가입</StyledSpan>
+            <StyledSpan>
+                <Link to="/members/join" style={linkStyle}>
+                    회원가입
+                </Link>
+            </StyledSpan>
         </MembersContainer>
     );
 }
+
+const linkStyle = {
+    textDecorationLine: 'none',
+    fontSize: '16px',
+    fontWeight: '500',
+    color: '#6e7191',
+};
 
 const StyledSpan = styled.span`
     font-weight: 500;
