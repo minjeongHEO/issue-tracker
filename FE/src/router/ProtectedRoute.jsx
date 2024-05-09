@@ -1,13 +1,11 @@
-import React from "react";
+import React from 'react';
+import { Navigate } from 'react-router-dom';
 
 export default function ProtectedRoute({ children }) {
-    // 클라이언트에서 토큰 유효성 검증 (로컬스토리지?)
+    //TODO: 토큰을 기반으로 로그인 상태 확인
+    const isUserAuthenticated = sessionStorage.getItem('storeid');
 
-    const isUserAuthenticated = true; /* 로그인 상태 검증 로직 */
-
-    if (!isUserAuthenticated) {
-        return <Navigate to="/login" />;
-    }
+    if (!isUserAuthenticated) return <Navigate to="/members/login" />;
 
     return children;
 }
