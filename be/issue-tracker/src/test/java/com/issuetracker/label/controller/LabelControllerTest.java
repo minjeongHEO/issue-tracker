@@ -3,6 +3,7 @@ package com.issuetracker.label.controller;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -95,5 +96,17 @@ class LabelControllerTest {
                 .andExpect(jsonPath("$.name").value(updatedLabel.getName()))
                 .andExpect(jsonPath("$.description").value(updatedLabel.getDescription()))
                 .andExpect(jsonPath("$.bgColor").value(updatedLabel.getBgColor()));
+    }
+
+    @DisplayName("라벨 삭제 API를 사용하여 라벨을 삭제할 수 있다.")
+    @Test
+    void deleteLabel() throws Exception {
+        // Given
+        Long labelId = 1L;
+        given(labelService.deleteLabel(labelId)).willReturn(1L);
+
+        // When & Then
+        mockMvc.perform(delete("/api/labels/{id}", labelId))
+                .andExpect(status().isOk());
     }
 }
