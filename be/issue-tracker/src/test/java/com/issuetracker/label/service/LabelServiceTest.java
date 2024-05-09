@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 import com.issuetracker.label.domain.Label;
 import com.issuetracker.label.dto.LabelDto;
 import com.issuetracker.label.exception.InvalidBgColorException;
+import com.issuetracker.label.exception.LabelNotFoundException;
 import com.issuetracker.label.repository.LabelRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -69,6 +70,33 @@ class LabelServiceTest {
             labelService.modifyLabel(labelDto, 1L);
         }).isInstanceOf(InvalidBgColorException.class);
         verify(labelRepository, never()).save(any(Label.class));
+    }
+
+    @DisplayName("존재하는 아이디를 가진 라벨 삭제 요청이면 라벨을 삭제할 수 있다.")
+    @Test
+    public void deleteLabel_WithValidId() {
+        Long id = 1L;
+
+        when(labelRepository.existsById(id)).thenReturn(true);
+
+        Long deletedId = labelService.deleteLabel(id);
+        assertThat(deletedId).isEqualTo(id);
+
+        verify(labelRepository).deleteById(id);
+    }
+
+    @DisplayName("존재하지 않는 아이디를 가진 라벨 삭제 요청이면 라벨을 삭제할 수 없다.")
+    @Test
+    public void deleteLabel_WithInvalidId() {
+        Long id = 10000L;
+
+        when(labelRepository.existsById(id)).thenReturn(false);
+
+        assertThatThrownBy(() -> {
+            labelService.deleteLabel(10000L);
+        }).isInstanceOf(LabelNotFoundException.class);
+
+        verify(labelRepository, never()).deleteById(id);
     }
 
     private void setupLabelDto(String name, String bgColor) {
