@@ -36,7 +36,8 @@ export default function Login() {
     }, []);
 
     useEffect(() => {
-        if (isInputValidation()) setIsDisabled(false);
+        if (isInputValidation()) setIsDisabled(true);
+        else setIsDisabled(false);
     }, [idInput, pwInput]);
 
     return (
