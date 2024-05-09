@@ -4,18 +4,21 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.issuetracker.label.domain.Label;
 import com.issuetracker.label.dto.LabelDto;
 import com.issuetracker.label.service.LabelService;
-import org.junit.jupiter.api.BeforeEach;
+import com.issuetracker.label.utils.HexColorGenerator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -30,13 +33,6 @@ class LabelControllerTest {
 
     @MockBean
     private LabelService labelService;
-
-    private ObjectMapper objectMapper;
-
-    @BeforeEach
-    void setUp() {
-        objectMapper = new ObjectMapper();
-    }
 
     @DisplayName("라벨 생성 API를 사용하여 새 라벨을 생성할 수 있다.")
     @Test
@@ -108,5 +104,19 @@ class LabelControllerTest {
         // When & Then
         mockMvc.perform(delete("/api/labels/{id}", labelId))
                 .andExpect(status().isOk());
+    }
+
+    @DisplayName("라벨 배경 색상 랜덤 생성 API를 사용하여 배경 색상을 랜덤으로 얻을 수 있다.")
+    @Test
+    void refreshLabelBackgroundColor() throws Exception {
+        try (MockedStatic<HexColorGenerator> mockedStatic = Mockito.mockStatic(HexColorGenerator.class)) {
+            // generateRandomHexColor 메소드가 호출될 때 "#FFFFFF"를 반환하도록 설정
+            mockedStatic.when(HexColorGenerator::generateRandomHexColor).thenReturn("#FFFFFF");
+
+            mockMvc.perform(get("/api/labels/bgcolor/refresh")
+                            .contentType(MediaType.TEXT_PLAIN))
+                    .andExpect(status().isOk())
+                    .andExpect(content().string("#FFFFFF"));
+        }
     }
 }
