@@ -1,16 +1,24 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { AppRoutes } from './router/routes';
 import styled, { ThemeProvider } from 'styled-components';
-import { lightTheme, darkTheme } from './styles/theme.js';
 import { GlobalStyle } from './styles/GlobalStyle.js';
+import { lightTheme, darkTheme } from './styles/theme.js';
+import DarkModeProvider, { DarkModeContext } from './context/DarkModeContext.jsx';
 
 function App() {
-    const userTheme = useState('lightTheme');
-    useEffect(() => {}, [userTheme]);
+    const { isDarkMode, toggleDarkMode } = useContext(DarkModeContext);
+    const [darkModeTheme, setDarkModeTheme] = useState(lightTheme);
+
+    useEffect(() => {
+        if (isDarkMode) setDarkModeTheme(darkTheme);
+        else setDarkModeTheme(lightTheme);
+    }, [isDarkMode]);
 
     return (
-        <ThemeProvider theme={lightTheme}>
+        <ThemeProvider theme={darkModeTheme}>
             <GlobalStyle />
+
+            <DarkThemeBtn onClick={toggleDarkMode}>🧸</DarkThemeBtn>
             <Root>
                 <AppRoutes />
             </Root>
@@ -32,4 +40,18 @@ const Root = styled.div`
     text-align: center;
 `;
 
+const DarkThemeBtn = styled.button`
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    background-color: var(--primary-color);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer; /* 마우스 오버 시 커서 변경 */
+    outline: none; /* 포커스 아웃라인 제거 */
+`;
 export default App;
