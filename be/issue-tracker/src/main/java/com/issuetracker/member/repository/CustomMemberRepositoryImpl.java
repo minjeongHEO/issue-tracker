@@ -16,11 +16,4 @@ public class CustomMemberRepositoryImpl implements CustomMemberRepository {
         jdbcTemplate.update(sql, member.getId(), member.getPassword(), member.getNickname(), member.getEmail());
         return member;
     }
-
-    @Override
-    public Member update(Member member) {
-        String sql = "UPDATE member SET password = ?, nickname = ?, email = ? WHERE id = ?";
-        jdbcTemplate.update(sql, member.getPassword(), member.getNickname(), member.getEmail(), member.getId());
-        return member;
-    }
 }
