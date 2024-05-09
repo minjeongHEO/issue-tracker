@@ -7,7 +7,9 @@ import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,5 +25,11 @@ public class LabelController {
         Label label = labelService.createLabel(labelDto);
         URI location = URI.create(String.format("/api/labels/%s", label.getId()));
         return ResponseEntity.created(location).body(label);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Label> modifyLabel(@Valid @RequestBody LabelDto labelDto, @PathVariable Long id) {
+        Label label = labelService.modifyLabel(labelDto, id);
+        return ResponseEntity.ok().body(label);
     }
 }
