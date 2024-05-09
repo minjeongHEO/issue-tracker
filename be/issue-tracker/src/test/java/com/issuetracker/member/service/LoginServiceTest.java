@@ -10,6 +10,7 @@ import com.issuetracker.member.model.Member;
 import com.issuetracker.member.repository.MemberRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -27,6 +28,7 @@ class LoginServiceTest {
     }
 
     @Test
+    @DisplayName("아이디와 비밀번호가 일치하면 로그인에 성공하고 멤버를 반환한다.")
     void login_success() {
         // Given
         String id = "john.doe";
@@ -46,6 +48,7 @@ class LoginServiceTest {
     }
 
     @Test
+    @DisplayName("id와 일치하는 멤버를 찾을 수 없으면 예외가 발생한다.")
     void loginFail_IdNotFound() {
         // Given
         String id = "unknown";
@@ -62,6 +65,7 @@ class LoginServiceTest {
     }
 
     @Test
+    @DisplayName("비밀번호가 일치하지 않으면 예외가 발생한다.")
     void loginFail_PasswordMismatch() {
         // Given
         String id = "john.doe";
