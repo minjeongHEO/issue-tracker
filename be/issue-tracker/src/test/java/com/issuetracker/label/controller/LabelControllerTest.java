@@ -48,7 +48,7 @@ class LabelControllerTest {
                 """;
         Label label = new Label("버그", null, "#ff0000");
 
-        given(labelService.createNewLabel(any(LabelDto.class))).willReturn(label);
+        given(labelService.createLabel(any(LabelDto.class))).willReturn(label);
 
         // When
         ResultActions resultActions = mockMvc.perform(post("/api/labels")

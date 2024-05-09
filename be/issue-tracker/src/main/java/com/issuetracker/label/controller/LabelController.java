@@ -20,7 +20,7 @@ public class LabelController {
 
     @PostMapping
     public ResponseEntity<Label> createLabels(@Valid @RequestBody LabelDto labelDto) {
-        Label label = labelService.createNewLabel(labelDto);
+        Label label = labelService.createLabel(labelDto);
         URI location = URI.create(String.format("/api/labels/%s", label.getName()));
         return ResponseEntity.created(location).body(label);
     }

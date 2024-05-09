@@ -45,7 +45,7 @@ class LabelServiceTest {
         when(labelRepository.insert(any(Label.class))).thenReturn(savedLabel);
 
         // createNewLabel 메소드 호출 및 반환값 검증
-        Label createdLabel = labelService.createNewLabel(labelDto);
+        Label createdLabel = labelService.createLabel(labelDto);
         assertThat(createdLabel).isNotNull();
         assertThat(createdLabel.getName()).isEqualTo("검정");
         assertThat(createdLabel.getBgColor()).isEqualTo("#000000");
@@ -60,7 +60,7 @@ class LabelServiceTest {
 
         // createNewLabel 메소드 호출 시 InvalidBgColorException이 발생하는지 검증
         assertThatThrownBy(() -> {
-            labelService.createNewLabel(labelDto);
+            labelService.createLabel(labelDto);
         }).isInstanceOf(InvalidBgColorException.class);
 
         // save 메소드가 호출되지 않았는지 검증

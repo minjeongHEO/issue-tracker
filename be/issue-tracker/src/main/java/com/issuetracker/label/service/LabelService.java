@@ -18,13 +18,13 @@ public class LabelService {
     /**
      * 레이블의 배경 색깔을 검증한 후 유효하면 새로운 레이블을 생성하여 DB에 저장 후 반환. 유효하지 않으면 InvalidBgColorException을 발생시킨다.
      */
-    public Label createNewLabel(LabelDto labelDto) {
+    public Label createLabel(LabelDto labelDto) {
         // 유효하지 않은 색상인 경우
         if (!isValidBgColor(labelDto)) {
             throw new InvalidBgColorException();
         }
 
-        Label label = createLabel(labelDto);
+        Label label = getLabel(labelDto);
         log.info("새로운 라벨이 생성되었습니다. - {}", label);
         return labelRepository.insert(label);
     }
@@ -35,7 +35,7 @@ public class LabelService {
         return BackgroundColorValidator.isHex(bgColor);
     }
 
-    private Label createLabel(LabelDto labelDto) {
+    private Label getLabel(LabelDto labelDto) {
         return new Label(labelDto.getName(), labelDto.getDescription(), labelDto.getBgColor());
     }
 }
