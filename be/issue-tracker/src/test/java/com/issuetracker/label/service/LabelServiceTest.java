@@ -12,6 +12,7 @@ import com.issuetracker.label.dto.LabelDto;
 import com.issuetracker.label.exception.InvalidBgColorException;
 import com.issuetracker.label.repository.LabelRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -32,6 +33,7 @@ class LabelServiceTest {
         this.labelDto = new LabelDto();
     }
 
+    @DisplayName("유효한 색상 코드를 가진 라벨 생성 요청이면 새 라벨을 생성할 수 있다.")
     @Test
     public void createNewLabel_WithValidBgColor() {
         // 유효한 색상 코드를 가진 LabelCreateDto 설정
@@ -49,6 +51,7 @@ class LabelServiceTest {
         assertThat(createdLabel.getBgColor()).isEqualTo("#000000");
     }
 
+    @DisplayName("유효하지 않은 색상 코드를 가진 라벨 생성 요청이면 새 라벨을 생성할 수 없다.")
     @Test
     public void createNewLabel_WithInvalidBgColor() {
         // 유효하지 않은 색상 코드를 가진 LabelCreateDto 생성

@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.issuetracker.label.domain.Label;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,6 +22,7 @@ class CustomLabelRepositoryImplTest {
         labelRepository.deleteAll();
     }
 
+    @DisplayName("라벨이 데이터베이스에 저장된다.")
     @Test
     void insert() {
         // Given
