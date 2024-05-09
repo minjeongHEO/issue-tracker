@@ -3,6 +3,7 @@ package com.issuetracker.label.service;
 import com.issuetracker.label.domain.Label;
 import com.issuetracker.label.dto.LabelDto;
 import com.issuetracker.label.exception.InvalidBgColorException;
+import com.issuetracker.label.exception.LabelNotFoundException;
 import com.issuetracker.label.repository.LabelRepository;
 import com.issuetracker.label.utils.BackgroundColorValidator;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,20 @@ public class LabelService {
         Label modifiedlabel = labelRepository.save(label);
         log.info("{} 라벨이 수정되었습니다. - {}", id, modifiedlabel);
         return modifiedlabel;
+    }
+
+    public Long deleteLabel(Long id) {
+        validateLabelExists(id);
+
+        labelRepository.deleteById(id);
+        log.info("{} 라벨이 삭제되었습니다.", id);
+        return id;
+    }
+
+    private void validateLabelExists(Long id) {
+        if (!labelRepository.existsById(id)) {
+            throw new LabelNotFoundException();
+        }
     }
 
     private void validateBgColor(LabelDto labelDto) {
