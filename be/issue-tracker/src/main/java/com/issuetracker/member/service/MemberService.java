@@ -17,14 +17,14 @@ public class MemberService {
      * 멤버의 아이디가 중복이 아니라면 새로운 멤버를 생성한다.
      */
     public Member create(MemberCreateDto memberCreateDto) {
-        Member member = getMemberByMemberCreateDto(memberCreateDto);
+        Member member = getMember(memberCreateDto);
         Member created = memberRepository.insert(member);
 
         log.info("새로운 유저가 생성되었습니다. {}", created);
         return created;
     }
 
-    private Member getMemberByMemberCreateDto(MemberCreateDto memberCreateDto) {
+    private Member getMember(MemberCreateDto memberCreateDto) {
         return new Member(memberCreateDto.getId(), memberCreateDto.getPassword(),
                 memberCreateDto.getNickname(), memberCreateDto.getEmail());
     }
