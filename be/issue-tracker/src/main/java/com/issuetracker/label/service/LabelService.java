@@ -28,6 +28,18 @@ public class LabelService {
         return savedLabel;
     }
 
+    public Label modifyLabel(LabelDto labelDto, Long id) {
+        // 유효하지 않은 색상인 경우
+        validateBgColor(labelDto);
+
+        Label label = getLabel(labelDto);
+        label.setId(id);
+
+        Label modifiedlabel = labelRepository.save(label);
+        log.info("{} 라벨이 수정되었습니다. - {}", id, modifiedlabel);
+        return modifiedlabel;
+    }
+
     private void validateBgColor(LabelDto labelDto) {
         String bgColor = labelDto.getBgColor();
         // 배경 색상 코드 유효성을 검증
