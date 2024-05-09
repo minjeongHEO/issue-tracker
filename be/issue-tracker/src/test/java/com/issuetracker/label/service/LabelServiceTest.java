@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 import com.issuetracker.label.domain.Label;
 import com.issuetracker.label.dto.LabelDto;
 import com.issuetracker.label.exception.InvalidBgColorException;
+import com.issuetracker.label.exception.LabelNotFoundException;
 import com.issuetracker.label.repository.LabelRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -35,35 +36,86 @@ class LabelServiceTest {
 
     @DisplayName("유효한 색상 코드를 가진 라벨 생성 요청이면 새 라벨을 생성할 수 있다.")
     @Test
-    public void createNewLabel_WithValidBgColor() {
-        // 유효한 색상 코드를 가진 LabelCreateDto 설정
-        labelDto.setName("검정");
-        labelDto.setBgColor("#000000");
-
-        // save 메소드가 호출될 때 리턴할 가짜 Label 객체 생성
-        Label savedLabel = new Label("검정", null, "#000000");
-        when(labelRepository.insert(any(Label.class))).thenReturn(savedLabel);
-
-        // createNewLabel 메소드 호출 및 반환값 검증
-        Label createdLabel = labelService.createNewLabel(labelDto);
-        assertThat(createdLabel).isNotNull();
-        assertThat(createdLabel.getName()).isEqualTo("검정");
-        assertThat(createdLabel.getBgColor()).isEqualTo("#000000");
+    public void createLabel_WithValidBgColor() {
+        setupLabelDto("검정", "#000000");
+        createAndReturnMockLabel("검정", "#000000", 1L);
+        Label createdLabel = labelService.createLabel(labelDto);
+        verifyLabelProperties(createdLabel, 1L, "검정", "#000000");
     }
 
     @DisplayName("유효하지 않은 색상 코드를 가진 라벨 생성 요청이면 새 라벨을 생성할 수 없다.")
     @Test
-    public void createNewLabel_WithInvalidBgColor() {
-        // 유효하지 않은 색상 코드를 가진 LabelCreateDto 생성
-        labelDto.setName("올바르지 않은 색상");
-        labelDto.setBgColor("#dasdad");
-
-        // createNewLabel 메소드 호출 시 InvalidBgColorException이 발생하는지 검증
+    public void createLabel_WithInvalidBgColor() {
+        setupLabelDto("올바르지 않은 색상", "#dasdad");
         assertThatThrownBy(() -> {
-            labelService.createNewLabel(labelDto);
+            labelService.createLabel(labelDto);
         }).isInstanceOf(InvalidBgColorException.class);
-
-        // save 메소드가 호출되지 않았는지 검증
         verify(labelRepository, never()).save(any(Label.class));
+    }
+
+    @DisplayName("유효한 색상 코드를 가진 라벨 수정 요청이면 라벨을 수정할 수 있다.")
+    @Test
+    public void modifyLabel_WithValidBgColor() {
+        setupLabelDto("검정", "#000000");
+        Label mockLabel = createAndReturnMockLabel("검정", "#000000", 1L);
+        Label modifiedLabel = labelService.modifyLabel(labelDto, mockLabel.getId());
+        verifyLabelProperties(modifiedLabel, 1L, "검정", "#000000");
+    }
+
+    @DisplayName("유효하지 않은 색상 코드를 가진 라벨 수정 요청이면 라벨을 수정할 수 없다.")
+    @Test
+    public void modifyLabel_WithInvalidBgColor() {
+        setupLabelDto("올바르지 않은 색상", "#dasdad");
+        assertThatThrownBy(() -> {
+            labelService.modifyLabel(labelDto, 1L);
+        }).isInstanceOf(InvalidBgColorException.class);
+        verify(labelRepository, never()).save(any(Label.class));
+    }
+
+    @DisplayName("존재하는 아이디를 가진 라벨 삭제 요청이면 라벨을 삭제할 수 있다.")
+    @Test
+    public void deleteLabel_WithValidId() {
+        Long id = 1L;
+
+        when(labelRepository.existsById(id)).thenReturn(true);
+
+        Long deletedId = labelService.deleteLabel(id);
+        assertThat(deletedId).isEqualTo(id);
+
+        verify(labelRepository).deleteById(id);
+    }
+
+    @DisplayName("존재하지 않는 아이디를 가진 라벨 삭제 요청이면 라벨을 삭제할 수 없다.")
+    @Test
+    public void deleteLabel_WithInvalidId() {
+        Long id = 10000L;
+
+        when(labelRepository.existsById(id)).thenReturn(false);
+
+        assertThatThrownBy(() -> {
+            labelService.deleteLabel(10000L);
+        }).isInstanceOf(LabelNotFoundException.class);
+
+        verify(labelRepository, never()).deleteById(id);
+    }
+
+    private void setupLabelDto(String name, String bgColor) {
+        labelDto.setName(name);
+        labelDto.setBgColor(bgColor);
+    }
+
+    private Label createAndReturnMockLabel(String name, String bgColor, Long id) {
+        Label label = new Label(name, null, bgColor);
+        label.setId(id);
+        when(labelRepository.save(any(Label.class))).thenReturn(label);
+        return label;
+    }
+
+    private void verifyLabelProperties(Label label, Long expectedId, String expectedName, String expectedBgColor) {
+        assertThat(label).isNotNull();
+        assertThat(label.getId()).isEqualTo(expectedId);
+        assertThat(label.getName()).isEqualTo(expectedName);
+        assertThat(label.getDescription()).isNull();
+        assertThat(label.getBgColor()).isEqualTo(expectedBgColor);
     }
 }

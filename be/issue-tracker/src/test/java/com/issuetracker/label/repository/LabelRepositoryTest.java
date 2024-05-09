@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @Transactional
-class CustomLabelRepositoryImplTest {
+class LabelRepositoryTest {
     @Autowired
     LabelRepository labelRepository;
 
@@ -29,13 +29,13 @@ class CustomLabelRepositoryImplTest {
         Label label = new Label("버그", null, "#ff0000");
 
         // When
-        Label savedLabel = labelRepository.insert(label);
+        Label savedLabel = labelRepository.save(label);
 
         // Then
         assertThat(savedLabel.toString()).isEqualTo(label.toString());
 
         // 정말로 DB에 삽입되었는지 검증한다.
-        Optional<Label> findLabelOptional = labelRepository.findById(savedLabel.getName());
+        Optional<Label> findLabelOptional = labelRepository.findById(savedLabel.getId());
         assertThat(findLabelOptional.isPresent()).isTrue();
 
         Label findLabel = findLabelOptional.get();
