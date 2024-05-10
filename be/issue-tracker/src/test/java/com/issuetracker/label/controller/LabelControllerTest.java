@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -59,6 +60,7 @@ class LabelControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(labelDto)))
                 .andExpect(status().isCreated())
+                .andExpect(header().string("Location", String.format("/api/labels/%s", label.getId())))
                 .andExpect(jsonPath("$.id").value(label.getId().toString()))
                 .andExpect(jsonPath("$.name").value(label.getName()))
                 .andExpect(jsonPath("$.description").isEmpty())
