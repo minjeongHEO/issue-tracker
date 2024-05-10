@@ -39,7 +39,7 @@ export default function Login() {
 
             if (loginResult.result === 'ok') {
                 setLoginCheck(true);
-                sessionStorage.setItem('storeUserData', loginResult.data);
+                sessionStorage.setItem('storeUserData', JSON.stringify(loginResult.data));
                 navigate('/');
             }
         } catch (error) {
