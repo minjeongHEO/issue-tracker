@@ -10,7 +10,7 @@ const ID_LOGIN_API_URI = '/api/login';
  */
 export const fetchLogin = async ({ id, password }) => {
     try {
-        const response = await fetch(`${import.meta.env.VITE_SANGCHU_SERVER}${ID_LOGIN_API_URI}`, {
+        const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ID_LOGIN_API_URI}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
