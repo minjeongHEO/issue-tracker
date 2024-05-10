@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { DarkModeContext } from '../context/DarkModeContext';
 import DarkLogotypeMedium from '../assets/DarkLogotypeMedium.svg';
@@ -6,6 +6,15 @@ import LightLogotypeMedium from '../assets/LightLogotypeMedium.svg';
 
 export default function Header() {
     const { isDarkMode } = useContext(DarkModeContext);
+    const [userId, setUserId] = useState('');
+    const getUserId = () => {
+        const userId = sessionStorage.getItem('storeUserData') ? JSON.parse(sessionStorage.getItem('storeUserData')).id : '';
+        setUserId(userId);
+    };
+
+    useEffect(() => {
+        getUserId();
+    }, []);
 
     return (
         <HeaderContainer>
@@ -13,6 +22,7 @@ export default function Header() {
                 <img src={isDarkMode ? DarkLogotypeMedium : LightLogotypeMedium} className="logo" alt="logo" />
             </StyledLogo>
             <StyledProfile>
+                <span>{userId} 님</span>
                 <img src="https://avatars.githubusercontent.com/u/96780693?s=40&v=4" className="profile" alt="profile" />
             </StyledProfile>
         </HeaderContainer>
@@ -34,6 +44,11 @@ const StyledLogo = styled.span`
 `;
 const StyledProfile = styled.span`
     margin-right: 85px;
+    display: flex;
+    align-items: center;
+    & span {
+        margin-right: 10px;
+    }
     & img {
         border-radius: 50%;
     }
