@@ -17,6 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.issuetracker.label.domain.Label;
 import com.issuetracker.label.dto.LabelDto;
 import com.issuetracker.label.exception.InvalidBgColorException;
+import com.issuetracker.label.exception.LabelNotFoundException;
 import com.issuetracker.label.service.LabelService;
 import com.issuetracker.label.utils.HexColorGenerator;
 import org.junit.jupiter.api.BeforeEach;
@@ -176,6 +177,16 @@ class LabelControllerTest {
 
         mockMvc.perform(delete("/api/labels/{id}", labelId))
                 .andExpect(status().isOk());
+    }
+
+    @DisplayName("라벨 삭제 API로 존재하지 않는 라벨 아이디를 삭제 요청하면 삭제하지 않고 상태코드 404를 반환한다.")
+    @Test
+    public void deleteLabels_WithNonExistedName() throws Exception {
+        given(labelService.deleteLabel(anyLong()))
+                .willThrow(LabelNotFoundException.class);
+
+        mockMvc.perform(delete("/api/labels/{id}", 10000L))
+                .andExpect(status().isNotFound()); // NOT FOUND(404) 상태 코드를 기대한다.
     }
 
     @DisplayName("라벨 배경 색상 랜덤 생성 API를 사용하여 배경 색상을 랜덤으로 얻을 수 있다.")
