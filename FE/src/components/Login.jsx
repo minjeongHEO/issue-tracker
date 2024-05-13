@@ -26,8 +26,18 @@ export default function Login() {
         if (setter) setter(value);
     };
 
+    const lengthSettings = {
+        min: 6,
+        max: 12,
+    };
+
+    const isValidLength = (inputValue, lengthSettings) => {
+        if (inputValue.length >= lengthSettings.min && inputValue.length <= lengthSettings.max) return true;
+        return false;
+    };
+
     const isInputValidation = () => {
-        if (idInput.length >= 6 && idInput.length <= 12 && pwInput.length >= 6 && pwInput.length <= 12) return false;
+        if (isValidLength(idInput, lengthSettings) && isValidLength(pwInput, lengthSettings)) return false;
         return true;
     };
 
