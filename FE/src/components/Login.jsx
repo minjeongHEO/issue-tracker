@@ -37,7 +37,7 @@ export default function Login() {
         try {
             const loginResult = await fetchLogin({ id: idInput, password: pwInput });
 
-            if (loginResult.result === 'ok') {
+            if (loginResult.result) {
                 setLoginCheck(true);
                 localStorage.setItem('storeUserData', JSON.stringify(loginResult.data));
                 navigate('/');

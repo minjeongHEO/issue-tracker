@@ -22,7 +22,7 @@ export const fetchLogin = async ({ id, password }) => {
 
         if (response.status === 200) {
             const result = await response.json();
-            return { result: 'ok', data: result };
+            return { result: true, data: result };
         }
     } catch (error) {
         throw error;
