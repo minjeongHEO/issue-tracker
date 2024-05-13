@@ -7,8 +7,6 @@ import com.issuetracker.label.exception.LabelNotFoundException;
 import com.issuetracker.label.repository.LabelRepository;
 import com.issuetracker.label.utils.BackgroundColorValidator;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,9 +21,9 @@ public class LabelService {
     /**
      * 레이블의 전체 리스트를 반환한다.
      */
+    @Transactional(readOnly = true)
     public List<Label> getLabels() {
-        return StreamSupport.stream(labelRepository.findAll().spliterator(), false)
-                .collect(Collectors.toList());
+        return (List<Label>) labelRepository.findAll();
     }
 
     /**
@@ -66,6 +64,15 @@ public class LabelService {
         labelRepository.deleteById(id);
         log.info("{} 라벨이 삭제되었습니다.", id);
         return id;
+    }
+
+    /**
+     * 레이블의 총 개수를 반환한다.
+     */
+    @Transactional(readOnly = true)
+    public long getLabelsCount() {
+        List<Label> labels = (List<Label>) labelRepository.findAll();
+        return labels.size();
     }
 
     private void validateLabelExists(Long id) {

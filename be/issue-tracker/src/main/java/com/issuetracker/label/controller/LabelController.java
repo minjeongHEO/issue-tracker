@@ -2,6 +2,7 @@ package com.issuetracker.label.controller;
 
 import com.issuetracker.label.domain.Label;
 import com.issuetracker.label.dto.LabelBgColorDto;
+import com.issuetracker.label.dto.LabelCountDto;
 import com.issuetracker.label.dto.LabelDto;
 import com.issuetracker.label.service.LabelService;
 import com.issuetracker.label.utils.HexColorGenerator;
@@ -54,5 +55,11 @@ public class LabelController {
     public ResponseEntity<LabelBgColorDto> refreshLabelBackgroundColor() {
         LabelBgColorDto randomHexColor = new LabelBgColorDto(HexColorGenerator.generateRandomHexColor());
         return ResponseEntity.ok().body(randomHexColor);
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<LabelCountDto> countLabels() {
+        LabelCountDto labelCountDto = new LabelCountDto(labelService.getLabelsCount());
+        return ResponseEntity.ok().body(labelCountDto);
     }
 }
