@@ -1,6 +1,7 @@
 package com.issuetracker.issue.service;
 
 import com.issuetracker.issue.domain.Issue;
+import com.issuetracker.issue.dto.IssueCountDto;
 import com.issuetracker.issue.dto.IssueListDto;
 import com.issuetracker.issue.dto.IssueListDto.IssueListDtoBuilder;
 import com.issuetracker.issue.repository.IssueLabelRepository;
@@ -31,6 +32,14 @@ public class IssueService {
         return selectedIssues.stream()
                 .map(this::toIssueListDto)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public IssueCountDto getIssueCountDto() {
+        long openedIssueCount = issueRepository.countAllByIsClosed(false);
+        long closedIssueCount = issueRepository.countAllByIsClosed(true);
+
+        return new IssueCountDto(openedIssueCount, closedIssueCount);
     }
 
     private IssueListDto toIssueListDto(Issue issue) {
