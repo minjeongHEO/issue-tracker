@@ -23,7 +23,7 @@ class IssueAssigneeRepositoryTest {
     @Test
     void crud() {
         issueAssigneeRepository.insert(1L, "sangchu");
-        IssueAssignee find = issueAssigneeRepository.findById(1L, "sangchu").get();
+        IssueAssignee find = issueAssigneeRepository.findByIssueIdAndMemberId(1L, "sangchu").get();
         assertThat(find.getIssueId()).isEqualTo(1L);
         assertThat(find.getMemberId()).isEqualTo("sangchu");
 

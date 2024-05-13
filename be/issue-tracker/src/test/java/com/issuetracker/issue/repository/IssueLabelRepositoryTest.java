@@ -3,6 +3,7 @@ package com.issuetracker.issue.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.issuetracker.issue.domain.IssueLabel;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +24,18 @@ class IssueLabelRepositoryTest {
     @Test
     void crud() {
         issueLabelRepository.insert(1L, 4L);
-        IssueLabel find = issueLabelRepository.findById(1L, 4L).get();
+        issueLabelRepository.insert(1L, 7L);
+
+        IssueLabel find = issueLabelRepository.findByIssueIdAndLabelId(1L, 4L).get();
 
         assertThat(find.getIssueId()).isEqualTo(1L);
         assertThat(find.getLabelId()).isEqualTo(4L);
 
+        List<IssueLabel> allByIssueId = issueLabelRepository.findAllByIssueId(1L);
+
+        assertThat(allByIssueId.size()).isEqualTo(2);
+
         issueLabelRepository.deleteById(1L, 4L);
-        assertThat(issueLabelRepository.count()).isEqualTo(0);
+        assertThat(issueLabelRepository.count()).isEqualTo(1);
     }
 }
