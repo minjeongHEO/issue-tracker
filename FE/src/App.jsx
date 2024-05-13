@@ -1,9 +1,11 @@
 import { useContext, useEffect, useState } from 'react';
 import { AppRoutes } from './router/routes';
+
 import styled, { ThemeProvider } from 'styled-components';
 import { GlobalStyle } from './styles/GlobalStyle.js';
 import { lightTheme, darkTheme } from './styles/theme.js';
 import { DarkModeContext } from './context/DarkModeContext.jsx';
+import { Button } from 'antd';
 
 function App() {
     const { isDarkMode, toggleDarkMode, darkModeTheme } = useContext(DarkModeContext);
@@ -33,7 +35,7 @@ const Root = styled.div`
     text-align: center;
 `;
 
-const DarkThemeBtn = styled.button`
+const DarkThemeBtn = styled(Button)`
     position: absolute;
     top: 30px;
     left: 30px;
