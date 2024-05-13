@@ -6,4 +6,6 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface IssueRepository extends CrudRepository<Issue, Long> {
     List<Issue> findAllByIsClosed(boolean isClosed);
+
+    long countAllByIsClosed(boolean isClosed);
 }
