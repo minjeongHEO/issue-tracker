@@ -8,13 +8,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.issuetracker.label.domain.Label;
+import com.issuetracker.label.dto.LabelBgColorDto;
 import com.issuetracker.label.dto.LabelDto;
 import com.issuetracker.label.exception.InvalidBgColorException;
 import com.issuetracker.label.exception.LabelNotFoundException;
@@ -185,13 +185,15 @@ class LabelControllerTest {
     @Test
     void refreshLabelBackgroundColor() throws Exception {
         try (MockedStatic<HexColorGenerator> mockedStatic = Mockito.mockStatic(HexColorGenerator.class)) {
+            LabelBgColorDto labelBgColorDto = new LabelBgColorDto("#ff0000");
+
             // generateRandomHexColor 메소드가 호출될 때 "#FFFFFF"를 반환하도록 설정
             mockedStatic.when(HexColorGenerator::generateRandomHexColor).thenReturn("#FFFFFF");
 
-            mockMvc.perform(get("/api/labels/bgcolor/refresh")
-                            .contentType(MediaType.TEXT_PLAIN))
-                    .andExpect(status().isOk())
-                    .andExpect(content().string("#FFFFFF"));
+            mockMvc.perform(get("/api/labels/bgcolor")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(labelBgColorDto)))
+                    .andExpect(status().isOk());
         }
     }
 }
