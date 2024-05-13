@@ -1,14 +1,11 @@
 package com.issuetracker.global.exception;
 
-import java.util.HashMap;
-import java.util.Map;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
+@RequiredArgsConstructor
 public class ErrorResult {
-    private final Map<String, Object> errors = new HashMap<>();
-
-    public void add(String key, Object value) {
-        errors.put(key, value);
-    }
+    private final String code;
+    private final String message;
 }
