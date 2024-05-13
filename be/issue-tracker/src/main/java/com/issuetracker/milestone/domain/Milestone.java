@@ -4,10 +4,12 @@ import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.data.annotation.Id;
 
 @RequiredArgsConstructor
 @Getter
+@ToString
 public class Milestone {
     @Setter
     @Id
