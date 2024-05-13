@@ -114,6 +114,21 @@ class LabelServiceTest {
         verify(labelRepository, never()).deleteById(id);
     }
 
+    @DisplayName("라벨의 총 개수를 구할 수 있다.")
+    @Test
+    public void countLabels() {
+        Label label1 = new Label("Label1", null, "#000000");
+        Label label2 = new Label("Label2", null, "#FFFFFF");
+        List<Label> mockLabels = Arrays.asList(label1, label2);
+
+        when(labelRepository.findAll()).thenReturn(mockLabels);
+
+        long result = labelService.countLabels();
+        assertThat(result).isEqualTo(2);
+
+        verify(labelRepository, times(1)).findAll();
+    }
+
     private Label createAndReturnMockLabel(LabelDto labelDto, Long id) {
         Label label = new Label(labelDto.getName(), labelDto.getDescription(), labelDto.getBgColor());
         label.setId(id);
