@@ -1,18 +1,14 @@
 package com.issuetracker.member.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class LoginTryDto {
     @NotBlank
-    private String id;
+    private final String id;
     @NotBlank
-    private String password;
+    private final String password;
 }

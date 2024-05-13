@@ -1,18 +1,12 @@
 package com.issuetracker.member.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.RequiredArgsConstructor;
 
 @Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@ToString
+@RequiredArgsConstructor
 public class LoginMemberDto {
-    private String id;
-    private String nickname;
-    private String email;
+    private final String id;
+    private final String nickname;
+    private final String email;
 }
