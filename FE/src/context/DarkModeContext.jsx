@@ -1,5 +1,7 @@
 import React, { createContext, useEffect, useState } from 'react';
-import { lightTheme, darkTheme } from '../styles/theme.js';
+import theme from '../styles/theme.js';
+
+const { lightTheme, darkTheme } = theme;
 
 const initDarkMode = () => {
     const savedTheme = localStorage.getItem('theme');

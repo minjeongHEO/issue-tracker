@@ -3,7 +3,6 @@ import { AppRoutes } from './router/routes';
 
 import styled, { ThemeProvider } from 'styled-components';
 import { GlobalStyle } from './styles/GlobalStyle.js';
-import { lightTheme, darkTheme } from './styles/theme.js';
 import { DarkModeContext } from './context/DarkModeContext.jsx';
 import { Button } from 'antd';
 
