@@ -3,16 +3,10 @@ import { AppRoutes } from './router/routes';
 import styled, { ThemeProvider } from 'styled-components';
 import { GlobalStyle } from './styles/GlobalStyle.js';
 import { lightTheme, darkTheme } from './styles/theme.js';
-import DarkModeProvider, { DarkModeContext } from './context/DarkModeContext.jsx';
+import { DarkModeContext } from './context/DarkModeContext.jsx';
 
 function App() {
-    const { isDarkMode, toggleDarkMode } = useContext(DarkModeContext);
-    const [darkModeTheme, setDarkModeTheme] = useState(lightTheme);
-
-    useEffect(() => {
-        if (isDarkMode) setDarkModeTheme(darkTheme);
-        else setDarkModeTheme(lightTheme);
-    }, [isDarkMode]);
+    const { isDarkMode, toggleDarkMode, darkModeTheme } = useContext(DarkModeContext);
 
     return (
         <ThemeProvider theme={darkModeTheme}>
