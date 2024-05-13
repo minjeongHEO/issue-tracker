@@ -70,7 +70,7 @@ public class LabelService {
      * 레이블의 총 개수를 반환한다.
      */
     @Transactional(readOnly = true)
-    public long getLabelsCount() {
+    public long countLabels() {
         List<Label> labels = (List<Label>) labelRepository.findAll();
         return labels.size();
     }

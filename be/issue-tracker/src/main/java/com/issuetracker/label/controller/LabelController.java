@@ -59,7 +59,7 @@ public class LabelController {
 
     @GetMapping("/count")
     public ResponseEntity<LabelCountDto> countLabels() {
-        LabelCountDto labelCountDto = new LabelCountDto(labelService.getLabelsCount());
+        LabelCountDto labelCountDto = new LabelCountDto(labelService.countLabels());
         return ResponseEntity.ok().body(labelCountDto);
     }
 }
