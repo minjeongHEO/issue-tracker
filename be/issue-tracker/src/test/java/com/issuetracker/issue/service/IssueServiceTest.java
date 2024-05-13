@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.issuetracker.issue.domain.Issue;
+import com.issuetracker.issue.dto.IssueCountDto;
 import com.issuetracker.issue.dto.IssueListDto;
 import com.issuetracker.issue.repository.IssueLabelRepository;
 import com.issuetracker.issue.repository.IssueRepository;
@@ -76,6 +77,22 @@ public class IssueServiceTest {
         verify(issueRepository, times(1)).findAllByIsClosed(true);
         verify(issueLabelRepository, times(1)).findAllByIssueId(2L);
         verify(labelRepository, times(0)).findLabelCoverDtoById(any());
+    }
+
+    @DisplayName("열린 이슈와 닫힌 이슈의 개수를 가져올 수 있다.")
+    @Test
+    public void testGetIssueCountDto() {
+        long openedIssueCount = 3;
+        long closedIssueCount = 2;
+
+        // 열린 이슈 목록과 닫힌 이슈 목록 설정
+        when(issueRepository.countAllByIsClosed(false)).thenReturn(openedIssueCount);
+        when(issueRepository.countAllByIsClosed(true)).thenReturn(closedIssueCount);
+
+        IssueCountDto issueCountDto = issueService.getIssueCountDto();
+
+        assertThat(issueCountDto.getOpenedIssueCount()).isEqualTo(openedIssueCount);
+        assertThat(issueCountDto.getClosedIssueCount()).isEqualTo(closedIssueCount);
     }
 
     private List<Issue> prepareMockIssues(LocalDateTime now, String title, String memberId, boolean isClosed, Long id) {
