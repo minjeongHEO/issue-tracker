@@ -35,8 +35,6 @@ const HeaderContainer = styled.header`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-left: 85px;
-    padding-right: 85px;
     min-width: 890px;
 `;
 const StyledLogo = styled.span`
