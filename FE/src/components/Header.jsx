@@ -8,7 +8,7 @@ export default function Header() {
     const { isDarkMode } = useContext(DarkModeContext);
     const [userId, setUserId] = useState('');
     const getUserId = () => {
-        const userId = sessionStorage.getItem('storeUserData') ? JSON.parse(sessionStorage.getItem('storeUserData')).id : '';
+        const userId = localStorage.getItem('storeUserData') ? JSON.parse(localStorage.getItem('storeUserData')).id : '';
         setUserId(userId);
     };
 
