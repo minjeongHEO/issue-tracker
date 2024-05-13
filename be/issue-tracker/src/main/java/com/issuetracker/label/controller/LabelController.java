@@ -7,6 +7,7 @@ import com.issuetracker.label.service.LabelService;
 import com.issuetracker.label.utils.HexColorGenerator;
 import jakarta.validation.Valid;
 import java.net.URI;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,6 +24,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class LabelController {
     private final LabelService labelService;
+
+    @GetMapping
+    public ResponseEntity<List<Label>> getLabels() {
+        List<Label> labels = labelService.getLabels();
+        return ResponseEntity.ok().body(labels);
+    }
 
     @PostMapping
     public ResponseEntity<Label> createLabels(@Valid @RequestBody LabelDto labelDto) {
