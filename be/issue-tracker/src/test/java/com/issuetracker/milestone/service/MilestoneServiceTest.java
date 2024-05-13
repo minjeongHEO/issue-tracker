@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import com.issuetracker.milestone.Repository.MilestoneRepository;
 import com.issuetracker.milestone.domain.Milestone;
+import com.issuetracker.milestone.dto.MilestoneCountDto;
 import com.issuetracker.milestone.dto.MilestoneCreateDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -75,5 +76,23 @@ class MilestoneServiceTest {
 
         // Then
         verify(milestoneRepository).deleteById(milestoneId);
+    }
+
+    @Test
+    @DisplayName("마일스톤의 개수를 카운트할 수 있다.")
+    void CountMilestones() {
+        // Given
+        when(milestoneRepository.countByIsClosed(true)).thenReturn(5L);
+        when(milestoneRepository.countByIsClosed(false)).thenReturn(10L);
+
+        // When
+        MilestoneCountDto result = milestoneService.countMilestones();
+
+        // Then
+        assertThat(result.getIsOpened()).isEqualTo(10L);
+        assertThat(result.getIsClosed()).isEqualTo(5L);
+
+        verify(milestoneRepository).countByIsClosed(true);
+        verify(milestoneRepository).countByIsClosed(false);
     }
 }

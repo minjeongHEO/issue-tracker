@@ -3,6 +3,7 @@ package com.issuetracker.milestone.service;
 import com.issuetracker.issue.repository.IssueRepository;
 import com.issuetracker.milestone.Repository.MilestoneRepository;
 import com.issuetracker.milestone.domain.Milestone;
+import com.issuetracker.milestone.dto.MilestoneCountDto;
 import com.issuetracker.milestone.dto.MilestoneCreateDto;
 import com.issuetracker.milestone.exception.MilestoneNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,13 @@ public class MilestoneService {
         validateExists(id);
         milestoneRepository.deleteById(id);
         log.info("마일스톤이 삭제되었습니다. id = {}", id);
+    }
+
+    @Transactional(readOnly = true)
+    public MilestoneCountDto countMilestones() {
+        Long isClosed = milestoneRepository.countByIsClosed(true);
+        Long isOpened = milestoneRepository.countByIsClosed(false);
+        return new MilestoneCountDto(isOpened, isClosed);
     }
 
     private Milestone toMilestone(MilestoneCreateDto milestoneCreateDto) {
