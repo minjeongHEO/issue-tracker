@@ -2,7 +2,6 @@ package com.issuetracker.member.controller;
 
 import com.issuetracker.member.dto.LoginMemberDto;
 import com.issuetracker.member.dto.LoginTryDto;
-import com.issuetracker.member.model.Member;
 import com.issuetracker.member.service.LoginService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,12 +19,7 @@ public class LoginController {
 
     @PostMapping
     public ResponseEntity<LoginMemberDto> login(@Valid @RequestBody LoginTryDto loginTryDto) {
-        Member authenticated = loginService.login(loginTryDto);
-        LoginMemberDto loginMemberDto = getLoginMemberDto(authenticated);
+        LoginMemberDto loginMemberDto = loginService.login(loginTryDto);
         return ResponseEntity.ok().body(loginMemberDto);
-    }
-
-    private LoginMemberDto getLoginMemberDto(Member member) {
-        return new LoginMemberDto(member.getId(), member.getNickname(), member.getEmail());
     }
 }

@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
+import com.issuetracker.member.dto.LoginMemberDto;
 import com.issuetracker.member.dto.LoginTryDto;
 import com.issuetracker.member.exception.LoginFailException;
 import com.issuetracker.member.model.Member;
@@ -41,10 +42,12 @@ class LoginServiceTest {
         LoginTryDto loginTryDto = new LoginTryDto(id, password);
 
         // When
-        Member loginMember = loginService.login(loginTryDto);
+        LoginMemberDto loginMember = loginService.login(loginTryDto);
 
         // Then
-        assertThat(member).isEqualTo(loginMember);
+        assertThat(member.getId()).isEqualTo(loginMember.getId());
+        assertThat(member.getNickname()).isEqualTo(loginMember.getNickname());
+        assertThat(member.getEmail()).isEqualTo(loginMember.getEmail());
     }
 
     @Test

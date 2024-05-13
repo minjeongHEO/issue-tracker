@@ -1,21 +1,19 @@
-package com.issuetracker.label.domain;
+package com.issuetracker.milestone.domain;
 
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
 
-@Getter
-@ToString
 @RequiredArgsConstructor
-public class Label {
-    @Id
+@Getter
+public class Milestone {
     @Setter
+    @Id
     private Long id;
     private final String name;
     private final String description;
-    @Column("background_color")
-    private final String bgColor;
+    private final LocalDateTime dueDate;
+    private final boolean isClosed;
 }

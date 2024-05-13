@@ -9,6 +9,7 @@ import com.issuetracker.label.utils.BackgroundColorValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,21 +20,24 @@ public class LabelService {
     /**
      * 레이블의 배경 색깔을 검증한 후 유효하면 새로운 레이블을 생성하여 DB에 저장 후 반환. 유효하지 않으면 InvalidBgColorException을 발생시킨다.
      */
+    @Transactional
     public Label createLabel(LabelDto labelDto) {
-        // 유효하지 않은 색상인 경우
         validateBgColor(labelDto);
 
-        Label label = getLabel(labelDto);
+        Label label = toLabel(labelDto);
         Label savedLabel = labelRepository.save(label);
         log.info("새로운 라벨이 생성되었습니다. - {}", savedLabel);
         return savedLabel;
     }
 
+    /**
+     * 레이블의 배경 색깔을 검증한 후 유효하면 수정된 레이블을 DB에 저장 후 반환. 유효하지 않으면 IncorrectUpdateSemanticsDataAccessException을 발생시킨다.
+     */
+    @Transactional
     public Label modifyLabel(LabelDto labelDto, Long id) {
-        // 유효하지 않은 색상인 경우
         validateBgColor(labelDto);
 
-        Label label = getLabel(labelDto);
+        Label label = toLabel(labelDto);
         label.setId(id);
 
         Label modifiedlabel = labelRepository.save(label);
@@ -41,6 +45,10 @@ public class LabelService {
         return modifiedlabel;
     }
 
+    /**
+     * 레이블이 존재하면 레이블을 삭제한 후 삭제된 id를 반환한다. 레이블이 존재하지 않으면 LabelNotFoundException을 발생시킨다.
+     */
+    @Transactional
     public Long deleteLabel(Long id) {
         validateLabelExists(id);
 
@@ -63,7 +71,7 @@ public class LabelService {
         }
     }
 
-    private Label getLabel(LabelDto labelDto) {
+    private Label toLabel(LabelDto labelDto) {
         return new Label(labelDto.getName(), labelDto.getDescription(), labelDto.getBgColor());
     }
 }

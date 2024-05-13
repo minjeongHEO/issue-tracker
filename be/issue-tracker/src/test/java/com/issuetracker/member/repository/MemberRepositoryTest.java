@@ -26,10 +26,10 @@ class MemberRepositoryTest {
     void insert() {
 
         Member member = new Member("sangchu", "123", "상추", "sangchu@gmail.com");
-        Member saved = memberRepository.insert(member);
+        memberRepository.insert(member);
         Member find = memberRepository.findById("sangchu").get();
 
-        assertThat(find).isEqualTo(saved);
+        assertThat(find).isEqualTo(member);
     }
 
     @Test

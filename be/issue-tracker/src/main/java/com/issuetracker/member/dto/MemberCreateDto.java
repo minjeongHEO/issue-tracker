@@ -1,23 +1,19 @@
 package com.issuetracker.member.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class MemberCreateDto {
 
     @NotBlank
-    private String id;
+    private final String id;
     @NotBlank
-    private String password;
+    private final String password;
     @NotBlank
-    private String nickname;
+    private final String nickname;
     @NotBlank
-    private String email;
+    private final String email;
 }

@@ -6,6 +6,7 @@ import com.issuetracker.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -16,15 +17,16 @@ public class MemberService {
     /**
      * 멤버의 아이디가 중복이 아니라면 새로운 멤버를 생성한다.
      */
+    @Transactional
     public Member create(MemberCreateDto memberCreateDto) {
-        Member member = getMember(memberCreateDto);
+        Member member = toMember(memberCreateDto);
         Member created = memberRepository.insert(member);
 
         log.info("새로운 유저가 생성되었습니다. {}", created);
         return created;
     }
 
-    private Member getMember(MemberCreateDto memberCreateDto) {
+    private Member toMember(MemberCreateDto memberCreateDto) {
         return new Member(memberCreateDto.getId(), memberCreateDto.getPassword(),
                 memberCreateDto.getNickname(), memberCreateDto.getEmail());
     }

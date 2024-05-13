@@ -3,8 +3,9 @@ package com.issuetracker.label.utils;
 import java.util.Random;
 
 public class HexColorGenerator {
+    private static final Random random = new Random();
+
     public static String generateRandomHexColor() {
-        Random random = new Random();
         // 0부터 255 사이의 무작위 정수 값을 RGB 색상 코드로 생성
         int r = random.nextInt(256);
         int g = random.nextInt(256);
