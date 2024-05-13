@@ -1,11 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { StyledButton, StyledInput } from '../styles/theme';
+import { StyledButton, StyledInput } from '../../styles/theme';
 import { Link, useNavigate } from 'react-router-dom';
-import DarkLogotypeLarge from '../assets/DarkLogotypeLarge.svg';
-import LightLogotypeLarge from '../assets/LightLogotypeLarge.svg';
-import { DarkModeContext } from '../context/DarkModeContext';
-import { fetchLogin } from '../api/fetchMembers';
+import DarkLogotypeLarge from '../../assets/DarkLogotypeLarge.svg';
+import LightLogotypeLarge from '../../assets/LightLogotypeLarge.svg';
+import { DarkModeContext } from '../../context/DarkModeContext';
+import { fetchLogin } from '../../api/fetchMembers';
+import Button from '../../styles/components/Button';
 
 export default function Login() {
     const { isDarkMode } = useContext(DarkModeContext);
@@ -78,6 +79,9 @@ export default function Login() {
             <StyledButton $bgcolor="#fff" $textcolor="#007AFF" style={{ marginBottom: '20px' }} disabled>
                 GitHub 계정으로 로그인
             </StyledButton>
+            {/* <StyleBtn type="default" $size="large" buttonType="outline" disabled={true}>
+                GitHub 계정으로 로그인
+            </StyleBtn> */}
             <StyledSpan style={{ marginBottom: '20px' }}>or</StyledSpan>
 
             <form onSubmit={handleIdLogin}>
@@ -107,6 +111,9 @@ export default function Login() {
 
 //TODO: className props 지정하고, StyledButton 상속 받아서 margin 커스텀하기
 
+const StyleBtn = styled(Button)`
+    margin-bottom: '20px';
+`;
 const linkStyle = {
     textDecorationLine: 'none',
     fontSize: '16px',

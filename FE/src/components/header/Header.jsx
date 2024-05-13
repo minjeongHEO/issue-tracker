@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { DarkModeContext } from '../context/DarkModeContext';
-import DarkLogotypeMedium from '../assets/DarkLogotypeMedium.svg';
-import LightLogotypeMedium from '../assets/LightLogotypeMedium.svg';
+import { DarkModeContext } from '../../context/DarkModeContext';
+import DarkLogotypeMedium from '../../assets/DarkLogotypeMedium.svg';
+import LightLogotypeMedium from '../../assets/LightLogotypeMedium.svg';
 
 export default function Header() {
     const { isDarkMode } = useContext(DarkModeContext);

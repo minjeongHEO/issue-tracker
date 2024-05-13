@@ -1,10 +1,10 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Join from '../components/Join';
-import Login from '../components/Login';
+import Join from '../components/members/Join';
+import Login from '../components/members/Login';
 import Index from '../components/Index';
 import NotFound from '../components/NotFound';
-import Milestones from '../components/Milestones';
-import Labels from '../components/Labels';
+import Milestones from '../components/milestones/Milestones';
+import Labels from '../components/labels/Labels';
 import ProtectedRoute from './ProtectedRoute';
 
 export const AppRoutes = () => {

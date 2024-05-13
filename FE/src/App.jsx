@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
 import { AppRoutes } from './router/routes';
-
 import styled, { ThemeProvider } from 'styled-components';
 import { GlobalStyle } from './styles/GlobalStyle.js';
 import { DarkModeContext } from './context/DarkModeContext.jsx';
