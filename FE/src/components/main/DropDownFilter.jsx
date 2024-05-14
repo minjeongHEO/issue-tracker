@@ -9,7 +9,7 @@ export default function DropDownFilter({ filterTitle, filterItems }) {
 
     const handleMenuClick = ({ key }) => {
         setSelectedKey(key);
-        message.info(`Click on item ${key}`);
+        message.info(`${key === 'null' ? `${filterTitle} 초기화` : key} 필터 선택`);
     };
 
     const clearTypeItemTitle = {
@@ -43,25 +43,32 @@ export default function DropDownFilter({ filterTitle, filterItems }) {
                     <DropTitle>{clearTypeItemTitle[filterTitle]}</DropTitle>
                 </div>
                 <div className="ItemRadio">
-                    <Radio checked={selectedKey === '2'} onChange={() => setSelectedKey('2')}></Radio>
+                    <Radio checked={selectedKey === 'null'} onChange={() => setSelectedKey('null')}></Radio>
                 </div>
             </ItemContainer>
         ),
-        key: '2',
+        key: 'null',
     };
 
-    const defaultTypeItems = {
-        label: (
-            <ItemContainer>
-                <div className="itemTitle">
-                    <DropTitle>내용내용</DropTitle>
-                </div>
-                <div className="ItemRadio">
-                    <Radio checked={selectedKey === '3'} onChange={() => setSelectedKey('3')}></Radio>
-                </div>
-            </ItemContainer>
-        ),
-        key: '3',
+    const defaultTypeItems = () => {
+        return filterItems
+            ? filterItems.reduce((acc, cur) => {
+                  acc.push({
+                      label: (
+                          <ItemContainer>
+                              <div className="itemTitle">
+                                  <DropTitle>{cur.title}</DropTitle>
+                              </div>
+                              <div className="ItemRadio">
+                                  <Radio checked={selectedKey === cur.value} onChange={() => setSelectedKey(cur.value)}></Radio>
+                              </div>
+                          </ItemContainer>
+                      ),
+                      key: cur.value,
+                  });
+                  return acc;
+              }, [])
+            : [];
     };
 
     const ImageTypeItems = {
@@ -99,11 +106,11 @@ export default function DropDownFilter({ filterTitle, filterItems }) {
     };
 
     const itemByType = {
-        필터: [titleItem, defaultTypeItems],
+        필터: [titleItem, ...defaultTypeItems()],
         담당자: [titleItem, clearTypeItem, ImageTypeItems],
         작성자: [titleItem, clearTypeItem, ImageTypeItems],
         레이블: [titleItem, clearTypeItem, labelTypeItems],
-        마일스톤: [titleItem, clearTypeItem, defaultTypeItems],
+        마일스톤: [titleItem, clearTypeItem, ...defaultTypeItems()],
     };
 
     const items = itemByType[filterTitle];
