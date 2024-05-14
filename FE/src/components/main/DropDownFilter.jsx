@@ -43,7 +43,7 @@ export default function DropDownFilter({ filterTitle, filterItems }) {
                     <DropTitle>{clearTypeItemTitle[filterTitle]}</DropTitle>
                 </div>
                 <div className="ItemRadio">
-                    <Radio checked={selectedKey === 'null'} onChange={() => setSelectedKey('null')}></Radio>
+                    <Radio checked={selectedKey === 'null'} onChange={() => setSelectedKey(null)}></Radio>
                 </div>
             </ItemContainer>
         ),
@@ -71,21 +71,28 @@ export default function DropDownFilter({ filterTitle, filterItems }) {
             : [];
     };
 
-    const ImageTypeItems = {
-        label: (
-            <ItemContainer>
-                <div className="itemTitle">
-                    <DropTitle>
-                        <AvatarImage src="https://avatars.githubusercontent.com/u/96780693?s=40&v=4"></AvatarImage>
-                        <UserName>woody</UserName>
-                    </DropTitle>
-                </div>
-                <div className="ItemRadio">
-                    <Radio checked={selectedKey === '4'} onChange={() => setSelectedKey('4')}></Radio>
-                </div>
-            </ItemContainer>
-        ),
-        key: '4',
+    const imageTypeItems = () => {
+        return filterItems
+            ? filterItems.reduce((acc, cur) => {
+                  acc.push({
+                      label: (
+                          <ItemContainer>
+                              <div className="itemTitle">
+                                  <DropTitle>
+                                      <AvatarImage src={cur.avatarSrc}></AvatarImage>
+                                      <UserName>{cur.userName}</UserName>
+                                  </DropTitle>
+                              </div>
+                              <div className="ItemRadio">
+                                  <Radio checked={selectedKey === cur.userName} onChange={() => setSelectedKey(cur.userName)}></Radio>
+                              </div>
+                          </ItemContainer>
+                      ),
+                      key: cur.userName,
+                  });
+                  return acc;
+              }, [])
+            : [];
     };
 
     const labelTypeItems = {
@@ -107,8 +114,8 @@ export default function DropDownFilter({ filterTitle, filterItems }) {
 
     const itemByType = {
         필터: [titleItem, ...defaultTypeItems()],
-        담당자: [titleItem, clearTypeItem, ImageTypeItems],
-        작성자: [titleItem, clearTypeItem, ImageTypeItems],
+        담당자: [titleItem, clearTypeItem, ...imageTypeItems()],
+        작성자: [titleItem, clearTypeItem, ...imageTypeItems()],
         레이블: [titleItem, clearTypeItem, labelTypeItems],
         마일스톤: [titleItem, clearTypeItem, ...defaultTypeItems()],
     };

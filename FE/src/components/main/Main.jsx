@@ -5,6 +5,11 @@ import { useNavigate } from 'react-router-dom';
 import IssueList from './IssueList';
 import DropDownFilter from './DropDownFilter';
 
+const imageTypeItems = [
+    { avatarSrc: 'https://avatars.githubusercontent.com/u/96780693?s=40&v=4', userName: 'woody' },
+    { avatarSrc: 'https://avatars.githubusercontent.com/u/103445254?s=40&v=4', userName: 'zzawang' },
+];
+
 const mainIssueFilters = [
     { title: '열린 이슈', value: 'is:open' },
     { title: '내가 작성한 이슈', value: 'author:@me' },
@@ -44,7 +49,7 @@ export default function Main() {
                     </div>
                     <div className="filter">
                         <span className="filterOption">
-                            <DropDownFilter filterTitle={'담당자'} />
+                            <DropDownFilter filterTitle={'담당자'} filterItems={imageTypeItems} />
                         </span>
                         <span className="filterOption">
                             <DropDownFilter filterTitle={'레이블'} />
