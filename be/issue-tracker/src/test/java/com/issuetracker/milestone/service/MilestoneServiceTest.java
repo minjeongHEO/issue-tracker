@@ -1,15 +1,22 @@
 package com.issuetracker.milestone.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.issuetracker.issue.repository.IssueRepository;
 import com.issuetracker.milestone.Repository.MilestoneRepository;
 import com.issuetracker.milestone.domain.Milestone;
 import com.issuetracker.milestone.dto.MilestoneCountDto;
 import com.issuetracker.milestone.dto.MilestoneCreateDto;
+import com.issuetracker.milestone.exception.MilestoneNotFoundException;
+import java.time.LocalDateTime;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,6 +27,9 @@ import org.mockito.MockitoAnnotations;
 class MilestoneServiceTest {
     @Mock
     MilestoneRepository milestoneRepository;
+    @Mock
+    IssueRepository issueRepository;
+
     @InjectMocks
     MilestoneService milestoneService;
 
@@ -48,7 +58,7 @@ class MilestoneServiceTest {
         // Given
         Long milestoneId = 1L;
         MilestoneCreateDto milestoneCreateDto = new MilestoneCreateDto("New Title", "New Description", null);
-        Milestone milestone = new Milestone("milestoneCreateDto.getName()", milestoneCreateDto.getDescription(), null,
+        Milestone milestone = new Milestone(milestoneCreateDto.getName(), milestoneCreateDto.getDescription(), null,
                 false);
         milestone.setId(milestoneId);
 
@@ -94,5 +104,70 @@ class MilestoneServiceTest {
 
         verify(milestoneRepository).countByIsClosed(true);
         verify(milestoneRepository).countByIsClosed(false);
+    }
+
+    @Test
+    @DisplayName("마일스톤을 닫을 수 있다.")
+    void closeMilestone() {
+        // 준비
+        Long id = 1L;
+        when(milestoneRepository.existsById(id)).thenReturn(true);
+        doNothing().when(milestoneRepository).closeById(id);
+
+        // 실행
+        milestoneService.close(id);
+
+        // 검증
+        verify(milestoneRepository).closeById(id);
+        verify(milestoneRepository).existsById(id);
+    }
+
+    @Test
+    @DisplayName("마일스톤을 열 수 있다.")
+    void openMilestoneTest() {
+        // 준비
+        Long id = 1L;
+        when(milestoneRepository.existsById(id)).thenReturn(true);
+        doNothing().when(milestoneRepository).openById(id);
+
+        // 실행
+        milestoneService.open(id);
+
+        // 검증
+        verify(milestoneRepository).openById(id);
+        verify(milestoneRepository).existsById(id);
+    }
+
+    @Test
+    void deleteMilestoneThrowsExceptionWhenNotFound() {
+        // 준비
+        Long id = 1L;
+        when(milestoneRepository.existsById(id)).thenReturn(false);
+
+        // 실행 & 검증
+        assertThatExceptionOfType(MilestoneNotFoundException.class)
+                .isThrownBy(() -> milestoneService.deleteMilestone(id));
+    }
+
+    @Test
+    @DisplayName("모든 마일스톤 및 마일스톤에 종속된 이슈의 개수를 알 수 있다. ")
+    void showMilestoneList() {
+        // 준비
+        Milestone milestone = new Milestone("마일스톤", "설명", LocalDateTime.now(), false);
+        when(milestoneRepository.findAllByIsClosed(false)).thenReturn(List.of(milestone));
+        when(issueRepository.countByMilestoneIdAndIsClosed(isNull(), eq(true))).thenReturn(5L);
+        when(issueRepository.countByMilestoneIdAndIsClosed(isNull(), eq(false))).thenReturn(3L);
+
+        // 실행
+        var listDto = milestoneService.showMilestoneList(false);
+
+        // 검증
+        assertThat(listDto.getMilestoneDetailDtos()).hasSize(1);
+        assertThat(listDto.getMilestoneDetailDtos().get(0).getClosedIssueCount()).isEqualTo(5L);
+        assertThat(listDto.getMilestoneDetailDtos().get(0).getOpenIssueCount()).isEqualTo(3L);
+
+        // Mockito 검증
+        verify(issueRepository).countByMilestoneIdAndIsClosed(isNull(), eq(false));
+        verify(issueRepository).countByMilestoneIdAndIsClosed(isNull(), eq(true));
     }
 }

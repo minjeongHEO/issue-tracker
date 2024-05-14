@@ -5,7 +5,11 @@ import com.issuetracker.milestone.Repository.MilestoneRepository;
 import com.issuetracker.milestone.domain.Milestone;
 import com.issuetracker.milestone.dto.MilestoneCountDto;
 import com.issuetracker.milestone.dto.MilestoneCreateDto;
+import com.issuetracker.milestone.dto.MilestoneDetailDto;
+import com.issuetracker.milestone.dto.MilestoneListDto;
 import com.issuetracker.milestone.exception.MilestoneNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -63,6 +67,48 @@ public class MilestoneService {
         log.info("마일스톤이 열렸습니다. id = {}", id);
     }
 
+    @Transactional(readOnly = true)
+    public MilestoneListDto showMilestoneList(boolean isClosed) {
+        List<Milestone> milestones = milestoneRepository.findAllByIsClosed(isClosed);
+        List<MilestoneDetailDto> milestoneDetailDtos = toMilestoneDetailDtos(milestones);
+        return new MilestoneListDto(milestoneDetailDtos);
+    }
+
+    @Transactional(readOnly = true)
+    public MilestoneDetailDto showMilestoneDetail(Long id) {
+        Milestone milestone = getMilestone(id);
+        Long openIssueCount = issueRepository.countByMilestoneIdAndIsClosed(id, false);
+        Long closedIssueCount = issueRepository.countByMilestoneIdAndIsClosed(id, true);
+
+        return toMilestoneDetailDto(milestone, openIssueCount, closedIssueCount);
+    }
+
+    private List<MilestoneDetailDto> toMilestoneDetailDtos(List<Milestone> milestones) {
+        List<MilestoneDetailDto> milestoneDetailDtos = new ArrayList<>();
+        for (Milestone milestone : milestones) {
+            Long milestoneId = milestone.getId();
+            Long openIssueCount = issueRepository.countByMilestoneIdAndIsClosed(milestoneId, false);
+            Long closedIssueCount = issueRepository.countByMilestoneIdAndIsClosed(milestoneId, true);
+            MilestoneDetailDto milestoneDetailDto = toMilestoneDetailDto(milestone, openIssueCount,
+                    closedIssueCount);
+
+            milestoneDetailDtos.add(milestoneDetailDto);
+        }
+        return milestoneDetailDtos;
+    }
+
+    private MilestoneDetailDto toMilestoneDetailDto(Milestone milestone, Long openIssueCount,
+                                                    Long closedIssueCount) {
+        return MilestoneDetailDto.builder()
+                .id(milestone.getId())
+                .name(milestone.getName())
+                .description(milestone.getDescription())
+                .dueDate(milestone.getDueDate())
+                .openIssueCount(openIssueCount)
+                .closedIssueCount(closedIssueCount)
+                .build();
+    }
+
     private Milestone toMilestone(MilestoneCreateDto milestoneCreateDto) {
         return new Milestone(milestoneCreateDto.getName(), milestoneCreateDto.getDescription(),
                 milestoneCreateDto.getDueDate(), false);
@@ -72,5 +118,10 @@ public class MilestoneService {
         if (!milestoneRepository.existsById(id)) {
             throw new MilestoneNotFoundException();
         }
+    }
+
+    private Milestone getMilestone(Long id) {
+        return milestoneRepository.findById(id)
+                .orElseThrow(MilestoneNotFoundException::new);
     }
 }

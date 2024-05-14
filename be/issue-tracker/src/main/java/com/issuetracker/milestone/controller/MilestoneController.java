@@ -3,6 +3,8 @@ package com.issuetracker.milestone.controller;
 import com.issuetracker.milestone.domain.Milestone;
 import com.issuetracker.milestone.dto.MilestoneCountDto;
 import com.issuetracker.milestone.dto.MilestoneCreateDto;
+import com.issuetracker.milestone.dto.MilestoneDetailDto;
+import com.issuetracker.milestone.dto.MilestoneListDto;
 import com.issuetracker.milestone.service.MilestoneService;
 import jakarta.validation.Valid;
 import java.net.URI;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -64,5 +67,18 @@ public class MilestoneController {
     public ResponseEntity<Void> openMilestone(@PathVariable Long id) {
         milestoneService.open(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<MilestoneListDto> showMilestoneList(
+            @RequestParam(defaultValue = "true") boolean isClosed) {
+        MilestoneListDto milestoneListDto = milestoneService.showMilestoneList(isClosed);
+        return ResponseEntity.ok(milestoneListDto);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<MilestoneDetailDto> showMilestone(@PathVariable Long id) {
+        MilestoneDetailDto milestoneDetailDto = milestoneService.showMilestoneDetail(id);
+        return ResponseEntity.ok(milestoneDetailDto);
     }
 }
