@@ -1,11 +1,14 @@
 package com.issuetracker.label.controller;
 
 import com.issuetracker.label.domain.Label;
+import com.issuetracker.label.dto.LabelBgColorDto;
+import com.issuetracker.label.dto.LabelCountDto;
 import com.issuetracker.label.dto.LabelDto;
 import com.issuetracker.label.service.LabelService;
 import com.issuetracker.label.utils.HexColorGenerator;
 import jakarta.validation.Valid;
 import java.net.URI;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,6 +25,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class LabelController {
     private final LabelService labelService;
+
+    @GetMapping
+    public ResponseEntity<List<Label>> getLabels() {
+        List<Label> labels = labelService.getLabels();
+        return ResponseEntity.ok().body(labels);
+    }
 
     @PostMapping
     public ResponseEntity<Label> createLabels(@Valid @RequestBody LabelDto labelDto) {
@@ -42,9 +51,15 @@ public class LabelController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/bgcolor/refresh")
-    public ResponseEntity<String> refreshLabelBackgroundColor() {
-        String randomHexColor = HexColorGenerator.generateRandomHexColor();
+    @GetMapping("/bgcolor")
+    public ResponseEntity<LabelBgColorDto> refreshLabelBackgroundColor() {
+        LabelBgColorDto randomHexColor = new LabelBgColorDto(HexColorGenerator.generateRandomHexColor());
         return ResponseEntity.ok().body(randomHexColor);
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<LabelCountDto> countLabels() {
+        LabelCountDto labelCountDto = new LabelCountDto(labelService.countLabels());
+        return ResponseEntity.ok().body(labelCountDto);
     }
 }

@@ -31,9 +31,11 @@ class IssueLabelRepositoryTest {
         assertThat(find.getIssueId()).isEqualTo(1L);
         assertThat(find.getLabelId()).isEqualTo(4L);
 
-        List<IssueLabel> allByIssueId = issueLabelRepository.findAllByIssueId(1L);
+        List<Long> allByIssueId = issueLabelRepository.findAllByIssueId(1L);
 
         assertThat(allByIssueId.size()).isEqualTo(2);
+        assertThat(allByIssueId.get(0)).isEqualTo(4L);
+        assertThat(allByIssueId.get(1)).isEqualTo(7L);
 
         issueLabelRepository.deleteById(1L, 4L);
         assertThat(issueLabelRepository.count()).isEqualTo(1);
