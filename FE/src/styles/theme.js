@@ -45,12 +45,14 @@ const lightTheme = {
     bgColorBody: '#FFF',
     fontColor: '#363537',
     dropshadowColor: '#14142B, 4%, Blur 8',
+    listHeaderColor: '#F7F7FC',
 };
 
 const darkTheme = {
     bgColorBody: '#363537',
     fontColor: '#FAFAFA',
     dropshadowColor: '#14142B, 80%, Blur 16',
+    listHeaderColor: '#6E7191',
 };
 
 ////////////////////
