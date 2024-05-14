@@ -14,7 +14,8 @@ public interface IssueLabelRepository extends CrudRepository<IssueLabel, Long> {
 
     Optional<IssueLabel> findByIssueIdAndLabelId(Long issueId, Long labelId);
 
-    List<IssueLabel> findAllByIssueId(Long issueId);
+    @Query("SELECT label_id FROM issue_label where issue_id = :issueId")
+    List<Long> findAllByIssueId(Long issueId);
 
     @Modifying
     @Query("DELETE FROM issue_label WHERE issue_id = :issueId AND label_id = :labelId")
