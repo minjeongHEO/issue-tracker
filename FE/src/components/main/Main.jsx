@@ -14,6 +14,7 @@ const imageTypeItems = [
     { avatarSrc: 'https://avatars.githubusercontent.com/u/96780693?s=40&v=4', userName: 'woody' },
     { avatarSrc: 'https://avatars.githubusercontent.com/u/103445254?s=40&v=4', userName: 'zzawang' },
 ];
+const milestoneTypeItems = [{ title: '⚙️ Etc' }, { title: '💄 Style' }, { title: '🧑🏻 User' }, { title: '🎯 Issue' }];
 
 const mainIssueFilters = [
     { title: '열린 이슈', value: 'is:open' },
@@ -60,7 +61,7 @@ export default function Main() {
                             <DropDownFilter filterTitle={'레이블'} filterItems={labelTypeItems} />
                         </span>
                         <span className="filterOption">
-                            <DropDownFilter filterTitle={'마일스톤'} filterItems={imageTypeItems} />
+                            <DropDownFilter filterTitle={'마일스톤'} filterItems={milestoneTypeItems} />
                         </span>
                         <span className="filterOption">
                             <DropDownFilter filterTitle={'작성자'} filterItems={imageTypeItems} />

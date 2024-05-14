@@ -60,11 +60,14 @@ export default function DropDownFilter({ filterTitle, filterItems }) {
                                   <DropTitle>{cur.title}</DropTitle>
                               </div>
                               <div className="ItemRadio">
-                                  <Radio checked={selectedKey === cur.value} onChange={() => setSelectedKey(cur.value)}></Radio>
+                                  <Radio
+                                      checked={selectedKey === (cur.value ?? cur.title)}
+                                      onChange={() => setSelectedKey(cur.value ?? cur.title)}
+                                  ></Radio>
                               </div>
                           </ItemContainer>
                       ),
-                      key: cur.value,
+                      key: cur.value ?? cur.title,
                   });
                   return acc;
               }, [])
