@@ -49,6 +49,20 @@ public class MilestoneService {
         return new MilestoneCountDto(isOpened, isClosed);
     }
 
+    @Transactional
+    public void close(Long id) {
+        validateExists(id);
+        milestoneRepository.closeById(id);
+        log.info("마일스톤이 닫혔습니다. id = {}", id);
+    }
+
+    @Transactional
+    public void open(Long id) {
+        validateExists(id);
+        milestoneRepository.openById(id);
+        log.info("마일스톤이 열렸습니다. id = {}", id);
+    }
+
     private Milestone toMilestone(MilestoneCreateDto milestoneCreateDto) {
         return new Milestone(milestoneCreateDto.getName(), milestoneCreateDto.getDescription(),
                 milestoneCreateDto.getDueDate(), false);

@@ -31,4 +31,13 @@ class MilestoneRepositoryTest {
         assertThat(milestoneRepository.countByIsClosed(false)).isEqualTo(2);
         assertThat(milestoneRepository.countByIsClosed(true)).isEqualTo(1);
     }
+
+    @Test
+    void closeById() {
+        Milestone saved = milestoneRepository.save(new Milestone("1", null, null, false));
+        milestoneRepository.closeById(saved.getId());
+        Milestone milestone = milestoneRepository.findById(saved.getId()).get();
+
+        assertThat(milestone.isClosed()).isEqualTo(true);
+    }
 }

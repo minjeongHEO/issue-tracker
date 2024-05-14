@@ -53,4 +53,16 @@ public class MilestoneController {
         MilestoneCountDto milestoneCountDto = milestoneService.countMilestones();
         return ResponseEntity.ok().body(milestoneCountDto);
     }
+
+    @PostMapping("/{id}/close")
+    public ResponseEntity<Void> closeMilestone(@PathVariable Long id) {
+        milestoneService.close(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{id}/open")
+    public ResponseEntity<Void> openMilestone(@PathVariable Long id) {
+        milestoneService.open(id);
+        return ResponseEntity.ok().build();
+    }
 }
