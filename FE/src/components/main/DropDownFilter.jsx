@@ -95,28 +95,35 @@ export default function DropDownFilter({ filterTitle, filterItems }) {
             : [];
     };
 
-    const labelTypeItems = {
-        label: (
-            <ItemContainer>
-                <div className="itemTitle">
-                    <DropTitle>
-                        <StyledColor style={{ backgroundColor: 'red' }}></StyledColor>
-                        <UserName>bug</UserName>
-                    </DropTitle>
-                </div>
-                <div className="ItemRadio">
-                    <Radio checked={selectedKey === '3'} onChange={() => setSelectedKey('3')}></Radio>
-                </div>
-            </ItemContainer>
-        ),
-        key: '3',
+    const labelTypeItems = () => {
+        return filterItems
+            ? filterItems.reduce((acc, cur) => {
+                  acc.push({
+                      label: (
+                          <ItemContainer>
+                              <div className="itemTitle">
+                                  <DropTitle>
+                                      <StyledColor style={{ backgroundColor: cur.labelColor }}></StyledColor>
+                                      <UserName>{cur.labelName}</UserName>
+                                  </DropTitle>
+                              </div>
+                              <div className="ItemRadio">
+                                  <Radio checked={selectedKey === cur.labelName} onChange={() => setSelectedKey(cur.labelName)}></Radio>
+                              </div>
+                          </ItemContainer>
+                      ),
+                      key: cur.labelName,
+                  });
+                  return acc;
+              }, [])
+            : [];
     };
 
     const itemByType = {
         필터: [titleItem, ...defaultTypeItems()],
         담당자: [titleItem, clearTypeItem, ...imageTypeItems()],
         작성자: [titleItem, clearTypeItem, ...imageTypeItems()],
-        레이블: [titleItem, clearTypeItem, labelTypeItems],
+        레이블: [titleItem, clearTypeItem, ...labelTypeItems()],
         마일스톤: [titleItem, clearTypeItem, ...defaultTypeItems()],
     };
 
@@ -135,8 +142,6 @@ export default function DropDownFilter({ filterTitle, filterItems }) {
 }
 
 //TODO:
-//1. 변하는 것들을 props로 넘겨주는거
-//2. itmes 배열을 prop에 따라서 각각 만들어주는거?
 //3. 다크모드 테마에 따른 색상변경
 
 const StyledColor = styled.div`

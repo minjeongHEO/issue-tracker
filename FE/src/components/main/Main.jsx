@@ -5,6 +5,11 @@ import { useNavigate } from 'react-router-dom';
 import IssueList from './IssueList';
 import DropDownFilter from './DropDownFilter';
 
+// TODO: fetch 데이터
+const labelTypeItems = [
+    { labelColor: '#F910AC', labelName: '🖥️ BE' },
+    { labelColor: '#F9D0F0', labelName: '🌐 FE' },
+];
 const imageTypeItems = [
     { avatarSrc: 'https://avatars.githubusercontent.com/u/96780693?s=40&v=4', userName: 'woody' },
     { avatarSrc: 'https://avatars.githubusercontent.com/u/103445254?s=40&v=4', userName: 'zzawang' },
@@ -52,13 +57,13 @@ export default function Main() {
                             <DropDownFilter filterTitle={'담당자'} filterItems={imageTypeItems} />
                         </span>
                         <span className="filterOption">
-                            <DropDownFilter filterTitle={'레이블'} />
+                            <DropDownFilter filterTitle={'레이블'} filterItems={labelTypeItems} />
                         </span>
                         <span className="filterOption">
-                            <DropDownFilter filterTitle={'마일스톤'} />
+                            <DropDownFilter filterTitle={'마일스톤'} filterItems={imageTypeItems} />
                         </span>
                         <span className="filterOption">
-                            <DropDownFilter filterTitle={'작성자'} />
+                            <DropDownFilter filterTitle={'작성자'} filterItems={imageTypeItems} />
                         </span>
                     </div>
                 </StyledBoxHeader>
