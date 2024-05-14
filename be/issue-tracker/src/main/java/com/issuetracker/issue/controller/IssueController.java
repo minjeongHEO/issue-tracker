@@ -18,7 +18,8 @@ public class IssueController {
     private final IssueService issueService;
 
     @GetMapping
-    public ResponseEntity<List<IssueListDto>> getIssuesByIsClosed(@RequestParam("isClosed") boolean isClosed) {
+    public ResponseEntity<List<IssueListDto>> getIssuesByIsClosed(
+            @RequestParam(value = "isClosed", defaultValue = "false") boolean isClosed) {
         List<IssueListDto> issueListDto = issueService.getIssuesByIsClosed(isClosed);
         return ResponseEntity.ok().body(issueListDto);
     }
