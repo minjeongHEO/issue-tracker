@@ -28,16 +28,16 @@ const mainIssueFilters = [
 export default function Main() {
     const navigate = useNavigate();
     const { state: selectedFilters, dispatch } = useFilterContext();
-    const [inputFilter, setInputFilter] = useState('is:issue is:open');
+    const [inputFilter, setInputFilter] = useState('');
 
     const listSelectedFilters = (selectedFilters) => {
-        let filters = [];
+        let filters = ['is:issue'];
+        if (selectedFilters.issues.isOpen || (!selectedFilters.issues.isOpen && !selectedFilters.issues.isClosed)) filters.push(`is:open`);
+        if (selectedFilters.issues.isClosed) filters.push(`is:closed`);
         if (selectedFilters.author) filters.push(`author:"${selectedFilters.author}"`);
         if (selectedFilters.label) filters.push(`label:"${selectedFilters.label}"`);
         if (selectedFilters.milestone) filters.push(`milestone:"${selectedFilters.milestone}"`);
         if (selectedFilters.assignee) filters.push(`assignee:"${selectedFilters.assignee}"`);
-        if (selectedFilters.issues.isOpen) filters.push(`is:open`);
-        if (selectedFilters.issues.isClosed) filters.push(`is:closed`);
         if (selectedFilters.issues.authorMe) filters.push(`author:@me`);
         if (selectedFilters.issues.assigneeMe) filters.push(`assignee:@me`);
         if (selectedFilters.issues.mentionsMe) filters.push(`mentions:@me`);
@@ -54,7 +54,7 @@ export default function Main() {
                 <FlexRow>
                     <FlexRow>
                         <IssueFilter>
-                            <DropDownFilter filterTitle={'필터'} filterItems={mainIssueFilters} dispatch={dispatch}>
+                            <DropDownFilter filterTitle={'issue'} filterItems={mainIssueFilters} dispatch={dispatch}>
                                 필터
                             </DropDownFilter>
                         </IssueFilter>
@@ -78,22 +78,22 @@ export default function Main() {
                     </div>
                     <div className="filter">
                         <span className="filterOption">
-                            <DropDownFilter filterTitle={'담당자'} filterItems={imageTypeItems} dispatch={dispatch}>
+                            <DropDownFilter filterTitle={'author'} filterItems={imageTypeItems} dispatch={dispatch}>
                                 담당자
                             </DropDownFilter>
                         </span>
                         <span className="filterOption">
-                            <DropDownFilter filterTitle={'레이블'} filterItems={labelTypeItems} dispatch={dispatch}>
+                            <DropDownFilter filterTitle={'label'} filterItems={labelTypeItems} dispatch={dispatch}>
                                 레이블
                             </DropDownFilter>
                         </span>
                         <span className="filterOption">
-                            <DropDownFilter filterTitle={'마일스톤'} filterItems={milestoneTypeItems} dispatch={dispatch}>
+                            <DropDownFilter filterTitle={'milestone'} filterItems={milestoneTypeItems} dispatch={dispatch}>
                                 마일스톤
                             </DropDownFilter>
                         </span>
                         <span className="filterOption">
-                            <DropDownFilter filterTitle={'작성자'} filterItems={imageTypeItems} dispatch={dispatch}>
+                            <DropDownFilter filterTitle={'assignee'} filterItems={imageTypeItems} dispatch={dispatch}>
                                 작성자
                             </DropDownFilter>
                         </span>

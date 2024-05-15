@@ -5,13 +5,12 @@ import styled from 'styled-components';
 
 export default function DropDownFilter({ filterTitle, filterItems, dispatch, children }) {
     const [selectedKey, setSelectedKey] = useState(null);
-    // const [selectedKey, setSelectedKey] = useState({}); //객체로 설정
 
     const dispatchTypeByFilter = {
-        담당자: 'SET_SELECTED_AUTHOR_FILTER',
-        작성자: 'SET_SELECTED_ASSIGNEE_FILTER',
-        레이블: 'SET_SELECTED_LABEL_FILTER',
-        마일스톤: 'SET_SELECTED_MILESTONE_FILTER',
+        author: 'SET_SELECTED_AUTHOR_FILTER',
+        label: 'SET_SELECTED_LABEL_FILTER',
+        milestone: 'SET_SELECTED_MILESTONE_FILTER',
+        assignee: 'SET_SELECTED_ASSIGNEE_FILTER',
     };
     const dispatchTypeByFilterContents = {
         'is:open': 'SET_SELECTED_IS_OPEN_FILTER',
@@ -23,9 +22,9 @@ export default function DropDownFilter({ filterTitle, filterItems, dispatch, chi
 
     const handleMenuClick = ({ key }) => {
         setSelectedKey(key);
-        message.info(`${key === 'null' ? `${filterTitle} 초기화` : key} 필터 선택`);
+        message.info(`${key === 'null' ? `${children} 초기화` : key} 필터 선택`);
 
-        if (filterTitle === '필터') {
+        if (children === '필터') {
             dispatch({ type: dispatchTypeByFilterContents[key], payload: key });
         } else {
             dispatch({ type: dispatchTypeByFilter[filterTitle], payload: key });
@@ -33,15 +32,13 @@ export default function DropDownFilter({ filterTitle, filterItems, dispatch, chi
     };
 
     const clearTypeItemTitle = {
-        담당자: '담당자가 없는 이슈',
-        작성자: '작성자가 없는 이슈',
-        레이블: '레이블이 없는 이슈',
-        마일스톤: '마일스톤이 없는 이슈',
+        type1: '가 없는 이슈',
+        type2: '이 없는 이슈',
     };
 
     const dropBoxTitle = () => {
-        if (filterTitle === '필터') return '이슈 필터';
-        return `${filterTitle} 필터`;
+        if (children === '필터') return '이슈 필터';
+        return `${children} 필터`;
     };
 
     const titleItem = {
@@ -56,11 +53,18 @@ export default function DropDownFilter({ filterTitle, filterItems, dispatch, chi
         disabled: true,
     };
 
+    const DropTitleComponent = ({ children, filterTitle }) => (
+        <DropTitle>
+            {children}
+            {filterTitle === 'author' || filterTitle === 'assignee' ? clearTypeItemTitle['type1'] : clearTypeItemTitle['type2']}
+        </DropTitle>
+    );
+
     const clearTypeItem = {
         label: (
             <ItemContainer>
                 <div className="itemTitle">
-                    <DropTitle>{clearTypeItemTitle[filterTitle]}</DropTitle>
+                    <DropTitleComponent children={children} filterTitle={filterTitle} />
                 </div>
                 <div className="ItemRadio">
                     <Radio checked={selectedKey === 'null'} onChange={() => setSelectedKey(null)}></Radio>
@@ -143,11 +147,11 @@ export default function DropDownFilter({ filterTitle, filterItems, dispatch, chi
     };
 
     const itemByType = {
-        필터: [titleItem, ...defaultTypeItems()],
-        담당자: [titleItem, clearTypeItem, ...imageTypeItems()],
-        작성자: [titleItem, clearTypeItem, ...imageTypeItems()],
-        레이블: [titleItem, clearTypeItem, ...labelTypeItems()],
-        마일스톤: [titleItem, clearTypeItem, ...defaultTypeItems()],
+        issue: [titleItem, ...defaultTypeItems()],
+        author: [titleItem, clearTypeItem, ...imageTypeItems()],
+        label: [titleItem, clearTypeItem, ...labelTypeItems()],
+        milestone: [titleItem, clearTypeItem, ...defaultTypeItems()],
+        assignee: [titleItem, clearTypeItem, ...imageTypeItems()],
     };
 
     const items = itemByType[filterTitle];
