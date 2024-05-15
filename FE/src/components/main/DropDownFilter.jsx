@@ -26,7 +26,7 @@ export default function DropDownFilter({ filterTitle, filterItems, dispatch, chi
         setSelectedKey(key);
         message.info(`${key === 'null' ? `${children} 초기화` : key} 필터 선택`);
 
-        if (children === '필터') {
+        if (filterTitle === 'issue') {
             dispatch({ type: dispatchTypeByFilterContents[key], payload: key });
         } else {
             dispatch({ type: dispatchTypeByFilter[filterTitle], payload: key });
@@ -34,7 +34,7 @@ export default function DropDownFilter({ filterTitle, filterItems, dispatch, chi
     };
 
     const dropBoxTitle = () => {
-        if (children === '필터') return '이슈 필터';
+        if (filterTitle === 'issue') return '이슈 필터';
         return `${children} 필터`;
     };
 
