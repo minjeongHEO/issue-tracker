@@ -72,7 +72,6 @@ public class MilestoneService {
         List<Milestone> milestones = milestoneRepository.findAllByIsClosed(isClosed);
 
         List<MilestoneDetailDto> milestoneDetailDtos = toMilestoneDetailDtos(milestones);
-        milestoneDetailDtos.forEach(System.out::println);
         return new MilestoneListDto(milestoneDetailDtos);
     }
 

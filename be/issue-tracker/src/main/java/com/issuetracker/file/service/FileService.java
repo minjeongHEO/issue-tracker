@@ -3,6 +3,7 @@ package com.issuetracker.file.service;
 import com.issuetracker.file.Repository.FileRepository;
 import com.issuetracker.file.domain.File;
 import com.issuetracker.file.dto.UploadedFileDto;
+import com.issuetracker.file.exception.FileNotFoundException;
 import com.issuetracker.file.exception.NotAllowedFileFormatException;
 import com.issuetracker.file.util.FileManager;
 import com.issuetracker.file.util.S3Manager;
@@ -36,6 +37,18 @@ public class FileService {
 
         log.info("새로운 파일이 저장되었습니다. {}", uploadedFileDto);
         return uploadedFileDto;
+    }
+
+    @Transactional
+    public UploadedFileDto showFile(Long id) {
+        File file = getFileOrThrow(id);
+        System.out.println(file.getStoreName());
+        String url = s3Manager.getResourceUrl(file.getStoreName());
+        return toUploadedFileDto(file, url);
+    }
+
+    private File getFileOrThrow(Long id) {
+        return fileRepository.findById(id).orElseThrow(FileNotFoundException::new);
     }
 
     private void validateFileFormat(MultipartFile multipartFile) throws IOException {
