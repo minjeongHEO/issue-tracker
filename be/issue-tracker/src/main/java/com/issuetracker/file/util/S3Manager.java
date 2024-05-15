@@ -32,10 +32,14 @@ public class S3Manager {
         return amazonS3Client.getResourceUrl(bucketName, bucketKey);
     }
 
+    public void deleteFile(String storeName) {
+        String bucketKey = getBucketKey(storeName);
+        amazonS3Client.deleteObject(bucketName, bucketKey);
+    }
+
     private ObjectMetadata getMetadata(MultipartFile multipartFile) {
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentType(multipartFile.getContentType());
-        System.out.println(metadata.getContentType());
         metadata.setContentLength(multipartFile.getSize());
         return metadata;
     }

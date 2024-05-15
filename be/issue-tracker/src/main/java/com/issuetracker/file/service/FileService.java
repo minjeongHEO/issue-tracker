@@ -42,9 +42,16 @@ public class FileService {
     @Transactional
     public UploadedFileDto showFile(Long id) {
         File file = getFileOrThrow(id);
-        System.out.println(file.getStoreName());
         String url = s3Manager.getResourceUrl(file.getStoreName());
         return toUploadedFileDto(file, url);
+    }
+
+    @Transactional
+    public void deleteFile(Long id) {
+        File file = getFileOrThrow(id);
+        fileRepository.deleteById(id);
+        s3Manager.deleteFile(file.getStoreName());
+        log.info("파일이 삭제되었습니다. {}", file);
     }
 
     private File getFileOrThrow(Long id) {
