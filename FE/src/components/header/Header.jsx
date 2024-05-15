@@ -23,7 +23,12 @@ export default function Header() {
             </StyledLogo>
             <StyledProfile>
                 <span>{userId} 님</span>
-                <img src="https://avatars.githubusercontent.com/u/96780693?s=40&v=4" className="profile" alt="profile" />
+                {/* <img src="https://avatars.githubusercontent.com/u/96780693?s=40" className="profile" alt="profile" /> */}
+                <img
+                    src="https://github.com/codesquad-masters2024-team02/issue-tracker/assets/96780693/d1c7123b-89c9-485b-b9dd-8cc21a1005e0"
+                    className="profile"
+                    alt="profile"
+                />
             </StyledProfile>
         </HeaderContainer>
     );
@@ -49,5 +54,8 @@ const StyledProfile = styled.span`
     }
     & img {
         border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
     }
 `;
