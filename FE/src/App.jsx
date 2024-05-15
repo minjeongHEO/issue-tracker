@@ -4,6 +4,7 @@ import styled, { ThemeProvider } from 'styled-components';
 import { GlobalStyle } from './styles/GlobalStyle.js';
 import { DarkModeContext } from './context/DarkModeContext.jsx';
 import { Button } from 'antd';
+import FilterProvider from './context/FilterContext.jsx';
 
 function App() {
     const { isDarkMode, toggleDarkMode, darkModeTheme } = useContext(DarkModeContext);
@@ -12,9 +13,11 @@ function App() {
         <ThemeProvider theme={darkModeTheme}>
             <GlobalStyle />
             <DarkThemeBtn onClick={toggleDarkMode}>{isDarkMode ? '🌞' : '🌚'}</DarkThemeBtn>
-            <Root>
-                <AppRoutes />
-            </Root>
+            <FilterProvider>
+                <Root>
+                    <AppRoutes />
+                </Root>
+            </FilterProvider>
         </ThemeProvider>
     );
 }
