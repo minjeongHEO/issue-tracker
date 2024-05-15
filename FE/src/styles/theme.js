@@ -55,6 +55,14 @@ const darkTheme = {
     listHeaderColor: '#6E7191',
 };
 
+export const DropTitle = styled.span`
+    margin-left: 10px;
+    margin-right: 10px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+`;
+
 ////////////////////
 
 const colorValue = {
@@ -244,6 +252,7 @@ export const theme = {
     buttonStyles,
     buttonStates,
 };
+
 export default theme;
 
 {

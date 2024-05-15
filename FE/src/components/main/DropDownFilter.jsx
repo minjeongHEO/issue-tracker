@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { DownOutlined } from '@ant-design/icons';
 import { Dropdown, Menu, message, Radio, Space } from 'antd';
 import styled from 'styled-components';
+import { DropTitle } from '../../styles/theme.js';
+import DropDownTitle from './DropDownTitle';
 
 export default function DropDownFilter({ filterTitle, filterItems, dispatch, children }) {
     const [selectedKey, setSelectedKey] = useState(null);
@@ -31,11 +33,6 @@ export default function DropDownFilter({ filterTitle, filterItems, dispatch, chi
         }
     };
 
-    const clearTypeItemTitle = {
-        type1: '가 없는 이슈',
-        type2: '이 없는 이슈',
-    };
-
     const dropBoxTitle = () => {
         if (children === '필터') return '이슈 필터';
         return `${children} 필터`;
@@ -53,18 +50,13 @@ export default function DropDownFilter({ filterTitle, filterItems, dispatch, chi
         disabled: true,
     };
 
-    const DropTitleComponent = ({ children, filterTitle }) => (
-        <DropTitle>
-            {children}
-            {filterTitle === 'author' || filterTitle === 'assignee' ? clearTypeItemTitle['type1'] : clearTypeItemTitle['type2']}
-        </DropTitle>
-    );
-
     const clearTypeItem = {
         label: (
             <ItemContainer>
                 <div className="itemTitle">
-                    <DropTitleComponent children={children} filterTitle={filterTitle} />
+                    <DropDownTitle name={children} filterTitle={filterTitle}>
+                        <DropTitle />
+                    </DropDownTitle>
                 </div>
                 <div className="ItemRadio">
                     <Radio checked={selectedKey === 'null'} onChange={() => setSelectedKey(null)}></Radio>
@@ -193,11 +185,4 @@ const ItemContainer = styled.div`
 `;
 const UserName = styled.span`
     margin: 10px;
-`;
-const DropTitle = styled.span`
-    margin-left: 10px;
-    margin-right: 10px;
-    height: 20px;
-    display: flex;
-    align-items: center;
 `;
