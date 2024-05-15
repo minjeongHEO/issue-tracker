@@ -52,11 +52,11 @@ export default function DropDownFilter({ filterTitle, filterItems, dispatch, dis
                     </DropDownTitle>
                 </div>
                 <div className="ItemRadio">
-                    <Radio checked={selectedKey === 'null'} onChange={() => setSelectedKey(null)}></Radio>
+                    <Radio checked={selectedKey === 'no'} onChange={() => setSelectedKey('no')}></Radio>
                 </div>
             </ItemContainer>
         ),
-        key: 'null',
+        key: 'no',
     };
 
     const defaultTypeItems = () => {

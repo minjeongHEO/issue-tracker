@@ -33,22 +33,37 @@ const dispatchTypeByFilterContents = {
     'author:@me': 'SET_SELECTED_MENTIONS_ME_FILTER',
 };
 
+const issueFilters = {
+    isOpen: 'is:open',
+    isClosed: 'is:closed',
+    authorMe: 'author:@me',
+    assigneeMe: 'assignee:@me',
+    mentionsMe: 'mentions:@me',
+};
+
 export default function Main() {
     const navigate = useNavigate();
     const { state: selectedFilters, dispatch } = useFilterContext();
     const [inputFilter, setInputFilter] = useState('');
 
-    const listSelectedFilters = (selectedFilters) => {
-        let filters = ['is:issue'];
-        if (selectedFilters.issues.isOpen || (!selectedFilters.issues.isOpen && !selectedFilters.issues.isClosed)) filters.push(`is:open`);
-        if (selectedFilters.issues.isClosed) filters.push(`is:closed`);
-        if (selectedFilters.author) filters.push(`author:"${selectedFilters.author}"`);
-        if (selectedFilters.label) filters.push(`label:"${selectedFilters.label}"`);
-        if (selectedFilters.milestone) filters.push(`milestone:"${selectedFilters.milestone}"`);
-        if (selectedFilters.assignee) filters.push(`assignee:"${selectedFilters.assignee}"`);
-        if (selectedFilters.issues.authorMe) filters.push(`author:@me`);
-        if (selectedFilters.issues.assigneeMe) filters.push(`assignee:@me`);
-        if (selectedFilters.issues.mentionsMe) filters.push(`mentions:@me`);
+    const filterSelectedLists = (selectedFilters) => {
+        const filters = ['is:issue'];
+
+        if (!selectedFilters || Object.keys(selectedFilters).length === 0) return;
+
+        // 1. 이슈 필터 처리
+        const issues = selectedFilters.issues || {};
+        const issueEntries = Object.entries(issues);
+        const hasNotNullValue = issueEntries.some(([key, value]) => value !== null);
+
+        if (hasNotNullValue) issueEntries.filter(([key, value]) => value !== null).forEach(([key, value]) => filters.push(issueFilters[key]));
+        else filters.push(issueFilters['isOpen']);
+
+        // 2. 나머지 필터 처리
+        Object.entries(selectedFilters)
+            .filter(([key, value]) => value !== null && key !== 'issues')
+            .forEach(([key, value]) => filters.push(`${key}:"${value}"`));
+
         return filters.join(' ');
     };
 
@@ -58,10 +73,10 @@ export default function Main() {
         dispatch({ type: dispatchTypeByFilterContents[attrValue], payload: attrValue });
     };
 
-    const allCheckBoxToggle = () => {};
+    const toggleAllCheckBox = () => {};
 
     useEffect(() => {
-        setInputFilter(listSelectedFilters(selectedFilters) === '' ? 'is:issue is:open' : listSelectedFilters(selectedFilters));
+        setInputFilter(filterSelectedLists(selectedFilters));
     }, [selectedFilters]);
 
     return (
@@ -93,7 +108,7 @@ export default function Main() {
             <StyledBox>
                 <StyledBoxHeader>
                     <div className="issue">
-                        <Checkbox onClick={allCheckBoxToggle} />
+                        <Checkbox onClick={toggleAllCheckBox} />
                         <span
                             className={`issueOption ${selectedFilters.issues.isClosed ? '' : `checked`}`}
                             attr-key="is:open"
