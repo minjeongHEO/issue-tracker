@@ -58,7 +58,7 @@ export default function Main() {
                                 필터
                             </DropDownFilter>
                         </IssueFilter>
-                        <InputFilter value={inputFilter}></InputFilter>
+                        <InputFilter value={inputFilter} onChange={(e) => setInputFilter(e.target.value)}></InputFilter>
                     </FlexRow>
 
                     <div>
