@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import IssueList from './IssueList';
 import DropDownFilter from './DropDownFilter';
 import { useFilterContext } from '../../context/FilterContext';
+import mockIssueList from '../../data/issueList.json';
 
 // TODO: fetch 데이터
 const labelTypeItems = [
@@ -45,6 +46,7 @@ export default function Main() {
     const navigate = useNavigate();
     const { state: selectedFilters, dispatch } = useFilterContext();
     const [inputFilter, setInputFilter] = useState('');
+    const [isEntireChecked, setIsEntireChecked] = useState(false);
 
     const filterSelectedLists = (selectedFilters) => {
         const filters = ['is:issue'];
@@ -73,7 +75,9 @@ export default function Main() {
         dispatch({ type: dispatchTypeByFilterContents[attrValue], payload: attrValue });
     };
 
-    const toggleAllCheckBox = () => {};
+    const toggleEntireCheckBox = () => {
+        setIsEntireChecked((checked) => !checked);
+    };
 
     useEffect(() => {
         setInputFilter(filterSelectedLists(selectedFilters));
@@ -108,16 +112,16 @@ export default function Main() {
             <StyledBox>
                 <StyledBoxHeader>
                     <div className="issue">
-                        <Checkbox onClick={toggleAllCheckBox} />
+                        <Checkbox onClick={toggleEntireCheckBox} checked={isEntireChecked} />
                         <span
-                            className={`issueOption ${selectedFilters.issues.isClosed ? '' : `checked`}`}
+                            className={`issueOption click ${selectedFilters.issues.isClosed ? '' : `checked`}`}
                             attr-key="is:open"
                             onClick={dispatchIssue}
                         >
                             열린 이슈()
                         </span>
                         <span
-                            className={`issueOption ${selectedFilters.issues.isClosed ? `checked` : ''}`}
+                            className={`issueOption click ${selectedFilters.issues.isClosed ? `checked` : ''}`}
                             attr-key="is:closed"
                             onClick={dispatchIssue}
                         >
@@ -149,9 +153,9 @@ export default function Main() {
                 </StyledBoxHeader>
 
                 <StyledBoxBody>
-                    <IssueList></IssueList>
-                    <IssueList></IssueList>
-                    <IssueList></IssueList>
+                    {mockIssueList.map((list) => (
+                        <IssueList key={list.id} isEntireChecked={isEntireChecked} toggleEntireCheckBox={toggleEntireCheckBox} listData={list} />
+                    ))}
                 </StyledBoxBody>
             </StyledBox>
         </MainContainer>
@@ -173,6 +177,10 @@ const StyledBoxHeader = styled.div`
     color: ${(props) => props.theme.fontColor};
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
+
+    & .click {
+        cursor: pointer;
+    }
 
     & .issue {
         margin-left: 30px;
@@ -227,12 +235,6 @@ const StyledBox = styled.div`
     color: ${(props) => props.theme.fontColor};
 `;
 
-const StyledSelect = styled(Select)`
-    width: 200px;
-`;
-const StyledInput = styled(Input)`
-    width: 600px;
-`;
 const StyledBtn = styled(Button)`
     margin-left: 10px;
 `;
