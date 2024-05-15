@@ -25,6 +25,14 @@ const mainIssueFilters = [
     { title: '닫힌 이슈', value: 'is:closed' },
 ];
 
+const dispatchTypeByFilterContents = {
+    'is:open': 'SET_SELECTED_IS_OPEN_FILTER',
+    'is:closed': 'SET_SELECTED_IS_CLOSED_FILTER',
+    'assignee:@me': 'SET_SELECTED_AUTHOR_ME_FILTER',
+    'mentions:@me': 'SET_SELECTED_ASSIGNEE_ME_FILTER',
+    'author:@me': 'SET_SELECTED_MENTIONS_ME_FILTER',
+};
+
 export default function Main() {
     const navigate = useNavigate();
     const { state: selectedFilters, dispatch } = useFilterContext();
@@ -44,6 +52,14 @@ export default function Main() {
         return filters.join(' ');
     };
 
+    const dispatchIssue = ({ target }) => {
+        const attrValue = target.getAttribute('attr-key');
+        if (!attrValue) return;
+        dispatch({ type: dispatchTypeByFilterContents[attrValue], payload: attrValue });
+    };
+
+    const allCheckBoxToggle = () => {};
+
     useEffect(() => {
         setInputFilter(listSelectedFilters(selectedFilters) === '' ? 'is:issue is:open' : listSelectedFilters(selectedFilters));
     }, [selectedFilters]);
@@ -54,7 +70,12 @@ export default function Main() {
                 <FlexRow>
                     <FlexRow>
                         <IssueFilter>
-                            <DropDownFilter filterTitle={'issue'} filterItems={mainIssueFilters} dispatch={dispatch}>
+                            <DropDownFilter
+                                filterTitle={'issue'}
+                                filterItems={mainIssueFilters}
+                                dispatch={dispatch}
+                                dispatchTypeByFilterContents={dispatchTypeByFilterContents}
+                            >
                                 필터
                             </DropDownFilter>
                         </IssueFilter>
@@ -72,9 +93,21 @@ export default function Main() {
             <StyledBox>
                 <StyledBoxHeader>
                     <div className="issue">
-                        <Checkbox />
-                        <span className="issueOption">열린 이슈()</span>
-                        <span className="issueOption">닫힌 이슈()</span>
+                        <Checkbox onClick={allCheckBoxToggle} />
+                        <span
+                            className={`issueOption ${selectedFilters.issues.isClosed ? '' : `checked`}`}
+                            attr-key="is:open"
+                            onClick={dispatchIssue}
+                        >
+                            열린 이슈()
+                        </span>
+                        <span
+                            className={`issueOption ${selectedFilters.issues.isClosed ? `checked` : ''}`}
+                            attr-key="is:closed"
+                            onClick={dispatchIssue}
+                        >
+                            닫힌 이슈()
+                        </span>
                     </div>
                     <div className="filter">
                         <span className="filterOption">
@@ -99,6 +132,7 @@ export default function Main() {
                         </span>
                     </div>
                 </StyledBoxHeader>
+
                 <StyledBoxBody>
                     <IssueList></IssueList>
                     <IssueList></IssueList>
@@ -133,6 +167,10 @@ const StyledBoxHeader = styled.div`
     }
     & .filter .filterOption {
         margin-right: 20px;
+    }
+
+    & .checked {
+        font-weight: bold;
     }
 `;
 
