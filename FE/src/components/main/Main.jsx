@@ -93,7 +93,7 @@ export default function Main() {
         <MainContainer>
             <StyledNav>
                 <FlexRow>
-                    <FlexRow>
+                    <FlexRow className="inputFilter">
                         <IssueFilter>
                             <DropDownFilter
                                 filterTitle={'issue'}
@@ -107,55 +107,57 @@ export default function Main() {
                         <InputFilter value={inputFilter} onChange={(e) => setInputFilter(e.target.value)}></InputFilter>
                     </FlexRow>
 
-                    <div>
+                    <NavBtnContainer>
                         <StyledBtn onClick={() => navigate('/labels')}>레이블()</StyledBtn>
                         <StyledBtn onClick={() => navigate('/milestones')}>마일스톤()</StyledBtn>
                         <StyledBtn onClick={() => navigate('/issues')}>+ 이슈작성</StyledBtn>
-                    </div>
+                    </NavBtnContainer>
                 </FlexRow>
             </StyledNav>
 
             <StyledBox>
                 <StyledBoxHeader>
-                    <div className="issue">
-                        <Checkbox onClick={() => toggleEntireCheckBox()} checked={checkedItems.length === mockIssueList.length} />
-                        <span
-                            className={`issueOption click ${selectedFilters.issues.isClosed ? '' : `checked`}`}
-                            attr-key="is:open"
-                            onClick={dispatchIssue}
-                        >
-                            열린 이슈()
-                        </span>
-                        <span
-                            className={`issueOption click ${selectedFilters.issues.isClosed ? `checked` : ''}`}
-                            attr-key="is:closed"
-                            onClick={dispatchIssue}
-                        >
-                            닫힌 이슈()
-                        </span>
-                    </div>
-                    <div className="filter">
-                        <span className="filterOption">
-                            <DropDownFilter filterTitle={'author'} filterItems={imageTypeItems} dispatch={dispatch}>
-                                담당자
-                            </DropDownFilter>
-                        </span>
-                        <span className="filterOption">
-                            <DropDownFilter filterTitle={'label'} filterItems={labelTypeItems} dispatch={dispatch}>
-                                레이블
-                            </DropDownFilter>
-                        </span>
-                        <span className="filterOption">
-                            <DropDownFilter filterTitle={'milestone'} filterItems={milestoneTypeItems} dispatch={dispatch}>
-                                마일스톤
-                            </DropDownFilter>
-                        </span>
-                        <span className="filterOption">
-                            <DropDownFilter filterTitle={'assignee'} filterItems={imageTypeItems} dispatch={dispatch}>
-                                작성자
-                            </DropDownFilter>
-                        </span>
-                    </div>
+                    <Checkbox onClick={() => toggleEntireCheckBox()} checked={checkedItems.length === mockIssueList.length} className="checkbox" />
+                    <StyledHeaderContents>
+                        <div className="issue">
+                            <span
+                                className={`issueOption click ${selectedFilters.issues.isClosed ? '' : `checked`}`}
+                                attr-key="is:open"
+                                onClick={dispatchIssue}
+                            >
+                                열린 이슈()
+                            </span>
+                            <span
+                                className={`issueOption click ${selectedFilters.issues.isClosed ? `checked` : ''}`}
+                                attr-key="is:closed"
+                                onClick={dispatchIssue}
+                            >
+                                닫힌 이슈()
+                            </span>
+                        </div>
+                        <div className="filter">
+                            <span className="filterOption">
+                                <DropDownFilter filterTitle={'author'} filterItems={imageTypeItems} dispatch={dispatch}>
+                                    담당자
+                                </DropDownFilter>
+                            </span>
+                            <span className="filterOption">
+                                <DropDownFilter filterTitle={'label'} filterItems={labelTypeItems} dispatch={dispatch}>
+                                    레이블
+                                </DropDownFilter>
+                            </span>
+                            <span className="filterOption">
+                                <DropDownFilter filterTitle={'milestone'} filterItems={milestoneTypeItems} dispatch={dispatch}>
+                                    마일스톤
+                                </DropDownFilter>
+                            </span>
+                            <span className="filterOption">
+                                <DropDownFilter filterTitle={'assignee'} filterItems={imageTypeItems} dispatch={dispatch}>
+                                    작성자
+                                </DropDownFilter>
+                            </span>
+                        </div>
+                    </StyledHeaderContents>
                 </StyledBoxHeader>
 
                 <StyledBoxBody>
@@ -179,11 +181,19 @@ const StyledBoxBody = styled.div`
     /* background-color: skyblue; */
 `;
 
+const StyledHeaderContents = styled.div`
+    width: 95%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+`;
+
 const StyledBoxHeader = styled.div`
     background-color: ${(props) => props.theme.listHeaderColor};
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    /* justify-content: space-between; */
     align-items: center;
     height: 60px;
     color: ${(props) => props.theme.fontColor};
@@ -194,8 +204,18 @@ const StyledBoxHeader = styled.div`
         cursor: pointer;
     }
 
-    & .issue {
+    & .checkbox {
         margin-left: 30px;
+    }
+
+    & .issue {
+        /* margin-right: 500px; */
+        width: 200px;
+        /* flex-basis: 30%; */
+    }
+    & .filter {
+        width: 360px;
+        /* flex-basis: 70%; */
     }
     & .issue .issueOption {
         margin-left: 10px;
@@ -220,7 +240,7 @@ const IssueFilter = styled.div`
     align-content: center;
 `;
 const InputFilter = styled.input`
-    width: 400px;
+    width: 100%;
     height: 35px;
     border-top-right-radius: 6px;
     border-bottom-right-radius: 6px;
@@ -229,6 +249,7 @@ const InputFilter = styled.input`
     border-color: ${(props) => props.theme.borderColor};
     background-color: ${(props) => props.theme.listHeaderColor};
     padding-left: 30px;
+    padding-right: 15px;
     color: ${(props) => props.theme.fontColor};
 
     &::placeholder {
@@ -264,8 +285,15 @@ const FlexRow = styled.div`
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+
+    & .inputFilter {
+        flex-basis: 70%;
+    }
 `;
 
 const StyledNav = styled.nav`
     margin-top: 30px;
+`;
+const NavBtnContainer = styled.div`
+    width: 380px;
 `;
