@@ -2,14 +2,13 @@ import { Checkbox } from 'antd';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-export default function IssueList({ isEntireChecked, toggleEntireCheckBox, listData }) {
-    const [isChecked, setIsChecked] = useState(false);
+export default function IssueList({ isSingleChecked, setCheckedItems, listData }) {
     const { title, labels, id, createDate, memberId, milestoneName } = listData;
     const [pastTime, setPastTime] = useState('');
 
     const toggleCheckBox = () => {
-        if (isEntireChecked) toggleEntireCheckBox();
-        setIsChecked((checked) => !checked);
+        if (isSingleChecked) setCheckedItems((prev) => prev.filter((item) => item !== id));
+        else setCheckedItems((prev) => [...prev, id]);
     };
 
     const calculatePastTime = () => {
@@ -39,7 +38,7 @@ export default function IssueList({ isEntireChecked, toggleEntireCheckBox, listD
     return (
         <ListContainer>
             <ListTitle>
-                <Checkbox onClick={toggleCheckBox} checked={isChecked} />
+                <Checkbox onClick={toggleCheckBox} checked={isSingleChecked} />
                 <ListBody>
                     <div>
                         <span>! {title}</span>
@@ -106,9 +105,11 @@ const StyledProfile = styled.span`
 `;
 
 const StyledLabel = styled.span`
+    display: inline-block;
+    align-content: center;
     margin-left: 10px;
     min-width: 20px;
-    height: 30px;
+    height: 23px;
     padding: 2px 10px;
     border-radius: 25px;
     border: 1px solid;

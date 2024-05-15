@@ -46,7 +46,8 @@ export default function Main() {
     const navigate = useNavigate();
     const { state: selectedFilters, dispatch } = useFilterContext();
     const [inputFilter, setInputFilter] = useState('');
-    const [isEntireChecked, setIsEntireChecked] = useState(false);
+
+    const [checkedItems, setCheckedItems] = useState([]);
 
     const filterSelectedLists = (selectedFilters) => {
         const filters = ['is:issue'];
@@ -76,7 +77,12 @@ export default function Main() {
     };
 
     const toggleEntireCheckBox = () => {
-        setIsEntireChecked((checked) => !checked);
+        if (checkedItems.length === mockIssueList.length) setCheckedItems([]);
+        else setCheckedItems(mockIssueList.map(({ id }) => id));
+    };
+
+    const isSingleChecked = (key) => {
+        return checkedItems.includes(key);
     };
 
     useEffect(() => {
@@ -112,7 +118,7 @@ export default function Main() {
             <StyledBox>
                 <StyledBoxHeader>
                     <div className="issue">
-                        <Checkbox onClick={toggleEntireCheckBox} checked={isEntireChecked} />
+                        <Checkbox onClick={() => toggleEntireCheckBox()} checked={checkedItems.length === mockIssueList.length} />
                         <span
                             className={`issueOption click ${selectedFilters.issues.isClosed ? '' : `checked`}`}
                             attr-key="is:open"
@@ -154,7 +160,13 @@ export default function Main() {
 
                 <StyledBoxBody>
                     {mockIssueList.map((list) => (
-                        <IssueList key={list.id} isEntireChecked={isEntireChecked} toggleEntireCheckBox={toggleEntireCheckBox} listData={list} />
+                        <IssueList
+                            key={list.id}
+                            isSingleChecked={isSingleChecked(list.id)}
+                            setCheckedItems={setCheckedItems}
+                            toggleEntireCheckBox={toggleEntireCheckBox}
+                            listData={list}
+                        />
                     ))}
                 </StyledBoxBody>
             </StyledBox>
