@@ -17,8 +17,8 @@ public class FileController {
     private final FileService fileService;
 
     @PostMapping("/api/files")
-    public ResponseEntity<UploadedFileDto> uploadFile(@RequestParam MultipartFile multipartFile) throws IOException {
-        UploadedFileDto uploadedFileDto = fileService.uploadFile(multipartFile);
+    public ResponseEntity<UploadedFileDto> uploadFile(@RequestParam MultipartFile file) throws IOException {
+        UploadedFileDto uploadedFileDto = fileService.uploadFile(file);
         URI location = URI.create(String.format("/api/files/%s", uploadedFileDto.getId()));
         return ResponseEntity.created(location).body(uploadedFileDto);
     }
