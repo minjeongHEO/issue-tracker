@@ -71,7 +71,7 @@ public class MilestoneController {
 
     @GetMapping
     public ResponseEntity<MilestoneListDto> showMilestoneList(
-            @RequestParam(defaultValue = "true") boolean isClosed) {
+            @RequestParam(defaultValue = "false") boolean isClosed) {
         MilestoneListDto milestoneListDto = milestoneService.showMilestoneList(isClosed);
         return ResponseEntity.ok(milestoneListDto);
     }
