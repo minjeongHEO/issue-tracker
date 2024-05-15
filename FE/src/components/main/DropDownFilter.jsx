@@ -166,7 +166,9 @@ const AvatarImage = styled.img`
     width: 20px;
 `;
 
-const StyledDropdown = styled(Dropdown)``;
+const StyledDropdown = styled(Dropdown)`
+    cursor: pointer;
+`;
 
 const ItemContainer = styled.div`
     display: flex;
