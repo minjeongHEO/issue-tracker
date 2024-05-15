@@ -3,13 +3,33 @@ import { DownOutlined } from '@ant-design/icons';
 import { Dropdown, Menu, message, Radio, Space } from 'antd';
 import styled from 'styled-components';
 
-export default function DropDownFilter({ filterTitle, filterItems }) {
+export default function DropDownFilter({ filterTitle, filterItems, dispatch, children }) {
     const [selectedKey, setSelectedKey] = useState(null);
     // const [selectedKey, setSelectedKey] = useState({}); //객체로 설정
+
+    const dispatchTypeByFilter = {
+        담당자: 'SET_SELECTED_AUTHOR_FILTER',
+        작성자: 'SET_SELECTED_ASSIGNEE_FILTER',
+        레이블: 'SET_SELECTED_LABEL_FILTER',
+        마일스톤: 'SET_SELECTED_MILESTONE_FILTER',
+    };
+    const dispatchTypeByFilterContents = {
+        'is:open': 'SET_SELECTED_IS_OPEN_FILTER',
+        'is:closed': 'SET_SELECTED_IS_CLOSED_FILTER',
+        'assignee:@me': 'SET_SELECTED_AUTHOR_ME_FILTER',
+        'mentions:@me': 'SET_SELECTED_ASSIGNEE_ME_FILTER',
+        'author:@me': 'SET_SELECTED_MENTIONS_ME_FILTER',
+    };
 
     const handleMenuClick = ({ key }) => {
         setSelectedKey(key);
         message.info(`${key === 'null' ? `${filterTitle} 초기화` : key} 필터 선택`);
+
+        if (filterTitle === '필터') {
+            dispatch({ type: dispatchTypeByFilterContents[key], payload: key });
+        } else {
+            dispatch({ type: dispatchTypeByFilter[filterTitle], payload: key });
+        }
     };
 
     const clearTypeItemTitle = {
@@ -136,7 +156,7 @@ export default function DropDownFilter({ filterTitle, filterItems }) {
         <StyledDropdown menu={{ items, onClick: handleMenuClick }} trigger={['click']}>
             <a onClick={(e) => e.preventDefault()}>
                 <Space>
-                    {filterTitle}
+                    {children}
                     <DownOutlined />
                 </Space>
             </a>
