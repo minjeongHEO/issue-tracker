@@ -176,22 +176,25 @@ const StyledBoxHeader = styled.div`
 
 const IssueFilter = styled.div`
     /* background-color: yellow; */
+    width: 100px;
+    height: 35px;
     border-top-left-radius: 6px;
     border-bottom-left-radius: 6px;
     border: 1px solid;
-    width: 100px;
-    height: 35px;
+    border-color: ${(props) => props.theme.borderColor};
     align-content: center;
 `;
 const InputFilter = styled.input`
+    width: 400px;
+    height: 35px;
     border-top-right-radius: 6px;
     border-bottom-right-radius: 6px;
     border: 1px solid;
     border-left: none;
-    width: 400px;
-    height: 35px;
+    border-color: ${(props) => props.theme.borderColor};
     background-color: ${(props) => props.theme.listHeaderColor};
     padding-left: 30px;
+    color: ${(props) => props.theme.fontColor};
 
     &::placeholder {
         color: ${(props) => props.theme.fontColor};
@@ -204,6 +207,7 @@ const StyledBox = styled.div`
     min-height: 160px;
     border-radius: 6px;
     border: 1px solid;
+    border-color: ${(props) => props.theme.borderColor};
     background-color: ${(props) => props.theme.bgColorBody};
     color: ${(props) => props.theme.fontColor};
 `;

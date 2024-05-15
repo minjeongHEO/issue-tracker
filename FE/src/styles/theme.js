@@ -43,6 +43,7 @@ export const StyledInput = styled.input`
 
 const lightTheme = {
     bgColorBody: '#FFF',
+    borderColor: '#EFF0F6',
     fontColor: '#363537',
     dropshadowColor: '#14142B, 4%, Blur 8',
     listHeaderColor: '#F7F7FC',
@@ -50,6 +51,7 @@ const lightTheme = {
 
 const darkTheme = {
     bgColorBody: '#363537',
+    borderColor: '#4E4B66',
     fontColor: '#FAFAFA',
     dropshadowColor: '#14142B, 80%, Blur 16',
     listHeaderColor: '#6E7191',

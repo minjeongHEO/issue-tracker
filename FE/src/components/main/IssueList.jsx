@@ -52,6 +52,9 @@ const ListContainer = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+
+    border-top: 1px solid;
+    border-color: ${(props) => props.theme.borderColor};
 `;
 
 const StyledProfile = styled.span`
