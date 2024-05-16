@@ -79,6 +79,13 @@ export const IndexContainer = styled.div`
     min-width: 890px;
     min-height: 890px;
 `;
+
+export const MainContainer = styled.main`
+    width: 100%;
+    min-width: 890px;
+    padding-left: 85px;
+    padding-right: 85px;
+`;
 ////////////////////
 
 const colorValue = {

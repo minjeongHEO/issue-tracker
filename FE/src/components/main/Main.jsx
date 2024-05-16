@@ -8,6 +8,7 @@ import { useFilterContext } from '../../context/FilterContext';
 import mockIssueList from '../../data/issueList.json';
 import NavStateType from './NavStateType';
 import NavFilterType from './NavFilterType';
+import { MainContainer } from '../../styles/theme';
 
 // TODO: fetch 데이터
 const labelTypeItems = [
@@ -255,15 +256,6 @@ const StyledBox = styled.div`
 
 const StyledBtn = styled(Button)`
     margin-left: 10px;
-`;
-
-const MainContainer = styled.main`
-    /* background-color: azure; */
-    /* height: 100%; */
-    width: 100%;
-    min-width: 890px;
-    padding-left: 85px;
-    padding-right: 85px;
 `;
 
 const FlexRow = styled.div`
