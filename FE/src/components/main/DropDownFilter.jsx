@@ -155,10 +155,10 @@ export default function DropDownFilter({ filterTitle, filterItems, dispatchTypeB
 
     const itemByType = {
         issue: [titleItem, ...defaultTypeItems()],
-        author: [titleItem, clearTypeItem, ...imageTypeItems()],
+        assignee: [titleItem, clearTypeItem, ...imageTypeItems()],
         label: [titleItem, clearTypeItem, ...labelTypeItems()],
         milestone: [titleItem, clearTypeItem, ...defaultTypeItems()],
-        assignee: [titleItem, clearTypeItem, ...imageTypeItems()],
+        author: [titleItem, ...imageTypeItems()],
         state: [titleItem, , ...defaultTypeItems()],
     };
 

@@ -24,7 +24,7 @@ export default function NavFilterType({ dispatchTypeByFilterContents, imageTypeI
             </div>
             <div className="filter">
                 <span className="filterOption">
-                    <DropDownFilter filterTitle={'author'} filterItems={imageTypeItems}>
+                    <DropDownFilter filterTitle={'assignee'} filterItems={imageTypeItems}>
                         담당자
                     </DropDownFilter>
                 </span>
@@ -39,7 +39,7 @@ export default function NavFilterType({ dispatchTypeByFilterContents, imageTypeI
                     </DropDownFilter>
                 </span>
                 <span className="filterOption">
-                    <DropDownFilter filterTitle={'assignee'} filterItems={imageTypeItems}>
+                    <DropDownFilter filterTitle={'author'} filterItems={imageTypeItems}>
                         작성자
                     </DropDownFilter>
                 </span>
