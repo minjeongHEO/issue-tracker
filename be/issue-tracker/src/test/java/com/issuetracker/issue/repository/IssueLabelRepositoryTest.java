@@ -23,8 +23,8 @@ class IssueLabelRepositoryTest {
 
     @Test
     void crud() {
-        issueLabelRepository.insert(1L, 4L);
-        issueLabelRepository.insert(1L, 7L);
+        issueLabelRepository.insert(new IssueLabel(1L, 4L));
+        issueLabelRepository.insert(new IssueLabel(1L, 7L));
 
         IssueLabel find = issueLabelRepository.findByIssueIdAndLabelId(1L, 4L).get();
 

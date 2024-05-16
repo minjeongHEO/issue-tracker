@@ -1,5 +1,6 @@
 package com.issuetracker.issue.repository;
 
+import com.issuetracker.global.repository.WithInsert;
 import com.issuetracker.issue.domain.IssueAssignee;
 import java.util.List;
 import java.util.Optional;
@@ -7,11 +8,7 @@ import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
 
-public interface IssueAssigneeRepository extends CrudRepository<IssueAssignee, Long> {
-    @Modifying
-    @Query("INSERT INTO issue_assignee (issue_id, member_id) VALUES (:issueId, :memberId)")
-    void insert(Long issueId, String memberId);
-
+public interface IssueAssigneeRepository extends CrudRepository<IssueAssignee, Long>, WithInsert<IssueAssignee> {
     Optional<IssueAssignee> findByIssueIdAndMemberId(Long issueId, String memberId);
 
     List<IssueAssignee> findAllByIssueId(Long issueId);

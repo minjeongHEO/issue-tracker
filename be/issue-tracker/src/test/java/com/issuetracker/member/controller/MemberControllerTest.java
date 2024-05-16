@@ -35,7 +35,7 @@ class MemberControllerTest {
     @Test
     void createMember() throws Exception {
         MemberCreateDto memberCreateDto = new MemberCreateDto("sangchu", "123", "상추", "sangchu@gmail.com");
-        Member member = new Member("sangchu", "123", "상추", "sangchu@gmail.com");
+        Member member = new Member("sangchu", "123", "상추", "sangchu@gmail.com", null);
         // Mock 서비스 레이어
         when(memberService.create(ArgumentMatchers.any(MemberCreateDto.class))).thenReturn(member);
 

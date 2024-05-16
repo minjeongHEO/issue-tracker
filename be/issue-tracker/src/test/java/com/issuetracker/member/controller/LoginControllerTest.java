@@ -40,7 +40,7 @@ class LoginControllerTest {
     @BeforeEach
     void setUp() {
         loginTryDto = new LoginTryDto("john.doe", "password123");
-        member = new Member("john.doe", "password123", "johnny", "john.doe@example.com");
+        member = new Member("john.doe", "password123", "johnny", "john.doe@example.com", null);
         loginMemberDto = new LoginMemberDto("john.doe", "johnny", "john.doe@example.com");
     }
 

@@ -33,7 +33,7 @@ class MemberServiceTest {
     void createMember() {
         // given
         MemberCreateDto memberCreateDto = new MemberCreateDto("sangchu", "123", "상추", "sangchu@gmail.com");
-        Member expectedMember = new Member("sangchu", "123", "상추", "sangchu@gmail.com");
+        Member expectedMember = new Member("sangchu", "123", "상추", "sangchu@gmail.com", null);
 
         when(memberRepository.existsById(anyString())).thenReturn(false);
         when(memberRepository.insert(any(Member.class))).thenReturn(expectedMember);

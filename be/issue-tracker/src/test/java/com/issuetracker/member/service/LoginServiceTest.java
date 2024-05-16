@@ -34,7 +34,7 @@ class LoginServiceTest {
         // Given
         String id = "john.doe";
         String password = "password123";
-        Member member = new Member(id, password, "johnny", "john.doe@example.com");
+        Member member = new Member(id, password, "johnny", "john.doe@example.com", null);
 
         // MemberRepository Mock 설정
         when(memberRepository.findById(id)).thenReturn(Optional.of(member));
@@ -74,7 +74,7 @@ class LoginServiceTest {
         String id = "john.doe";
         String correctPassword = "correct_password";
         String wrongPassword = "wrong_password";
-        Member member = new Member(id, correctPassword, "johnny", "john.doe@example.com");
+        Member member = new Member(id, correctPassword, "johnny", "john.doe@example.com", null);
 
         // MemberRepository Mock 설정 (올바른 ID로 멤버 반환)
         when(memberRepository.findById(id)).thenReturn(Optional.of(member));
