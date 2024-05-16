@@ -119,7 +119,7 @@ export default function Main() {
                     <NavBtnContainer>
                         <StyledBtn onClick={() => navigate('/labels')}>레이블()</StyledBtn>
                         <StyledBtn onClick={() => navigate('/milestones')}>마일스톤()</StyledBtn>
-                        <StyledBtn onClick={() => navigate('/issues')}>+ 이슈작성</StyledBtn>
+                        <StyledBtn onClick={() => navigate('/issues/new')}>+ 이슈작성</StyledBtn>
                     </NavBtnContainer>
                 </FlexRow>
 
@@ -259,7 +259,7 @@ const StyledBtn = styled(Button)`
 
 const MainContainer = styled.main`
     /* background-color: azure; */
-    height: 100%;
+    /* height: 100%; */
     width: 100%;
     min-width: 890px;
     padding-left: 85px;
