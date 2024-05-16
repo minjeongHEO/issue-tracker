@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @RequiredArgsConstructor
 public class FileService {
+    public static final int EXPIRATION_IN_MINUTES = 60;
     private final S3Manager s3Manager;
     private final FileManager fileManager;
     private final FileRepository fileRepository;
@@ -30,19 +31,17 @@ public class FileService {
         String uploadName = multipartFile.getOriginalFilename();
         String storeName = fileManager.toStoreName(uploadName);
 
-        String url = s3Manager.uploadToS3(multipartFile, storeName);
-
         File file = fileRepository.save(new File(uploadName, storeName));
-        UploadedFileDto uploadedFileDto = toUploadedFileDto(file, url);
+        s3Manager.uploadToS3(multipartFile, storeName);
+        log.info("새로운 파일이 저장되었습니다. {}", file);
 
-        log.info("새로운 파일이 저장되었습니다. {}", uploadedFileDto);
-        return uploadedFileDto;
+        return toUploadedFileDto(file, s3Manager.getResourceUrl(file.getStoreName(), EXPIRATION_IN_MINUTES));
     }
 
     @Transactional
     public UploadedFileDto showFile(Long id) {
         File file = getFileOrThrow(id);
-        String url = s3Manager.getResourceUrl(file.getStoreName());
+        String url = s3Manager.getResourceUrl(file.getStoreName(), EXPIRATION_IN_MINUTES);
         return toUploadedFileDto(file, url);
     }
 
@@ -65,7 +64,6 @@ public class FileService {
     }
 
     private UploadedFileDto toUploadedFileDto(File file, String url) {
-        return new UploadedFileDto(file.getId(), file.getUploadName(),
-                file.getStoreName(), url);
+        return new UploadedFileDto(file.getId(), file.getUploadName(), url);
     }
 }

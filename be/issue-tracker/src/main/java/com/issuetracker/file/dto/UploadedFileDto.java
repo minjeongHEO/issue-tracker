@@ -10,6 +10,5 @@ import lombok.ToString;
 public class UploadedFileDto {
     private final Long id;
     private final String uploadName;
-    private final String storeName;
     private final String url;
 }
