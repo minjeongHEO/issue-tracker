@@ -120,7 +120,9 @@ export default function Main() {
                     <NavBtnContainer>
                         <StyledBtn onClick={() => navigate('/labels')}>레이블()</StyledBtn>
                         <StyledBtn onClick={() => navigate('/milestones')}>마일스톤()</StyledBtn>
-                        <StyledBtn onClick={() => navigate('/issues/new')}>+ 이슈작성</StyledBtn>
+                        <StyledBtn onClick={() => navigate('/issues/new')} type="primary">
+                            + 이슈작성
+                        </StyledBtn>
                     </NavBtnContainer>
                 </FlexRow>
 
