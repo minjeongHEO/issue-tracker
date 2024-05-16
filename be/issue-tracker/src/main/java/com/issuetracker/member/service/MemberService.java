@@ -4,6 +4,7 @@ import com.issuetracker.file.dto.UploadedFileDto;
 import com.issuetracker.file.service.FileService;
 import com.issuetracker.member.dto.MemberCreateDto;
 import com.issuetracker.member.dto.SimpleMemberDto;
+import com.issuetracker.member.exception.MemberNotFoundException;
 import com.issuetracker.member.model.Member;
 import com.issuetracker.member.repository.MemberRepository;
 import java.util.ArrayList;
@@ -38,6 +39,17 @@ public class MemberService {
         List<Member> members = (List<Member>) memberRepository.findAll();
         List<SimpleMemberDto> simpleMembers = toSimpleMemberDtos(members);
         return Collections.unmodifiableList(simpleMembers);
+    }
+
+    @Transactional
+    public SimpleMemberDto getSimpleMemberDtoById(String id) {
+        Member member = getMemberOrThrow(id);
+        String imgUrl = getImgUrl(member);
+        return new SimpleMemberDto(id, imgUrl);
+    }
+
+    private Member getMemberOrThrow(String id) {
+        return memberRepository.findById(id).orElseThrow(MemberNotFoundException::new);
     }
 
     private Member toMember(MemberCreateDto memberCreateDto) {
