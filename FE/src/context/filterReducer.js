@@ -25,7 +25,7 @@ export const filterReducer = (state, action) => {
         case 'SET_CLEAR_FILTER': //필터 지우기
             return { ...initFilterState };
 
-        case 'SET_SELECTED_AUTHOR_FILTER': //담당자 필터
+        case 'SET_SELECTED_AUTHOR_FILTER': //작성자 필터
             return { ...state, author: action.payload };
 
         case 'SET_SELECTED_LABEL_FILTER': //레이블 필터
@@ -34,7 +34,7 @@ export const filterReducer = (state, action) => {
         case 'SET_SELECTED_MILESTONE_FILTER': //마일스톤 필터
             return { ...state, milestone: action.payload };
 
-        case 'SET_SELECTED_ASSIGNEE_FILTER': //작성자 필터
+        case 'SET_SELECTED_ASSIGNEE_FILTER': //담당자 필터
             return { ...state, assignee: action.payload };
 
         case 'SET_SELECTED_IS_OPEN_FILTER': //열린 이슈
