@@ -28,6 +28,7 @@ export default function DropDownFilter({ filterTitle, filterItems, dispatch, dis
 
     const dropBoxTitle = () => {
         if (filterTitle === 'issue') return '이슈 필터';
+        if (filterTitle === 'state') return '상태 변경';
         return `${children} 필터`;
     };
 
@@ -137,6 +138,7 @@ export default function DropDownFilter({ filterTitle, filterItems, dispatch, dis
         label: [titleItem, clearTypeItem, ...labelTypeItems()],
         milestone: [titleItem, clearTypeItem, ...defaultTypeItems()],
         assignee: [titleItem, clearTypeItem, ...imageTypeItems()],
+        state: [titleItem, , ...defaultTypeItems()],
     };
 
     const items = itemByType[filterTitle];

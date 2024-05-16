@@ -18,6 +18,8 @@ const imageTypeItems = [
 ];
 const milestoneTypeItems = [{ title: '⚙️ Etc' }, { title: '💄 Style' }, { title: '🧑🏻 User' }, { title: '🎯 Issue' }];
 
+const stateModifyFilters = [{ title: '선택한 이슈 열기' }, { title: '선택한 이슈 닫기' }];
+
 const mainIssueFilters = [
     { title: '열린 이슈', value: 'is:open' },
     { title: '내가 작성한 이슈', value: 'author:@me' },
@@ -137,7 +139,7 @@ export default function Main() {
                         <StyledHeaderContents>
                             🚧{checkedItems.length}개 이슈 수정
                             <span className="filterOption">
-                                <DropDownFilter filterTitle={'author'} filterItems={imageTypeItems} dispatch={dispatch}>
+                                <DropDownFilter filterTitle={'state'} filterItems={stateModifyFilters} dispatch={dispatch}>
                                     🚧상태 수정
                                 </DropDownFilter>
                             </span>
