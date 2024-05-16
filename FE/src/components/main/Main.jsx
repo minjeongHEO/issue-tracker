@@ -6,6 +6,8 @@ import IssueList from './IssueList';
 import DropDownFilter from './DropDownFilter';
 import { useFilterContext } from '../../context/FilterContext';
 import mockIssueList from '../../data/issueList.json';
+import { StyledHeaderContents } from '../../styles/theme';
+import NavStateType from './NavStateType';
 
 // TODO: fetch 데이터
 const labelTypeItems = [
@@ -136,14 +138,11 @@ export default function Main() {
                 <StyledBoxHeader>
                     <Checkbox onClick={() => toggleEntireCheckBox()} checked={checkedItems.length === mockIssueList.length} className="checkbox" />
                     {checkedItems.length > 0 ? (
-                        <StyledHeaderContents>
-                            🚧{checkedItems.length}개 이슈 수정
-                            <span className="filterOption">
-                                <DropDownFilter filterTitle={'state'} filterItems={stateModifyFilters} dispatch={dispatch}>
-                                    🚧상태 수정
-                                </DropDownFilter>
-                            </span>
-                        </StyledHeaderContents>
+                        <NavStateType
+                            checkedItemsCount={checkedItems.length}
+                            stateModifyFilters={stateModifyFilters}
+                            dispatch={dispatch}
+                        ></NavStateType>
                     ) : (
                         <StyledHeaderContents>
                             <div className="issue">
@@ -209,13 +208,13 @@ const StyledBoxBody = styled.div`
     /* background-color: skyblue; */
 `;
 
-const StyledHeaderContents = styled.div`
-    width: 95%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-`;
+// const StyledHeaderContents = styled.div`
+//     width: 95%;
+//     display: flex;
+//     flex-direction: row;
+//     justify-content: space-between;
+//     align-items: center;
+// `;
 
 const StyledBoxHeader = styled.div`
     background-color: ${(props) => props.theme.listHeaderColor};
@@ -237,14 +236,18 @@ const StyledBoxHeader = styled.div`
     }
 
     & .issue {
-        /* margin-right: 500px; */
         width: 200px;
-        /* flex-basis: 30%; */
+    }
+    & .issue.state {
+        width: 145px;
     }
     & .filter {
-        width: 360px;
-        /* flex-basis: 70%; */
+        width: 385px;
     }
+    & .filter.state {
+        width: 135px;
+    }
+
     & .issue .issueOption {
         margin-left: 10px;
     }

@@ -74,6 +74,8 @@ const ListBody = styled.div`
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    margin-left: 20px;
+
     :first-child {
         margin-bottom: 20px;
     }

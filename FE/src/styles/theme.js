@@ -65,6 +65,13 @@ export const DropTitle = styled.span`
     align-items: center;
 `;
 
+export const StyledHeaderContents = styled.div`
+    width: 95%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+`;
 ////////////////////
 
 const colorValue = {
