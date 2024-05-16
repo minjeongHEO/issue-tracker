@@ -1,10 +1,12 @@
 import { Checkbox } from 'antd';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 export default function IssueList({ isSingleChecked, setCheckedItems, listData }) {
     const { title, labels, id, createDate, memberId, milestoneName } = listData;
     const [pastTime, setPastTime] = useState('');
+    const navigate = useNavigate();
 
     const toggleCheckBox = () => {
         if (isSingleChecked) setCheckedItems((prev) => prev.filter((item) => item !== id));
@@ -41,7 +43,9 @@ export default function IssueList({ isSingleChecked, setCheckedItems, listData }
                 <Checkbox onClick={toggleCheckBox} checked={isSingleChecked} />
                 <ListBody>
                     <div>
-                        <span>! {title}</span>
+                        <span className="title" onClick={() => navigate(`/issues/${id}`)}>
+                            ! {title}
+                        </span>
                         {labels &&
                             labels.map(({ name, bgColor }) => (
                                 <StyledLabel key={name} style={{ backgroundColor: bgColor }}>
@@ -80,6 +84,10 @@ const ListBody = styled.div`
         margin-bottom: 20px;
     }
 
+    .title {
+        font-weight: bold;
+        cursor: pointer;
+    }
     & span {
         margin-left: 10px;
     }
