@@ -12,5 +12,4 @@ Web 용 react-router-dom을 React 애플리케이션 프로젝트에 설치해�
 
 ### Ant Design
 
-`$ npm i antd`
-`$ npm install antd --save`
+`$ npm install antd@latest`
