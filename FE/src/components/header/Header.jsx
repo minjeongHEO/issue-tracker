@@ -19,11 +19,12 @@ export default function Header() {
     return (
         <HeaderContainer>
             <StyledLogo>
-                <img src={isDarkMode ? DarkLogotypeMedium : LightLogotypeMedium} className="logo" alt="logo" />
+                <a href="/">
+                    <img src={isDarkMode ? DarkLogotypeMedium : LightLogotypeMedium} className="logo" alt="logo" />
+                </a>
             </StyledLogo>
             <StyledProfile>
                 <span>{userId} 님</span>
-                {/* <img src="https://avatars.githubusercontent.com/u/96780693?s=40" className="profile" alt="profile" /> */}
                 <img
                     src="https://github.com/codesquad-masters2024-team02/issue-tracker/assets/96780693/d1c7123b-89c9-485b-b9dd-8cc21a1005e0"
                     className="profile"
@@ -44,6 +45,7 @@ const HeaderContainer = styled.header`
 `;
 const StyledLogo = styled.span`
     margin-left: 85px;
+    cursor: pointer;
 `;
 const StyledProfile = styled.span`
     margin-right: 85px;
