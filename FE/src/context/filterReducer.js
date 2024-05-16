@@ -22,6 +22,9 @@ const resetIssues = {
 
 export const filterReducer = (state, action) => {
     switch (action.type) {
+        case 'SET_CLEAR_FILTER': //필터 지우기
+            return { ...initFilterState };
+
         case 'SET_SELECTED_AUTHOR_FILTER': //담당자 필터
             return { ...state, author: action.payload };
 

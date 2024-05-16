@@ -46,8 +46,18 @@ export default function Main() {
     const navigate = useNavigate();
     const { state: selectedFilters, dispatch } = useFilterContext();
     const [inputFilter, setInputFilter] = useState('');
-
+    const [isClearFilter, setIsClearFilter] = useState(false);
     const [checkedItems, setCheckedItems] = useState([]);
+
+    const clearFilter = () => {
+        dispatch({ type: 'SET_CLEAR_FILTER', payload: '' });
+    };
+
+    const isFilterActive = () => {
+        const selectedLists = filterSelectedLists(selectedFilters);
+        if (selectedLists.length === 2 && selectedLists.includes('is:open')) return false;
+        return true;
+    };
 
     const filterSelectedLists = (selectedFilters) => {
         const filters = ['is:issue'];
@@ -67,7 +77,7 @@ export default function Main() {
             .filter(([key, value]) => value !== null && key !== 'issues')
             .forEach(([key, value]) => filters.push(`${key}:"${value}"`));
 
-        return filters.join(' ');
+        return filters;
     };
 
     const dispatchIssue = ({ target }) => {
@@ -86,7 +96,8 @@ export default function Main() {
     };
 
     useEffect(() => {
-        setInputFilter(filterSelectedLists(selectedFilters));
+        setInputFilter(filterSelectedLists(selectedFilters).join(' '));
+        setIsClearFilter(isFilterActive());
     }, [selectedFilters]);
 
     return (
@@ -113,6 +124,10 @@ export default function Main() {
                         <StyledBtn onClick={() => navigate('/issues')}>+ 이슈작성</StyledBtn>
                     </NavBtnContainer>
                 </FlexRow>
+
+                <div className={`clearBtn ${isClearFilter ? 'visible' : 'hidden'}`} style={{ visibility: isClearFilter ? 'visible' : 'hidden' }}>
+                    <span onClick={clearFilter}>🧹 현재의 검색 필터 및 정렬 지우기</span>
+                </div>
             </StyledNav>
 
             <StyledBox>
@@ -304,7 +319,25 @@ const FlexRow = styled.div`
 
 const StyledNav = styled.nav`
     margin-top: 30px;
+
+    & .clearBtn {
+        text-align: left;
+        margin-top: 15px;
+        font-size: 12px;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+    & .clearBtn.visible {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    & .clearBtn span {
+        cursor: pointer;
+    }
 `;
+
 const NavBtnContainer = styled.div`
     width: 380px;
 `;
