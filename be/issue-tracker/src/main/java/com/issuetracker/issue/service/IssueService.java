@@ -32,21 +32,40 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class IssueService {
     private final IssueRepository issueRepository;
+    private final IssueAssigneeRepository issueAssigneeRepository;
     private final IssueLabelRepository issueLabelRepository;
     private final LabelRepository labelRepository;
     private final MilestoneService milestoneService;
     private final FileService fileService;
-    private final IssueAssigneeRepository issueAssigneeRepository;
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
     private final MemberService memberService;
 
+    /**
+     * 열린 이슈의 개수와 닫힌 이슈의 개수를 구한다.
+     */
     @Transactional(readOnly = true)
-    public IssueCountDto getIssueCountDto() {
+    public IssueCountDto countIssues() {
         long openedIssueCount = issueRepository.countAllByIsClosed(false);
         long closedIssueCount = issueRepository.countAllByIsClosed(true);
 
         return new IssueCountDto(openedIssueCount, closedIssueCount);
+    }
+
+    /**
+     * 특정 이슈에 있는 라벨들의 아이디 리스트를 반환한다.
+     */
+    @Transactional(readOnly = true)
+    public List<Long> findLabelIdsByIssueId(Long issueId) {
+        return issueLabelRepository.findAllByIssueId(issueId);
+    }
+
+    /**
+     * 특정 이슈를 담당하는 담당자들의 아이디 리스트를 반환한다.
+     */
+    @Transactional(readOnly = true)
+    public List<String> findAssigneeIdsByIssueId(Long issueId) {
+        return issueAssigneeRepository.findAssigneeIdsByIssueId(issueId);
     }
 
     @Transactional

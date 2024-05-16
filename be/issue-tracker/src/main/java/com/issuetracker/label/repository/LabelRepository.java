@@ -7,6 +7,6 @@ import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
 
 public interface LabelRepository extends CrudRepository<Label, Long> {
-    @Query("SELECT name, background_color FROM label WHERE id IN (:labelIds)")
-    List<LabelCoverDto> findLabelCoverDtoById(Iterable<Long> labelIds);
+    @Query("SELECT name, background_color FROM label WHERE id IN (:ids)")
+    List<LabelCoverDto> findLabelCoverDtoByIds(List<Long> ids);
 }

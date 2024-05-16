@@ -1,6 +1,7 @@
 package com.issuetracker.label.service;
 
 import com.issuetracker.label.domain.Label;
+import com.issuetracker.label.dto.LabelCoverDto;
 import com.issuetracker.label.dto.LabelDto;
 import com.issuetracker.label.exception.InvalidBgColorException;
 import com.issuetracker.label.exception.LabelNotFoundException;
@@ -73,6 +74,13 @@ public class LabelService {
     public long countLabels() {
         List<Label> labels = (List<Label>) labelRepository.findAll();
         return labels.size();
+    }
+
+    /**
+     * 매개변수로 넘어온 레이블 아이디 리스트에 포함되는 레이블들의 이름과 배경색을 반환한다.
+     */
+    public List<LabelCoverDto> findLabelCoverDtoByIds(List<Long> ids) {
+        return labelRepository.findLabelCoverDtoByIds(ids);
     }
 
     private void validateLabelExists(Long id) {
