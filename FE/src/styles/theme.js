@@ -72,6 +72,13 @@ export const StyledHeaderContents = styled.div`
     justify-content: space-between;
     align-items: center;
 `;
+
+export const IndexContainer = styled.div`
+    height: 100vh;
+    width: 100vw;
+    min-width: 890px;
+    min-height: 890px;
+`;
 ////////////////////
 
 const colorValue = {
