@@ -4,9 +4,30 @@ import { Dropdown, Menu, message, Radio, Space } from 'antd';
 import styled from 'styled-components';
 import { DropTitle } from '../../styles/theme.js';
 import DropDownTitle from './DropDownTitle';
+import { useFilterContext } from '../../context/FilterContext.jsx';
 
-export default function DropDownFilter({ filterTitle, filterItems, dispatch, dispatchTypeByFilterContents, children }) {
+export default function DropDownFilter({ filterTitle, filterItems, dispatchTypeByFilterContents, children }) {
     const [selectedKey, setSelectedKey] = useState(null);
+    const { state: selectedFilters, dispatch } = useFilterContext();
+
+    const isResetFilters = (selectedFilters) => {
+        if (!selectedFilters || Object.keys(selectedFilters).length === 0) return;
+
+        const issues = selectedFilters.issues || {};
+        const isResetIssueFilters = Object.entries(issues)
+            .filter(([key, value]) => key !== 'isOpen' || key !== 'isClosed')
+            .every(([key, value]) => value === null);
+
+        const isResetRestFilters = Object.entries(selectedFilters)
+            .filter(([key, value]) => key !== 'issues')
+            .every(([key, value]) => value === null);
+
+        return isResetIssueFilters && isResetRestFilters;
+    };
+
+    useEffect(() => {
+        if (isResetFilters(selectedFilters)) setSelectedKey(null);
+    }, [selectedFilters]);
 
     const dispatchTypeByFilter = {
         author: 'SET_SELECTED_AUTHOR_FILTER',
