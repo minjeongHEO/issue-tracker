@@ -26,7 +26,7 @@ public class IssueFilterQueryGenerator {
         appendLabelFilter(sql, params, issueQueryDto.getLabelId());
         appendMilestoneFilter(sql, params, issueQueryDto.getMilestoneId());
 
-        sql.append("ORDER BY i.create_date DESC"); // 최신순으로 정렬
+        sql.append("ORDER BY i.create_date DESC, i.id DESC;"); // 최신순으로 정렬.
 
         result.put("params", params.toArray());
         result.put("sql", sql.toString());
