@@ -23,15 +23,15 @@ class IssueLabelRepositoryTest {
 
     @Test
     void crud() {
-        issueLabelRepository.insert(1L, 4L);
-        issueLabelRepository.insert(1L, 7L);
+        issueLabelRepository.insert(new IssueLabel(1L, 4L));
+        issueLabelRepository.insert(new IssueLabel(1L, 7L));
 
         IssueLabel find = issueLabelRepository.findByIssueIdAndLabelId(1L, 4L).get();
 
         assertThat(find.getIssueId()).isEqualTo(1L);
         assertThat(find.getLabelId()).isEqualTo(4L);
 
-        List<Long> allByIssueId = issueLabelRepository.findLabelIdsByIssueId(1L);
+        List<Long> allByIssueId = issueLabelRepository.findAllByIssueId(1L);
 
         assertThat(allByIssueId.size()).isEqualTo(2);
         assertThat(allByIssueId.get(0)).isEqualTo(4L);

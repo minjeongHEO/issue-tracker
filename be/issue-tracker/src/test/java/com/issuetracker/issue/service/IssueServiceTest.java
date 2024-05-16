@@ -33,7 +33,7 @@ public class IssueServiceTest {
         when(issueRepository.countAllByIsClosed(false)).thenReturn(openedIssueCount);
         when(issueRepository.countAllByIsClosed(true)).thenReturn(closedIssueCount);
 
-        IssueCountDto issueCountDto = issueService.getIssueCountDto();
+        IssueCountDto issueCountDto = issueService.countIssues();
 
         assertThat(issueCountDto.getOpenedIssueCount()).isEqualTo(openedIssueCount);
         assertThat(issueCountDto.getClosedIssueCount()).isEqualTo(closedIssueCount);

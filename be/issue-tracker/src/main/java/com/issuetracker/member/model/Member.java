@@ -16,11 +16,8 @@ public class Member {
     private final String password;
     private final String nickname;
     private final String email;
-
-    public boolean hasSameId(String id) {
-        return this.id.equals(id);
-    }
-
+    private final Long fileId;
+    
     public boolean hasSamePassword(String password) {
         return this.password.equals(password);
     }
