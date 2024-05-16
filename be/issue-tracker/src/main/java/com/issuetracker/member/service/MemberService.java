@@ -1,8 +1,14 @@
 package com.issuetracker.member.service;
 
+import com.issuetracker.file.dto.UploadedFileDto;
+import com.issuetracker.file.service.FileService;
 import com.issuetracker.member.dto.MemberCreateDto;
+import com.issuetracker.member.dto.SimpleMemberDto;
 import com.issuetracker.member.model.Member;
 import com.issuetracker.member.repository.MemberRepository;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final FileService fileService;
 
     /**
      * 멤버의 아이디가 중복이 아니라면 새로운 멤버를 생성한다.
@@ -26,8 +33,32 @@ public class MemberService {
         return created;
     }
 
+    @Transactional
+    public List<SimpleMemberDto> getMembers() {
+        List<Member> members = (List<Member>) memberRepository.findAll();
+        List<SimpleMemberDto> simpleMembers = toSimpleMemberDtos(members);
+        return Collections.unmodifiableList(simpleMembers);
+    }
+
     private Member toMember(MemberCreateDto memberCreateDto) {
         return new Member(memberCreateDto.getId(), memberCreateDto.getPassword(),
-                memberCreateDto.getNickname(), memberCreateDto.getEmail());
+                memberCreateDto.getNickname(), memberCreateDto.getEmail(), null);
+    }
+
+    private List<SimpleMemberDto> toSimpleMemberDtos(List<Member> members) {
+        List<SimpleMemberDto> simpleMemberDtos = new ArrayList<>();
+        for (Member member : members) {
+            String imgUrl = getImgUrl(member);
+            simpleMemberDtos.add(new SimpleMemberDto(member.getId(), imgUrl));
+        }
+        return simpleMemberDtos;
+    }
+
+    private String getImgUrl(Member member) {
+        if (member.getFileId() == null) {
+            return null;
+        }
+        UploadedFileDto uploadedFileDto = fileService.showFile(member.getFileId());
+        return uploadedFileDto.getUrl();
     }
 }

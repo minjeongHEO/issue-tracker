@@ -70,6 +70,7 @@ public class MilestoneService {
     @Transactional(readOnly = true)
     public MilestoneListDto showMilestoneList(boolean isClosed) {
         List<Milestone> milestones = milestoneRepository.findAllByIsClosed(isClosed);
+
         List<MilestoneDetailDto> milestoneDetailDtos = toMilestoneDetailDtos(milestones);
         return new MilestoneListDto(milestoneDetailDtos);
     }
@@ -106,6 +107,7 @@ public class MilestoneService {
                 .dueDate(milestone.getDueDate())
                 .openIssueCount(openIssueCount)
                 .closedIssueCount(closedIssueCount)
+                .isClosed(milestone.isClosed())
                 .build();
     }
 
