@@ -15,8 +15,8 @@ public class IssueController {
     private final IssueService issueService;
 
     @GetMapping("/count")
-    public ResponseEntity<IssueCountDto> getCounts() {
-        IssueCountDto issueCountDto = issueService.getIssueCountDto();
+    public ResponseEntity<IssueCountDto> countIssues() {
+        IssueCountDto issueCountDto = issueService.countIssues();
         return ResponseEntity.ok().body(issueCountDto);
     }
 }

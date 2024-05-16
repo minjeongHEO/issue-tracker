@@ -22,7 +22,7 @@ public class IssueService {
      * 열린 이슈의 개수와 닫힌 이슈의 개수를 구한다.
      */
     @Transactional(readOnly = true)
-    public IssueCountDto getIssueCountDto() {
+    public IssueCountDto countIssues() {
         long openedIssueCount = issueRepository.countAllByIsClosed(false);
         long closedIssueCount = issueRepository.countAllByIsClosed(true);
 
