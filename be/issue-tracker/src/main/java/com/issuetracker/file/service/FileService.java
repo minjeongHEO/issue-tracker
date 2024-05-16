@@ -38,7 +38,7 @@ public class FileService {
         return toUploadedFileDto(file, s3Manager.getResourceUrl(file.getStoreName(), EXPIRATION_IN_MINUTES));
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public UploadedFileDto showFile(Long id) {
         File file = getFileOrThrow(id);
         String url = s3Manager.getResourceUrl(file.getStoreName(), EXPIRATION_IN_MINUTES);
@@ -51,6 +51,12 @@ public class FileService {
         fileRepository.deleteById(id);
         s3Manager.deleteFile(file.getStoreName());
         log.info("파일이 삭제되었습니다. {}", file);
+    }
+
+    @Transactional(readOnly = true)
+    public String getImgUrlById(Long id) {
+        File file = getFileOrThrow(id);
+        return s3Manager.getResourceUrl(file.getStoreName(), EXPIRATION_IN_MINUTES);
     }
 
     private File getFileOrThrow(Long id) {

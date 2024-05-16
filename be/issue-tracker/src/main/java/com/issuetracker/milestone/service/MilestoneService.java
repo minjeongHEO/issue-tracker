@@ -7,6 +7,7 @@ import com.issuetracker.milestone.dto.MilestoneCountDto;
 import com.issuetracker.milestone.dto.MilestoneCreateDto;
 import com.issuetracker.milestone.dto.MilestoneDetailDto;
 import com.issuetracker.milestone.dto.MilestoneListDto;
+import com.issuetracker.milestone.dto.SimpleMilestoneDto;
 import com.issuetracker.milestone.exception.MilestoneNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -82,6 +83,14 @@ public class MilestoneService {
         Long closedIssueCount = issueRepository.countByMilestoneIdAndIsClosed(id, true);
 
         return toMilestoneDetailDto(milestone, openIssueCount, closedIssueCount);
+    }
+
+    @Transactional
+    public SimpleMilestoneDto showSimpleMilestone(Long id) {
+        Milestone milestone = getMilestone(id);
+        Long openIssueCount = issueRepository.countByMilestoneIdAndIsClosed(id, false);
+        Long closedIssueCount = issueRepository.countByMilestoneIdAndIsClosed(id, true);
+        return new SimpleMilestoneDto(milestone.getId(), milestone.getName(), openIssueCount, closedIssueCount);
     }
 
     private List<MilestoneDetailDto> toMilestoneDetailDtos(List<Milestone> milestones) {
