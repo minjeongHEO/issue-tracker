@@ -2,16 +2,15 @@ package com.issuetracker.global.exception;
 
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 
 @Getter
 public class CustomException extends RuntimeException {
     private final String errorCode;
-    private final HttpStatusCode httpStatusCode;
+    private final HttpStatus httpStatus;
 
-    public CustomException(String message, String errorCode, HttpStatus httpStatusCode) {
+    public CustomException(String message, String errorCode, HttpStatus httpStatus) {
         super(message);
         this.errorCode = errorCode;
-        this.httpStatusCode = httpStatusCode;
+        this.httpStatus = httpStatus;
     }
 }
