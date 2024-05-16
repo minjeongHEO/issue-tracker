@@ -118,46 +118,57 @@ export default function Main() {
             <StyledBox>
                 <StyledBoxHeader>
                     <Checkbox onClick={() => toggleEntireCheckBox()} checked={checkedItems.length === mockIssueList.length} className="checkbox" />
-                    <StyledHeaderContents>
-                        <div className="issue">
-                            <span
-                                className={`issueOption click ${selectedFilters.issues.isClosed ? '' : `checked`}`}
-                                attr-key="is:open"
-                                onClick={dispatchIssue}
-                            >
-                                열린 이슈()
-                            </span>
-                            <span
-                                className={`issueOption click ${selectedFilters.issues.isClosed ? `checked` : ''}`}
-                                attr-key="is:closed"
-                                onClick={dispatchIssue}
-                            >
-                                닫힌 이슈()
-                            </span>
-                        </div>
-                        <div className="filter">
+                    {checkedItems.length > 0 ? (
+                        <StyledHeaderContents>
+                            🚧{checkedItems.length}개 이슈 수정
                             <span className="filterOption">
                                 <DropDownFilter filterTitle={'author'} filterItems={imageTypeItems} dispatch={dispatch}>
-                                    담당자
+                                    🚧상태 수정
                                 </DropDownFilter>
                             </span>
-                            <span className="filterOption">
-                                <DropDownFilter filterTitle={'label'} filterItems={labelTypeItems} dispatch={dispatch}>
-                                    레이블
-                                </DropDownFilter>
-                            </span>
-                            <span className="filterOption">
-                                <DropDownFilter filterTitle={'milestone'} filterItems={milestoneTypeItems} dispatch={dispatch}>
-                                    마일스톤
-                                </DropDownFilter>
-                            </span>
-                            <span className="filterOption">
-                                <DropDownFilter filterTitle={'assignee'} filterItems={imageTypeItems} dispatch={dispatch}>
-                                    작성자
-                                </DropDownFilter>
-                            </span>
-                        </div>
-                    </StyledHeaderContents>
+                        </StyledHeaderContents>
+                    ) : (
+                        <StyledHeaderContents>
+                            <div className="issue">
+                                <span
+                                    className={`issueOption click ${selectedFilters.issues.isClosed ? '' : `checked`}`}
+                                    attr-key="is:open"
+                                    onClick={dispatchIssue}
+                                >
+                                    열린 이슈()
+                                </span>
+                                <span
+                                    className={`issueOption click ${selectedFilters.issues.isClosed ? `checked` : ''}`}
+                                    attr-key="is:closed"
+                                    onClick={dispatchIssue}
+                                >
+                                    닫힌 이슈()
+                                </span>
+                            </div>
+                            <div className="filter">
+                                <span className="filterOption">
+                                    <DropDownFilter filterTitle={'author'} filterItems={imageTypeItems} dispatch={dispatch}>
+                                        담당자
+                                    </DropDownFilter>
+                                </span>
+                                <span className="filterOption">
+                                    <DropDownFilter filterTitle={'label'} filterItems={labelTypeItems} dispatch={dispatch}>
+                                        레이블
+                                    </DropDownFilter>
+                                </span>
+                                <span className="filterOption">
+                                    <DropDownFilter filterTitle={'milestone'} filterItems={milestoneTypeItems} dispatch={dispatch}>
+                                        마일스톤
+                                    </DropDownFilter>
+                                </span>
+                                <span className="filterOption">
+                                    <DropDownFilter filterTitle={'assignee'} filterItems={imageTypeItems} dispatch={dispatch}>
+                                        작성자
+                                    </DropDownFilter>
+                                </span>
+                            </div>
+                        </StyledHeaderContents>
+                    )}
                 </StyledBoxHeader>
 
                 <StyledBoxBody>
@@ -274,7 +285,7 @@ const StyledBtn = styled(Button)`
 
 const MainContainer = styled.main`
     /* background-color: azure; */
-    height: 90%;
+    height: 100%;
     width: 100%;
     min-width: 890px;
     padding-left: 85px;
