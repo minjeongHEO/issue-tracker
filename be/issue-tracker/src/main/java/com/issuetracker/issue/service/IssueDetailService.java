@@ -6,12 +6,8 @@ import com.issuetracker.comment.service.CommentService;
 import com.issuetracker.file.dto.UploadedFileDto;
 import com.issuetracker.file.service.FileService;
 import com.issuetracker.issue.domain.Issue;
-import com.issuetracker.issue.dto.IssueCountDto;
 import com.issuetracker.issue.dto.IssueDetailDto;
 import com.issuetracker.issue.exception.IssueNotFoundException;
-import com.issuetracker.issue.repository.IssueAssigneeRepository;
-import com.issuetracker.issue.repository.IssueLabelRepository;
-import com.issuetracker.issue.repository.IssueRepository;
 import com.issuetracker.label.domain.Label;
 import com.issuetracker.label.service.LabelService;
 import com.issuetracker.member.dto.SimpleMemberDto;
@@ -29,42 +25,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class IssueService {
-    private final IssueRepository issueRepository;
-    private final IssueAssigneeRepository issueAssigneeRepository;
-    private final IssueLabelRepository issueLabelRepository;
+public class IssueDetailService {
+    private final IssueQueryService issueQueryService;
     private final LabelService labelService;
     private final MilestoneService milestoneService;
     private final FileService fileService;
     private final CommentService commentService;
     private final MemberService memberService;
-
-    /**
-     * 열린 이슈의 개수와 닫힌 이슈의 개수를 구한다.
-     */
-    @Transactional(readOnly = true)
-    public IssueCountDto countIssues() {
-        long openedIssueCount = issueRepository.countAllByIsClosed(false);
-        long closedIssueCount = issueRepository.countAllByIsClosed(true);
-
-        return new IssueCountDto(openedIssueCount, closedIssueCount);
-    }
-
-    /**
-     * 특정 이슈에 있는 라벨들의 아이디 리스트를 반환한다.
-     */
-    @Transactional(readOnly = true)
-    public List<Long> findLabelIdsByIssueId(Long issueId) {
-        return issueLabelRepository.findAllByIssueId(issueId);
-    }
-
-    /**
-     * 특정 이슈를 담당하는 담당자들의 아이디 리스트를 반환한다.
-     */
-    @Transactional(readOnly = true)
-    public List<String> findAssigneeIdsByIssueId(Long issueId) {
-        return issueAssigneeRepository.findAssigneeIdsByIssueId(issueId);
-    }
 
     @Transactional
     public IssueDetailDto showIssue(Long id) {
@@ -131,12 +98,12 @@ public class IssueService {
     }
 
     private List<Label> getIssueLabels(Long id) {
-        List<Long> issueLabelIds = issueLabelRepository.findAllByIssueId(id);
+        List<Long> issueLabelIds = issueQueryService.findLabelIdsByIssueId(id);
         return labelService.findLabelsByIds(issueLabelIds);
     }
 
     private List<SimpleMemberDto> getIssueAssignees(Long id) {
-        List<String> issueAssigneeIds = issueAssigneeRepository.findAllByIssueId(id);
+        List<String> issueAssigneeIds = issueQueryService.findAssigneeIdsByIssueId(id);
         List<Member> members = memberService.findMembersById(issueAssigneeIds);
         return members.stream()
                 .map(member -> new SimpleMemberDto(member.getId(), fileService.getImgUrlById(member.getFileId())))
@@ -144,7 +111,7 @@ public class IssueService {
     }
 
     private Issue getIssue(Long id) {
-        return issueRepository.findById(id).orElseThrow(IssueNotFoundException::new);
+        return issueQueryService.getIssueOrThrow(id);
     }
 
     private IssueDetailDto toIssueDetailDto(Issue issue, SimpleMemberDto writer, SimpleMilestoneDto milestone,

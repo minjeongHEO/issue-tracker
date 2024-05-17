@@ -1,11 +1,10 @@
-package com.issuetracker.global.service;
+package com.issuetracker.issue.service;
 
 import com.issuetracker.global.utils.IssueFilterQueryGenerator;
 import com.issuetracker.issue.dto.IssueFilterDto;
 import com.issuetracker.issue.dto.IssueFilterResponseDto;
 import com.issuetracker.issue.dto.IssueQueryDto;
 import com.issuetracker.issue.repository.IssueCustomRepository;
-import com.issuetracker.issue.service.IssueService;
 import com.issuetracker.label.dto.LabelCoverDto;
 import com.issuetracker.label.service.LabelService;
 import java.util.List;
@@ -19,8 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class HomeService {
-    private final IssueService issueService;
+public class IssueFilterService {
+    private final IssueQueryService issueQueryService;
     private final LabelService labelService;
     private final IssueCustomRepository issueCustomRepository;
 
@@ -42,7 +41,7 @@ public class HomeService {
                 .title(filterDto.getTitle())
                 .authorId(filterDto.getAuthorId())
                 .createDate(filterDto.getCreateDate())
-                .assigneeIds(issueService.findAssigneeIdsByIssueId(filterId))
+                .assigneeIds(issueQueryService.findAssigneeIdsByIssueId(filterId))
                 .labels(getLabels(filterId))
                 .milestoneName(filterDto.getMilestoneName())
                 .build();
@@ -54,7 +53,7 @@ public class HomeService {
     }
 
     private List<LabelCoverDto> getLabels(Long filterId) {
-        List<Long> labelIds = issueService.findLabelIdsByIssueId(filterId);
+        List<Long> labelIds = issueQueryService.findLabelIdsByIssueId(filterId);
         if (!labelIds.isEmpty()) {
             return labelService.findLabelCoverDtoByIds(labelIds);
         }

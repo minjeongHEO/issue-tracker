@@ -80,7 +80,7 @@ class LabelControllerTest {
         // 유효하지 않은 색상 코드로 배경 색 설정
         LabelDto labelDto = new LabelDto("버그", null, "#12");
 
-        given(labelService.createLabel(any(LabelDto.class))).willThrow(InvalidBgColorException.class);
+        given(labelService.createLabel(any(LabelDto.class))).willThrow(new InvalidBgColorException());
 
         mockMvc.perform(post("/api/labels")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -139,7 +139,7 @@ class LabelControllerTest {
         // 유효하지 않은 색상 코드로 배경 색 설정
         LabelDto labelDto = new LabelDto("버그", null, "#12");
 
-        given(labelService.modifyLabel(any(LabelDto.class), anyLong())).willThrow(InvalidBgColorException.class);
+        given(labelService.modifyLabel(any(LabelDto.class), anyLong())).willThrow(new InvalidBgColorException());
 
         mockMvc.perform(put("/api/labels/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -175,7 +175,7 @@ class LabelControllerTest {
     @Test
     public void deleteLabels_WithNonExistedName() throws Exception {
         given(labelService.deleteLabel(anyLong()))
-                .willThrow(LabelNotFoundException.class);
+                .willThrow(new LabelNotFoundException());
 
         mockMvc.perform(delete("/api/labels/{id}", 10000L))
                 .andExpect(status().isNotFound()); // NOT FOUND(404) 상태 코드를 기대한다.

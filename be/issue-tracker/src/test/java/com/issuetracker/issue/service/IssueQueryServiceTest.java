@@ -12,11 +12,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-public class IssueServiceTest {
+public class IssueQueryServiceTest {
     @Mock
     private IssueRepository issueRepository;
     @InjectMocks
-    private IssueService issueService;
+    private IssueQueryService issueQueryService;
 
     @BeforeEach
     public void setUp() {
@@ -33,7 +33,7 @@ public class IssueServiceTest {
         when(issueRepository.countAllByIsClosed(false)).thenReturn(openedIssueCount);
         when(issueRepository.countAllByIsClosed(true)).thenReturn(closedIssueCount);
 
-        IssueCountDto issueCountDto = issueService.countIssues();
+        IssueCountDto issueCountDto = issueQueryService.countIssues();
 
         assertThat(issueCountDto.getOpenedIssueCount()).isEqualTo(openedIssueCount);
         assertThat(issueCountDto.getClosedIssueCount()).isEqualTo(closedIssueCount);
