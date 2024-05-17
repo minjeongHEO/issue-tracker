@@ -23,8 +23,7 @@ public class HomeController {
     @GetMapping("/issues")
     public ResponseEntity<HomeResponseDto> getFilteredIssues(@ModelAttribute IssueQueryDto issueQueryDto) {
         List<IssueFilterResponseDto> issueFilterResponses = issueFilterService.getFilteredIssues(issueQueryDto);
-        HomeResponseDto homeResponseDto = new HomeResponseDto(issueQueryService.countIssues(),
-                issueFilterResponses);
+        HomeResponseDto homeResponseDto = new HomeResponseDto(issueQueryService.countIssues(), issueFilterResponses);
         return ResponseEntity.ok().body(homeResponseDto);
     }
 }

@@ -18,4 +18,7 @@ public interface MilestoneRepository extends CrudRepository<Milestone, Long> {
     void openById(Long id);
 
     List<Milestone> findAllByIsClosed(boolean isClosed);
+
+    @Query("SELECT id FROM milestone WHERE name = :name")
+    Long findIdByName(String name);
 }

@@ -7,7 +7,15 @@ import java.util.List;
 import java.util.Map;
 
 public class IssueFilterQueryGenerator {
-    public static Map<String, Object> generate(IssueQueryDto issueQueryDto) {
+    private final IssueQueryDto issueQueryDto;
+    private final List<String> noValues;
+
+    public IssueFilterQueryGenerator(IssueQueryDto issueQueryDto) {
+        this.issueQueryDto = issueQueryDto;
+        this.noValues = issueQueryDto.getNoValues();
+    }
+
+    public Map<String, Object> generate(Long labelId, Long milestoneId) {
         Map<String, Object> result = new HashMap<>();
         StringBuilder sql = new StringBuilder("SELECT i.id, i.title, i.member_id, i.create_date, m.name " +
                 "FROM issue i " +
@@ -23,8 +31,8 @@ public class IssueFilterQueryGenerator {
         appendAuthorFilter(sql, params, issueQueryDto.getAuthorId());
         appendAssigneeFilter(sql, params, issueQueryDto.getAssigneeId());
         appendMentionedFilter(sql, params, issueQueryDto.getMentionedId());
-        appendLabelFilter(sql, params, issueQueryDto.getLabelId());
-        appendMilestoneFilter(sql, params, issueQueryDto.getMilestoneId());
+        appendLabelFilter(sql, params, labelId);
+        appendMilestoneFilter(sql, params, milestoneId);
 
         sql.append("ORDER BY i.create_date DESC, i.id DESC;"); // 최신순으로 정렬.
 
@@ -33,50 +41,47 @@ public class IssueFilterQueryGenerator {
         return result;
     }
 
-    private static void appendAuthorFilter(StringBuilder sql, List<Object> params, String authorId) {
+    private void appendAuthorFilter(StringBuilder sql, List<Object> params, String authorId) {
         if (authorId != null) { // 작성자 필터 조건이 있다면
             sql.append("AND i.member_id = ? ");
             params.add(authorId);
         }
     }
 
-    private static void appendAssigneeFilter(StringBuilder sql, List<Object> params, String assigneeId) {
+    private void appendAssigneeFilter(StringBuilder sql, List<Object> params, String assigneeId) {
         if (assigneeId != null) { // 담당자 필터 조건이 있다면
-            if (assigneeId.equals("-1")) { // 담당자가 없는 필터 조건
-                sql.append("AND ia.member_id IS NULL ");
-            } else { // 특정 담당자 필터 조건
-                sql.append("AND ia.member_id = ? ");
-                params.add(assigneeId);
-            }
+            sql.append("AND ia.member_id = ? ");
+            params.add(assigneeId);
+        }
+        if (noValues.contains("assignee")) { // 담당자가 없는 필터 조건
+            sql.append("AND ia.member_id IS NULL ");
         }
     }
 
-    private static void appendMentionedFilter(StringBuilder sql, List<Object> params, String mentionedId) {
+    private void appendMentionedFilter(StringBuilder sql, List<Object> params, String mentionedId) {
         if (mentionedId != null) { // 댓글을 작성한 사용자 필터 조건이 있다면
             sql.append("AND c.member_id = ? ");
             params.add(mentionedId);
         }
     }
 
-    private static void appendLabelFilter(StringBuilder sql, List<Object> params, Long labelId) {
+    private void appendLabelFilter(StringBuilder sql, List<Object> params, Long labelId) {
         if (labelId != null) { // 라벨 필터 조건이 있다면
-            if (labelId == -1L) { // 라벨이 없는 필터 조건
-                sql.append("AND il.label_id IS NULL ");
-            } else { // 특정 라벨 필터 조건
-                sql.append("AND il.label_id = ? ");
-                params.add(labelId);
-            }
+            sql.append("AND il.label_id = ? ");
+            params.add(labelId);
+        }
+        if (noValues.contains("label")) { // 라벨이 없는 필터 조건
+            sql.append("AND il.label_id IS NULL ");
         }
     }
 
-    private static void appendMilestoneFilter(StringBuilder sql, List<Object> params, Long milestoneId) {
+    private void appendMilestoneFilter(StringBuilder sql, List<Object> params, Long milestoneId) {
         if (milestoneId != null) { // 마일스톤 필터 조건이 있다면
-            if (milestoneId == -1L) { // 마일스톤이 없는 필터 조건
-                sql.append("AND i.milestone_id IS NULL ");
-            } else { // 특정 마일스톤 필터 조건
-                sql.append("AND i.milestone_id = ? ");
-                params.add(milestoneId);
-            }
+            sql.append("AND i.milestone_id = ? ");
+            params.add(milestoneId);
+        }
+        if (noValues.contains("milestone")) {  // 마일스톤이 없는 필터 조건
+            sql.append("AND i.milestone_id IS NULL ");
         }
     }
 }

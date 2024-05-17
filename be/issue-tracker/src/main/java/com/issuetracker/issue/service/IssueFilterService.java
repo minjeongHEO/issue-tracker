@@ -7,7 +7,9 @@ import com.issuetracker.issue.dto.IssueQueryDto;
 import com.issuetracker.issue.repository.IssueCustomRepository;
 import com.issuetracker.label.dto.LabelCoverDto;
 import com.issuetracker.label.service.LabelService;
+import com.issuetracker.milestone.service.MilestoneService;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class IssueFilterService {
     private final IssueQueryService issueQueryService;
     private final LabelService labelService;
+    private final MilestoneService milestoneService;
     private final IssueCustomRepository issueCustomRepository;
 
     /**
@@ -48,8 +51,13 @@ public class IssueFilterService {
     }
 
     private Set<IssueFilterDto> findIssueWithFilter(IssueQueryDto issueQueryDto) {
-        return issueCustomRepository.findIssueWithFilter(
-                IssueFilterQueryGenerator.generate(issueQueryDto), issueQueryDto);
+        Long labelId = labelService.findIdByName(issueQueryDto.getLabelName());
+        Long milestoneId = milestoneService.findIdByName(issueQueryDto.getMilestoneName());
+
+        // 사용자가 전달한 필터 조건으로 쿼리와 파라미터를 동적으로 생성
+        IssueFilterQueryGenerator filterQueryGenerator = new IssueFilterQueryGenerator(issueQueryDto);
+        Map<String, Object> filter = filterQueryGenerator.generate(labelId, milestoneId);
+        return issueCustomRepository.findIssueWithFilter(filter, issueQueryDto);
     }
 
     private List<LabelCoverDto> getLabels(Long filterId) {

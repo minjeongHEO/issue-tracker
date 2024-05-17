@@ -79,12 +79,19 @@ public class LabelService {
     /**
      * 매개변수로 넘어온 레이블 아이디 리스트에 포함되는 레이블들의 이름과 배경색을 반환한다.
      */
+    @Transactional(readOnly = true)
     public List<LabelCoverDto> findLabelCoverDtoByIds(List<Long> ids) {
         return labelRepository.findLabelCoverDtoByIds(ids);
     }
 
+    @Transactional(readOnly = true)
     public List<Label> findLabelsByIds(List<Long> issueLabelIds) {
         return (List<Label>) labelRepository.findAllById(issueLabelIds);
+    }
+
+    @Transactional(readOnly = true)
+    public Long findIdByName(String name) {
+        return labelRepository.findIdByName(name);
     }
 
     private void validateLabelExists(Long id) {

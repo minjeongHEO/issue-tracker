@@ -93,6 +93,11 @@ public class MilestoneService {
         return new SimpleMilestoneDto(milestone.getId(), milestone.getName(), openIssueCount, closedIssueCount);
     }
 
+    @Transactional(readOnly = true)
+    public Long findIdByName(String name) {
+        return milestoneRepository.findIdByName(name);
+    }
+
     private List<MilestoneDetailDto> toMilestoneDetailDtos(List<Milestone> milestones) {
         List<MilestoneDetailDto> milestoneDetailDtos = new ArrayList<>();
         for (Milestone milestone : milestones) {
