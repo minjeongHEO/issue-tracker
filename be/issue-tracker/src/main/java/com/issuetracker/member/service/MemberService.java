@@ -10,6 +10,7 @@ import com.issuetracker.member.repository.MemberRepository;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -50,6 +51,17 @@ public class MemberService {
 
     public List<Member> findMembersById(List<String> issueAssigneeIds) {
         return (List<Member>) memberRepository.findAllById(issueAssigneeIds);
+    }
+
+    @Transactional(readOnly = true)
+    public List<SimpleMemberDto> findSimpleMembers(List<String> assigneeIds) {
+        return assigneeIds.stream()
+                .map(assigneeId -> {
+                    Long fileId = memberRepository.findFileIdById(assigneeId);
+                    String imgUrl = fileService.getImgUrlById(fileId);
+                    return new SimpleMemberDto(assigneeId, imgUrl);
+                })
+                .collect(Collectors.toList());
     }
 
     private Member getMemberOrThrow(String id) {
