@@ -83,6 +83,10 @@ public class LabelService {
         return labelRepository.findLabelCoverDtoByIds(ids);
     }
 
+    public List<Label> findLabelsByIds(List<Long> issueLabelIds) {
+        return (List<Label>) labelRepository.findAllById(issueLabelIds);
+    }
+
     private void validateLabelExists(Long id) {
         if (!labelRepository.existsById(id)) {
             throw new LabelNotFoundException();

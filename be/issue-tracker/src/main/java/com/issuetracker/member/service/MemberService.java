@@ -48,6 +48,10 @@ public class MemberService {
         return new SimpleMemberDto(id, imgUrl);
     }
 
+    public List<Member> findMembersById(List<String> issueAssigneeIds) {
+        return (List<Member>) memberRepository.findAllById(issueAssigneeIds);
+    }
+
     private Member getMemberOrThrow(String id) {
         return memberRepository.findById(id).orElseThrow(MemberNotFoundException::new);
     }
