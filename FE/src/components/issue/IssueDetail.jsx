@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { MainContainer } from '../../styles/theme';
 import { Button } from 'antd';
 import { IconEdit } from '../../assets/icons/IconEdit';
-import Archive from '../../assets/archive.svg';
+import { IconArchive } from '../../assets/icons/IconArchive';
 
 export default function IssueDetail() {
     let { id } = useParams();
@@ -24,7 +24,12 @@ export default function IssueDetail() {
                             </h1>
                             <HeaderAction>
                                 <StyledBtn>
-                                    <StyledIconEdit>wooody</StyledIconEdit> 이슈 닫기
+                                    <IconEdit />
+                                    <span>제목 편집</span>
+                                </StyledBtn>
+                                <StyledBtn>
+                                    <IconArchive />
+                                    <span>이슈 닫기</span>
                                 </StyledBtn>
                             </HeaderAction>
                         </FlexRow>
@@ -66,10 +71,6 @@ export default function IssueDetail() {
     );
 }
 
-const StyledButton = styled(Button)`
-    border-color: var(--primary-color);
-`;
-
 const StyledIssueState = styled.div`
     background-color: var(--primary-color);
     color: var(--font-color);
@@ -88,6 +89,9 @@ const StyledBtn = styled(Button)`
     background-color: white;
     color: var(--primary-color);
     border-color: var(--primary-color);
+    & span {
+        margin-left: 5px;
+    }
 `;
 const HeaderSummary = styled.div`
     display: flex;
@@ -120,37 +124,34 @@ const HeaderEdit = styled.div``;
 const TitleContainer = styled.div`
     width: 100%;
     height: 100px;
-    background-color: antiquewhite;
+    /* background-color: antiquewhite; */
 `;
 const ContentsContainer = styled.div`
     display: flex;
     flex-direction: row;
     width: 100%;
     height: 700px;
-    background-color: aquamarine;
+    /* background-color: aquamarine; */
 `;
 const Comments = styled.div`
-    background-color: azure;
     width: 700px;
     height: 200px;
+    /* background-color: azure; */
 `;
 const Comment = styled.div`
-    background-color: #fff;
     width: 90%;
     min-height: 100px;
     margin-bottom: 10px;
+    /* background-color: #fff; */
 `;
 const Filters = styled.div`
-    background-color: beige;
     width: 200px;
     height: 200px;
+    /* background-color: beige; */
 `;
 const Filter = styled.div`
-    background-color: #fff;
     width: 90%;
     min-height: 100px;
     margin-bottom: 10px;
-`;
-const StyledIconEdit = styled(IconEdit)`
-    color: green;
+    /* background-color: #fff; */
 `;
