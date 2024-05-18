@@ -10,6 +10,8 @@ import org.springframework.data.relational.core.mapping.Column;
 @RequiredArgsConstructor
 public class LabelCoverDto {
     private final String name;
+    @Column("text_color")
+    private final String textColor;
     @Column("background_color")
     private final String bgColor;
 }

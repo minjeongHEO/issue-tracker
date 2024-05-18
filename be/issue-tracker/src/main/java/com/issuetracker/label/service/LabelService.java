@@ -72,8 +72,7 @@ public class LabelService {
      */
     @Transactional(readOnly = true)
     public long countLabels() {
-        List<Label> labels = (List<Label>) labelRepository.findAll();
-        return labels.size();
+        return labelRepository.countAll();
     }
 
     /**
@@ -109,6 +108,6 @@ public class LabelService {
     }
 
     private Label toLabel(LabelDto labelDto) {
-        return new Label(labelDto.getName(), labelDto.getDescription(), labelDto.getBgColor());
+        return new Label(labelDto.getName(), labelDto.getDescription(), labelDto.getTextColor(), labelDto.getBgColor());
     }
 }

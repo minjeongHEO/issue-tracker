@@ -16,6 +16,8 @@ public class Label {
     private Long id;
     private final String name;
     private final String description;
+    @Column("text_color")
+    private final String textColor;
     @Column("background_color")
     private final String bgColor;
 }
