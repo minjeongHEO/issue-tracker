@@ -11,6 +11,6 @@ import lombok.ToString;
 @ToString
 @RequiredArgsConstructor
 public class HomeResponseDto {
-    private final IssueCountDto issueCount;
-    private final List<IssueFilterResponseDto> issueFilterResponses;
+    private final IssueCountDto count;
+    private final List<IssueFilterResponseDto> filteredIssues;
 }

@@ -1,5 +1,6 @@
 package com.issuetracker.issue.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.issuetracker.comment.dto.CommentDetailDto;
 import com.issuetracker.file.dto.UploadedFileDto;
 import com.issuetracker.label.domain.Label;
@@ -19,6 +20,7 @@ public class IssueDetailDto {
     private final String title;
     private final String content;
     private final LocalDateTime createDate;
+    @JsonProperty("isClosed")
     private final boolean isClosed;
     private final SimpleMemberDto writer;
     private final SimpleMilestoneDto milestone;

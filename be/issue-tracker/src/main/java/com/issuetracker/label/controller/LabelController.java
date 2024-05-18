@@ -4,6 +4,7 @@ import com.issuetracker.label.domain.Label;
 import com.issuetracker.label.dto.LabelBgColorDto;
 import com.issuetracker.label.dto.LabelCountDto;
 import com.issuetracker.label.dto.LabelDto;
+import com.issuetracker.label.dto.LabelListDto;
 import com.issuetracker.label.service.LabelService;
 import com.issuetracker.label.utils.HexColorGenerator;
 import jakarta.validation.Valid;
@@ -27,9 +28,11 @@ public class LabelController {
     private final LabelService labelService;
 
     @GetMapping
-    public ResponseEntity<List<Label>> getLabels() {
+    public ResponseEntity<LabelListDto> getLabels() {
+        long count = labelService.countLabels();
         List<Label> labels = labelService.getLabels();
-        return ResponseEntity.ok().body(labels);
+        LabelListDto labelListDto = new LabelListDto(count, labels);
+        return ResponseEntity.ok().body(labelListDto);
     }
 
     @PostMapping

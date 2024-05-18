@@ -13,5 +13,7 @@ public class LabelDto {
     private final String name;
     private final String description;
     @NotBlank
+    private final String textColor;
+    @NotBlank
     private final String bgColor;
 }
