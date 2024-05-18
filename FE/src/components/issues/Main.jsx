@@ -22,6 +22,7 @@ const imageTypeItems = [
 const milestoneTypeItems = [{ title: '⚙️ Etc' }, { title: '💄 Style' }, { title: '🧑🏻 User' }, { title: '🎯 Issue' }];
 
 const stateModifyFilters = [{ title: '선택한 이슈 열기' }, { title: '선택한 이슈 닫기' }];
+// TODO: ----------------------------------
 
 const mainIssueFilters = [
     { title: '열린 이슈', value: 'is:open' },

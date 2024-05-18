@@ -3,7 +3,7 @@ import { DownOutlined } from '@ant-design/icons';
 import { Dropdown, Menu, message, Radio, Space } from 'antd';
 import styled from 'styled-components';
 import { DropTitle } from '../../styles/theme.js';
-import DropDownTitle from './DropDownTitle';
+import DropDownTitle from './DropDownTitle.jsx';
 import { useFilterContext } from '../../context/FilterContext.jsx';
 
 export default function DropDownFilter({ filterTitle, filterItems, dispatchTypeByFilterContents, children }) {

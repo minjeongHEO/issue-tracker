@@ -2,6 +2,7 @@ import { Checkbox } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { IconMilestone } from '../../assets/icons/IconMilestone';
 
 export default function IssueList({ isSingleChecked, setCheckedItems, listData }) {
     const { title, labels, id, createDate, memberId, milestoneName } = listData;
@@ -42,7 +43,7 @@ export default function IssueList({ isSingleChecked, setCheckedItems, listData }
             <ListTitle>
                 <Checkbox onClick={toggleCheckBox} checked={isSingleChecked} />
                 <ListBody>
-                    <div>
+                    <div className="titleContainer">
                         <span className="title" onClick={() => navigate(`/issues/${id}`)}>
                             ! {title}
                         </span>
@@ -58,7 +59,11 @@ export default function IssueList({ isSingleChecked, setCheckedItems, listData }
                         <span>
                             이 이슈가 {pastTime}, {memberId || ''}님에 의해 작성되었습니다.
                         </span>
-                        <span>마일스톤</span>
+
+                        <span>
+                            {/* <IconMilestone /> */}
+                            {milestoneName || ''}
+                        </span>
                     </div>
                 </ListBody>
             </ListTitle>
@@ -80,7 +85,7 @@ const ListBody = styled.div`
     align-items: flex-start;
     margin-left: 20px;
 
-    :first-child {
+    .titleContainer {
         margin-bottom: 20px;
     }
 
@@ -93,6 +98,7 @@ const ListBody = styled.div`
     }
 `;
 
+const StyledIconMilestone = styled(IconMilestone)``;
 const ListTitle = styled.div`
     display: flex;
     flex-direction: row;

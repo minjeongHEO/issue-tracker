@@ -1,6 +1,6 @@
 import React from 'react';
 import Header from './header/Header';
-import Main from './main/Main';
+import Main from './issues/Main';
 import styled from 'styled-components';
 import { IndexContainer } from '../styles/theme';
 
