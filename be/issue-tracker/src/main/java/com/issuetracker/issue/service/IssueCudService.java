@@ -8,6 +8,7 @@ import com.issuetracker.issue.dto.IssueAssigneeModifyDto;
 import com.issuetracker.issue.dto.IssueCreateRequestDto;
 import com.issuetracker.issue.dto.IssueCreateResponseDto;
 import com.issuetracker.issue.dto.IssueLabelModifyDto;
+import com.issuetracker.issue.dto.IssueMilestoneModifyDto;
 import com.issuetracker.issue.dto.IssueTitleModifyDto;
 import com.issuetracker.issue.exception.IssueNotFoundException;
 import com.issuetracker.issue.repository.IssueAssigneeRepository;
@@ -71,6 +72,13 @@ public class IssueCudService {
         issueAssigneeRepository.deleteByIssueId(id);
         List<String> assigneeIds = issueAssigneeModifyDto.getAssigneeIds();
         insertIssueAssigness(assigneeIds, id);
+    }
+
+    @Transactional
+    public void modifyIssueMilestone(Long id, IssueMilestoneModifyDto issueMilestoneModifyDto) {
+        validateIssueExists(id);
+        Long milestoneId = issueMilestoneModifyDto.getMilestoneId();
+        issueRepository.updateMilestoneById(id, milestoneId);
     }
 
     private void insertIssueLabels(List<Long> labelIds, Long issueId) {
