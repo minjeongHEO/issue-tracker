@@ -1,5 +1,6 @@
 package com.issuetracker.issue.controller;
 
+import com.issuetracker.issue.dto.IssueAssigneeModifyDto;
 import com.issuetracker.issue.dto.IssueCountDto;
 import com.issuetracker.issue.dto.IssueCreateRequestDto;
 import com.issuetracker.issue.dto.IssueCreateResponseDto;
@@ -67,6 +68,13 @@ public class IssueController {
     public ResponseEntity<Void> modifyIssueLabel(@Valid @RequestBody IssueLabelModifyDto issueLabelModifyDto,
                                                  @PathVariable Long id) {
         issueCudService.modifyIssueLabel(id, issueLabelModifyDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/{id}/assignee")
+    public ResponseEntity<Void> modifyIssueAssignee(@Valid @RequestBody IssueAssigneeModifyDto issueAssigneeModifyDto,
+                                                    @PathVariable Long id) {
+        issueCudService.modifyIssueAssignee(id, issueAssigneeModifyDto);
         return ResponseEntity.ok().build();
     }
 }
