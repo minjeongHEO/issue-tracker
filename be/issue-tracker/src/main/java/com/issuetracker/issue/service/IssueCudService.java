@@ -4,6 +4,7 @@ import com.issuetracker.issue.controller.IssueBodyModifyDto;
 import com.issuetracker.issue.domain.Issue;
 import com.issuetracker.issue.domain.IssueAssignee;
 import com.issuetracker.issue.domain.IssueLabel;
+import com.issuetracker.issue.dto.IssueAssigneeModifyDto;
 import com.issuetracker.issue.dto.IssueCreateRequestDto;
 import com.issuetracker.issue.dto.IssueCreateResponseDto;
 import com.issuetracker.issue.dto.IssueLabelModifyDto;
@@ -62,6 +63,14 @@ public class IssueCudService {
         issueLabelRepository.deleteByIssueId(id);
         List<Long> labelIds = issueLabelModifyDto.getLabelIds();
         insertIssueLabels(labelIds, id);
+    }
+
+    @Transactional
+    public void modifyIssueAssignee(Long id, IssueAssigneeModifyDto issueAssigneeModifyDto) {
+        validateIssueExists(id);
+        issueAssigneeRepository.deleteByIssueId(id);
+        List<String> assigneeIds = issueAssigneeModifyDto.getAssigneeIds();
+        insertIssueAssigness(assigneeIds, id);
     }
 
     private void insertIssueLabels(List<Long> labelIds, Long issueId) {
