@@ -4,13 +4,16 @@ import com.issuetracker.issue.dto.IssueCountDto;
 import com.issuetracker.issue.dto.IssueCreateRequestDto;
 import com.issuetracker.issue.dto.IssueCreateResponseDto;
 import com.issuetracker.issue.dto.IssueDetailDto;
+import com.issuetracker.issue.dto.IssueTitleModifyDto;
 import com.issuetracker.issue.service.IssueCudService;
 import com.issuetracker.issue.service.IssueDetailService;
 import com.issuetracker.issue.service.IssueQueryService;
+import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,9 +42,16 @@ public class IssueController {
 
     @PostMapping
     public ResponseEntity<IssueCreateResponseDto> createIssue(
-            @RequestBody IssueCreateRequestDto issueCreateRequestDto) {
+            @Valid @RequestBody IssueCreateRequestDto issueCreateRequestDto) {
         IssueCreateResponseDto issue = issueCudService.createIssue(issueCreateRequestDto);
         URI location = URI.create(String.format("/api/issues/%s", issue.getId()));
         return ResponseEntity.created(location).body(issue);
+    }
+
+    @PatchMapping("/{id}/title")
+    public ResponseEntity<Void> modifyIssueTitle(@Valid @RequestBody IssueTitleModifyDto issueTitleModifyDto,
+                                                 @PathVariable Long id) {
+        issueCudService.modifyIssueTitle(id, issueTitleModifyDto);
+        return ResponseEntity.ok().build();
     }
 }

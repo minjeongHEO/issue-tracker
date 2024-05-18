@@ -5,6 +5,7 @@ import com.issuetracker.issue.domain.IssueAssignee;
 import com.issuetracker.issue.domain.IssueLabel;
 import com.issuetracker.issue.dto.IssueCreateRequestDto;
 import com.issuetracker.issue.dto.IssueCreateResponseDto;
+import com.issuetracker.issue.dto.IssueTitleModifyDto;
 import com.issuetracker.issue.repository.IssueAssigneeRepository;
 import com.issuetracker.issue.repository.IssueLabelRepository;
 import com.issuetracker.issue.repository.IssueRepository;
@@ -37,6 +38,12 @@ public class IssueCudService {
         return toIssueCreateResponseDto(issue, labelIds, assigneeIds);
     }
 
+    @Transactional
+    public void modifyIssueTitle(Long id, IssueTitleModifyDto issueTitleModifyDto) {
+        String title = issueTitleModifyDto.getTitle();
+        issueRepository.updateTitleById(id, title);
+    }
+
     private void insertIssueLabels(List<Long> labelIds, Long issueId) {
         labelIds.stream()
                 .map(labelId -> new IssueLabel(issueId, labelId))
@@ -55,8 +62,8 @@ public class IssueCudService {
                 request.getMilestoneId(), request.getFileId());
     }
 
-    private static IssueCreateResponseDto toIssueCreateResponseDto(Issue issue, List<Long> labelIds,
-                                                                   List<String> assigneeIds) {
+    private IssueCreateResponseDto toIssueCreateResponseDto(Issue issue, List<Long> labelIds,
+                                                            List<String> assigneeIds) {
         return new IssueCreateResponseDto(issue.getId(), issue.getTitle(), issue.getContent(), issue.getMemberId(),
                 issue.getCreateDate(), issue.isClosed(), issue.getMilestoneId(), issue.getFileId(),
                 labelIds, assigneeIds);
