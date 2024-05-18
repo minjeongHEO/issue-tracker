@@ -5,6 +5,7 @@ import com.issuetracker.issue.domain.Issue;
 import com.issuetracker.issue.domain.IssueAssignee;
 import com.issuetracker.issue.domain.IssueLabel;
 import com.issuetracker.issue.dto.IssueAssigneeModifyDto;
+import com.issuetracker.issue.dto.IssueChangeStatusDto;
 import com.issuetracker.issue.dto.IssueCreateRequestDto;
 import com.issuetracker.issue.dto.IssueCreateResponseDto;
 import com.issuetracker.issue.dto.IssueLabelModifyDto;
@@ -79,6 +80,24 @@ public class IssueCudService {
         validateIssueExists(id);
         Long milestoneId = issueMilestoneModifyDto.getMilestoneId();
         issueRepository.updateMilestoneById(id, milestoneId);
+    }
+
+    @Transactional
+    public void openIssues(IssueChangeStatusDto issueChangeStatusDto) {
+        List<Long> issueIds = issueChangeStatusDto.getIssueIds();
+        if (issueIds == null) {
+            return;
+        }
+        issueIds.forEach(issueId -> issueRepository.changeStatusById(issueId, false));
+    }
+
+    @Transactional
+    public void closeIssues(IssueChangeStatusDto issueChangeStatusDto) {
+        List<Long> issueIds = issueChangeStatusDto.getIssueIds();
+        if (issueIds == null) {
+            return;
+        }
+        issueIds.forEach(issueId -> issueRepository.changeStatusById(issueId, true));
     }
 
     private void insertIssueLabels(List<Long> labelIds, Long issueId) {

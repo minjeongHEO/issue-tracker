@@ -22,4 +22,8 @@ public interface IssueRepository extends CrudRepository<Issue, Long> {
     @Modifying
     @Query("UPDATE issue SET milestone_id = :milestoneId WHERE id = :id")
     void updateMilestoneById(Long id, Long milestoneId);
+
+    @Modifying
+    @Query("UPDATE issue SET is_closed = :isClosed WHERE id = :id")
+    void changeStatusById(Long id, boolean isClosed);
 }

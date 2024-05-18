@@ -1,6 +1,7 @@
 package com.issuetracker.issue.controller;
 
 import com.issuetracker.issue.dto.IssueAssigneeModifyDto;
+import com.issuetracker.issue.dto.IssueChangeStatusDto;
 import com.issuetracker.issue.dto.IssueCountDto;
 import com.issuetracker.issue.dto.IssueCreateRequestDto;
 import com.issuetracker.issue.dto.IssueCreateResponseDto;
@@ -84,6 +85,18 @@ public class IssueController {
             @Valid @RequestBody IssueMilestoneModifyDto issueMilestoneModifyDto,
             @PathVariable Long id) {
         issueCudService.modifyIssueMilestone(id, issueMilestoneModifyDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/close")
+    public ResponseEntity<Void> closeIssues(@Valid @RequestBody IssueChangeStatusDto issueChangeStatusDto) {
+        issueCudService.closeIssues(issueChangeStatusDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/open")
+    public ResponseEntity<Void> openIssues(@Valid @RequestBody IssueChangeStatusDto issueChangeStatusDto) {
+        issueCudService.openIssues(issueChangeStatusDto);
         return ResponseEntity.ok().build();
     }
 }

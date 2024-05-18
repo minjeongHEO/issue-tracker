@@ -73,7 +73,7 @@ public class MilestoneService {
         List<Milestone> milestones = milestoneRepository.findAllByIsClosed(isClosed);
 
         List<MilestoneDetailDto> milestoneDetailDtos = toMilestoneDetailDtos(milestones);
-        return new MilestoneListDto(milestoneDetailDtos, (long) milestoneDetailDtos.size());
+        return new MilestoneListDto((long) milestoneDetailDtos.size(), milestoneDetailDtos);
     }
 
     @Transactional(readOnly = true)
