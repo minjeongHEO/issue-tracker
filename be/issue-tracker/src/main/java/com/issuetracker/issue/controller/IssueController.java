@@ -54,4 +54,11 @@ public class IssueController {
         issueCudService.modifyIssueTitle(id, issueTitleModifyDto);
         return ResponseEntity.ok().build();
     }
+
+    @PatchMapping("/{id}/body")
+    public ResponseEntity<Void> modifyIssueBody(@Valid @RequestBody IssueBodyModifyDto issueBodyModifyDto,
+                                                @PathVariable Long id) {
+        issueCudService.modifyIssueBody(id, issueBodyModifyDto);
+        return ResponseEntity.ok().build();
+    }
 }
