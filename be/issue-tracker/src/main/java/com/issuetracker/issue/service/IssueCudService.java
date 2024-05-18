@@ -1,11 +1,13 @@
 package com.issuetracker.issue.service;
 
+import com.issuetracker.issue.controller.IssueBodyModifyDto;
 import com.issuetracker.issue.domain.Issue;
 import com.issuetracker.issue.domain.IssueAssignee;
 import com.issuetracker.issue.domain.IssueLabel;
 import com.issuetracker.issue.dto.IssueCreateRequestDto;
 import com.issuetracker.issue.dto.IssueCreateResponseDto;
 import com.issuetracker.issue.dto.IssueTitleModifyDto;
+import com.issuetracker.issue.exception.IssueNotFoundException;
 import com.issuetracker.issue.repository.IssueAssigneeRepository;
 import com.issuetracker.issue.repository.IssueLabelRepository;
 import com.issuetracker.issue.repository.IssueRepository;
@@ -40,8 +42,17 @@ public class IssueCudService {
 
     @Transactional
     public void modifyIssueTitle(Long id, IssueTitleModifyDto issueTitleModifyDto) {
+        validateIssueExists(id);
         String title = issueTitleModifyDto.getTitle();
         issueRepository.updateTitleById(id, title);
+    }
+
+    @Transactional
+    public void modifyIssueBody(Long id, IssueBodyModifyDto issueBodyModifyDto) {
+        validateIssueExists(id);
+        String content = issueBodyModifyDto.getContent();
+        Long fileId = issueBodyModifyDto.getFileId();
+        issueRepository.updateBodyById(id, content, fileId);
     }
 
     private void insertIssueLabels(List<Long> labelIds, Long issueId) {
@@ -67,5 +78,11 @@ public class IssueCudService {
         return new IssueCreateResponseDto(issue.getId(), issue.getTitle(), issue.getContent(), issue.getMemberId(),
                 issue.getCreateDate(), issue.isClosed(), issue.getMilestoneId(), issue.getFileId(),
                 labelIds, assigneeIds);
+    }
+
+    private void validateIssueExists(Long id) {
+        if (!issueRepository.existsById(id)) {
+            throw new IssueNotFoundException();
+        }
     }
 }

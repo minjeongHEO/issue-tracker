@@ -13,5 +13,9 @@ public interface IssueRepository extends CrudRepository<Issue, Long> {
 
     @Modifying
     @Query("UPDATE issue SET title = :title WHERE id = :id")
-    void updateTitleById(Long id, String title);
+    boolean updateTitleById(Long id, String title);
+
+    @Modifying
+    @Query("UPDATE issue SET content = :content, file_id = :fileId WHERE id = :id")
+    boolean updateBodyById(Long id, String content, Long fileId);
 }
