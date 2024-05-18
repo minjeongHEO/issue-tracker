@@ -4,6 +4,7 @@ import com.issuetracker.issue.dto.IssueCountDto;
 import com.issuetracker.issue.dto.IssueCreateRequestDto;
 import com.issuetracker.issue.dto.IssueCreateResponseDto;
 import com.issuetracker.issue.dto.IssueDetailDto;
+import com.issuetracker.issue.dto.IssueLabelModifyDto;
 import com.issuetracker.issue.dto.IssueTitleModifyDto;
 import com.issuetracker.issue.service.IssueCudService;
 import com.issuetracker.issue.service.IssueDetailService;
@@ -59,6 +60,13 @@ public class IssueController {
     public ResponseEntity<Void> modifyIssueBody(@Valid @RequestBody IssueBodyModifyDto issueBodyModifyDto,
                                                 @PathVariable Long id) {
         issueCudService.modifyIssueBody(id, issueBodyModifyDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/{id}/label")
+    public ResponseEntity<Void> modifyIssueLabel(@Valid @RequestBody IssueLabelModifyDto issueLabelModifyDto,
+                                                 @PathVariable Long id) {
+        issueCudService.modifyIssueLabel(id, issueLabelModifyDto);
         return ResponseEntity.ok().build();
     }
 }

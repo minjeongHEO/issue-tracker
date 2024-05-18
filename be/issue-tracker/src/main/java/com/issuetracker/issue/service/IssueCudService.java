@@ -6,6 +6,7 @@ import com.issuetracker.issue.domain.IssueAssignee;
 import com.issuetracker.issue.domain.IssueLabel;
 import com.issuetracker.issue.dto.IssueCreateRequestDto;
 import com.issuetracker.issue.dto.IssueCreateResponseDto;
+import com.issuetracker.issue.dto.IssueLabelModifyDto;
 import com.issuetracker.issue.dto.IssueTitleModifyDto;
 import com.issuetracker.issue.exception.IssueNotFoundException;
 import com.issuetracker.issue.repository.IssueAssigneeRepository;
@@ -55,13 +56,27 @@ public class IssueCudService {
         issueRepository.updateBodyById(id, content, fileId);
     }
 
+    @Transactional
+    public void modifyIssueLabel(Long id, IssueLabelModifyDto issueLabelModifyDto) {
+        validateIssueExists(id);
+        issueLabelRepository.deleteByIssueId(id);
+        List<Long> labelIds = issueLabelModifyDto.getLabelIds();
+        insertIssueLabels(labelIds, id);
+    }
+
     private void insertIssueLabels(List<Long> labelIds, Long issueId) {
+        if (labelIds == null) {
+            return;
+        }
         labelIds.stream()
                 .map(labelId -> new IssueLabel(issueId, labelId))
                 .forEach(issueLabelRepository::insert);
     }
 
     private void insertIssueAssigness(List<String> assigneeIds, Long issueId) {
+        if (assigneeIds == null) {
+            return;
+        }
         assigneeIds.stream()
                 .map(assigneeId -> new IssueAssignee(issueId, assigneeId))
                 .forEach(issueAssigneeRepository::insert);
