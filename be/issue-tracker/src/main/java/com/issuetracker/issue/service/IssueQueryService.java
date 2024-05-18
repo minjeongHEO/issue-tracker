@@ -51,4 +51,8 @@ public class IssueQueryService {
     public Issue getIssueOrThrow(Long id) {
         return issueRepository.findById(id).orElseThrow(IssueNotFoundException::new);
     }
+
+    public Long countIssuesByMilestoneIdAndStatus(Long milestoneId, boolean isClosed) {
+        return issueRepository.countByMilestoneIdAndIsClosed(milestoneId, isClosed);
+    }
 }
