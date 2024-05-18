@@ -16,6 +16,7 @@ import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -85,6 +86,12 @@ public class IssueController {
             @Valid @RequestBody IssueMilestoneModifyDto issueMilestoneModifyDto,
             @PathVariable Long id) {
         issueCudService.modifyIssueMilestone(id, issueMilestoneModifyDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteIssue(@PathVariable Long id) {
+        issueCudService.deleteIssue(id);
         return ResponseEntity.ok().build();
     }
 

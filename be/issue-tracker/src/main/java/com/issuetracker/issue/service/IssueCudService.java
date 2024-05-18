@@ -100,6 +100,12 @@ public class IssueCudService {
         issueIds.forEach(issueId -> issueRepository.changeStatusById(issueId, true));
     }
 
+    @Transactional
+    public void deleteIssue(Long id) {
+        validateIssueExists(id);
+        issueRepository.deleteById(id);
+    }
+
     private void insertIssueLabels(List<Long> labelIds, Long issueId) {
         if (labelIds == null) {
             return;
