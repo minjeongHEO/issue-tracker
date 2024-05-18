@@ -1,6 +1,6 @@
 package com.issuetracker.milestone.service;
 
-import com.issuetracker.issue.repository.IssueRepository;
+import com.issuetracker.issue.service.IssueQueryService;
 import com.issuetracker.milestone.Repository.MilestoneRepository;
 import com.issuetracker.milestone.domain.Milestone;
 import com.issuetracker.milestone.dto.MilestoneCountDto;
@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class MilestoneService {
     private final MilestoneRepository milestoneRepository;
-    private final IssueRepository issueRepository;
+    private final IssueQueryService issueQueryService;
 
     @Transactional
     public Milestone createMilestone(MilestoneCreateDto milestoneCreateDto) {
@@ -79,17 +79,18 @@ public class MilestoneService {
     @Transactional(readOnly = true)
     public MilestoneDetailDto showMilestoneDetail(Long id) {
         Milestone milestone = getMilestone(id);
-        Long openIssueCount = issueRepository.countByMilestoneIdAndIsClosed(id, false);
-        Long closedIssueCount = issueRepository.countByMilestoneIdAndIsClosed(id, true);
+
+        Long openIssueCount = issueQueryService.countIssuesByMilestoneIdAndStatus(id, false);
+        Long closedIssueCount = issueQueryService.countIssuesByMilestoneIdAndStatus(id, true);
 
         return toMilestoneDetailDto(milestone, openIssueCount, closedIssueCount);
     }
 
     @Transactional
-    public SimpleMilestoneDto showSimpleMilestone(Long id) {
+    public SimpleMilestoneDto showMilestoneCover(Long id) {
         Milestone milestone = getMilestone(id);
-        Long openIssueCount = issueRepository.countByMilestoneIdAndIsClosed(id, false);
-        Long closedIssueCount = issueRepository.countByMilestoneIdAndIsClosed(id, true);
+        Long openIssueCount = issueQueryService.countIssuesByMilestoneIdAndStatus(id, false);
+        Long closedIssueCount = issueQueryService.countIssuesByMilestoneIdAndStatus(id, true);
         return new SimpleMilestoneDto(milestone.getId(), milestone.getName(), openIssueCount, closedIssueCount);
     }
 
@@ -102,8 +103,8 @@ public class MilestoneService {
         List<MilestoneDetailDto> milestoneDetailDtos = new ArrayList<>();
         for (Milestone milestone : milestones) {
             Long milestoneId = milestone.getId();
-            Long openIssueCount = issueRepository.countByMilestoneIdAndIsClosed(milestoneId, false);
-            Long closedIssueCount = issueRepository.countByMilestoneIdAndIsClosed(milestoneId, true);
+            Long openIssueCount = issueQueryService.countIssuesByMilestoneIdAndStatus(milestoneId, false);
+            Long closedIssueCount = issueQueryService.countIssuesByMilestoneIdAndStatus(milestoneId, true);
             MilestoneDetailDto milestoneDetailDto = toMilestoneDetailDto(milestone, openIssueCount,
                     closedIssueCount);
 

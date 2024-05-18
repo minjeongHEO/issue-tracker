@@ -7,7 +7,6 @@ import com.issuetracker.file.dto.UploadedFileDto;
 import com.issuetracker.file.service.FileService;
 import com.issuetracker.issue.domain.Issue;
 import com.issuetracker.issue.dto.IssueDetailDto;
-import com.issuetracker.issue.exception.IssueNotFoundException;
 import com.issuetracker.label.domain.Label;
 import com.issuetracker.label.service.LabelService;
 import com.issuetracker.member.dto.SimpleMemberDto;
@@ -78,7 +77,7 @@ public class IssueDetailService {
         if (milestoneId == null) {
             return null;
         }
-        return milestoneService.showSimpleMilestone(issue.getMilestoneId());
+        return milestoneService.showMilestoneCover(issue.getMilestoneId());
     }
 
     private UploadedFileDto getFileByIssue(Issue issue) {
