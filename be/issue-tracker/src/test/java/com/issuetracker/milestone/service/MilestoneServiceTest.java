@@ -9,7 +9,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.issuetracker.issue.repository.IssueRepository;
+import com.issuetracker.issue.service.IssueQueryService;
 import com.issuetracker.milestone.Repository.MilestoneRepository;
 import com.issuetracker.milestone.domain.Milestone;
 import com.issuetracker.milestone.dto.MilestoneCountDto;
@@ -28,7 +28,7 @@ class MilestoneServiceTest {
     @Mock
     MilestoneRepository milestoneRepository;
     @Mock
-    IssueRepository issueRepository;
+    IssueQueryService issueQueryService;
 
     @InjectMocks
     MilestoneService milestoneService;
@@ -155,8 +155,8 @@ class MilestoneServiceTest {
         // 준비
         Milestone milestone = new Milestone("마일스톤", "설명", LocalDateTime.now(), false);
         when(milestoneRepository.findAllByIsClosed(false)).thenReturn(List.of(milestone));
-        when(issueRepository.countByMilestoneIdAndIsClosed(isNull(), eq(true))).thenReturn(5L);
-        when(issueRepository.countByMilestoneIdAndIsClosed(isNull(), eq(false))).thenReturn(3L);
+        when(issueQueryService.countIssuesByMilestoneIdAndStatus(isNull(), eq(true))).thenReturn(5L);
+        when(issueQueryService.countIssuesByMilestoneIdAndStatus(isNull(), eq(false))).thenReturn(3L);
 
         // 실행
         var listDto = milestoneService.showMilestoneList(false);
@@ -167,7 +167,7 @@ class MilestoneServiceTest {
         assertThat(listDto.getMilestoneDetailDtos().get(0).getOpenIssueCount()).isEqualTo(3L);
 
         // Mockito 검증
-        verify(issueRepository).countByMilestoneIdAndIsClosed(isNull(), eq(false));
-        verify(issueRepository).countByMilestoneIdAndIsClosed(isNull(), eq(true));
+        verify(issueQueryService).countIssuesByMilestoneIdAndStatus(isNull(), eq(false));
+        verify(issueQueryService).countIssuesByMilestoneIdAndStatus(isNull(), eq(true));
     }
 }
