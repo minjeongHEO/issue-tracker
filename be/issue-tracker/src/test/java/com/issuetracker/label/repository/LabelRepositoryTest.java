@@ -26,7 +26,7 @@ class LabelRepositoryTest {
     @Test
     void insert() {
         // Given
-        Label label = new Label("버그", null, "#ff0000");
+        Label label = new Label("버그", null, "#000000", "#ff0000");
 
         // When
         Label savedLabel = labelRepository.save(label);
