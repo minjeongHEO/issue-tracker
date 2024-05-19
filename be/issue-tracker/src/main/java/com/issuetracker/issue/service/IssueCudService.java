@@ -30,6 +30,9 @@ public class IssueCudService {
     private final IssueLabelRepository issueLabelRepository;
     private final IssueAssigneeRepository issueAssigneeRepository;
 
+    /**
+     * 사용자가 입력한 정보를 바탕으로 이슈를 생성한다.
+     */
     @Transactional
     public IssueCreateResponseDto createIssue(IssueCreateRequestDto request) {
         Issue issue = toIssue(request);
@@ -44,6 +47,9 @@ public class IssueCudService {
         return toIssueCreateResponseDto(issue, labelIds, assigneeIds);
     }
 
+    /**
+     * id와 일치하는 이슈를 찾아 제목을 변경한다. 해당 이슈가 존재하지 않는다면 예외를 발생시킨다.
+     */
     @Transactional
     public void modifyIssueTitle(Long id, IssueTitleModifyDto issueTitleModifyDto) {
         validateIssueExists(id);
@@ -51,6 +57,9 @@ public class IssueCudService {
         issueRepository.updateTitleById(id, title);
     }
 
+    /**
+     * id와 일치하는 이슈를 찾아 본문을 변경한다. 해당 이슈가 존재하지 않는다면 예외를 발생시킨다.
+     */
     @Transactional
     public void modifyIssueBody(Long id, IssueBodyModifyDto issueBodyModifyDto) {
         validateIssueExists(id);
@@ -59,6 +68,9 @@ public class IssueCudService {
         issueRepository.updateBodyById(id, content, fileId);
     }
 
+    /**
+     * id와 일치하는 이슈를 찾아 라벨을 변경한다. 해당 이슈가 존재하지 않는다면 예외를 발생시킨다.
+     */
     @Transactional
     public void modifyIssueLabel(Long id, IssueLabelModifyDto issueLabelModifyDto) {
         validateIssueExists(id);
@@ -67,6 +79,9 @@ public class IssueCudService {
         insertIssueLabels(labelIds, id);
     }
 
+    /**
+     * id와 일치하는 이슈를 찾아 담당자를 변경한다. 해당 이슈가 존재하지 않는다면 예외를 발생시킨다.
+     */
     @Transactional
     public void modifyIssueAssignee(Long id, IssueAssigneeModifyDto issueAssigneeModifyDto) {
         validateIssueExists(id);
@@ -75,6 +90,9 @@ public class IssueCudService {
         insertIssueAssigness(assigneeIds, id);
     }
 
+    /**
+     * id와 일치하는 이슈를 찾아 마일스톤을 변경한다. 해당 이슈가 존재하지 않는다면 예외를 발생시킨다.
+     */
     @Transactional
     public void modifyIssueMilestone(Long id, IssueMilestoneModifyDto issueMilestoneModifyDto) {
         validateIssueExists(id);
@@ -82,6 +100,9 @@ public class IssueCudService {
         issueRepository.updateMilestoneById(id, milestoneId);
     }
 
+    /**
+     * 요청한 id와 일치하는 이슈를 연다.
+     */
     @Transactional
     public void openIssues(IssueChangeStatusDto issueChangeStatusDto) {
         List<Long> issueIds = issueChangeStatusDto.getIssueIds();
@@ -91,6 +112,9 @@ public class IssueCudService {
         issueIds.forEach(issueId -> issueRepository.changeStatusById(issueId, false));
     }
 
+    /**
+     * 요청한 id와 일치하는 이슈를 닫는다.
+     */
     @Transactional
     public void closeIssues(IssueChangeStatusDto issueChangeStatusDto) {
         List<Long> issueIds = issueChangeStatusDto.getIssueIds();
@@ -100,6 +124,9 @@ public class IssueCudService {
         issueIds.forEach(issueId -> issueRepository.changeStatusById(issueId, true));
     }
 
+    /**
+     * id와 일치하는 이슈를 삭제한다. 이슈가 존재하지 않는다면 예외를 발생시킨다.
+     */
     @Transactional
     public void deleteIssue(Long id) {
         validateIssueExists(id);

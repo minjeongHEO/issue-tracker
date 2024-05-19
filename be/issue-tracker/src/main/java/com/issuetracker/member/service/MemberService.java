@@ -35,22 +35,35 @@ public class MemberService {
         return created;
     }
 
-    @Transactional
+    /**
+     * 회원가입 되어있는 모든 멤버의 간략한 정보를 반환한다.
+     */
+    @Transactional(readOnly = true)
     public List<SimpleMemberDto> getMembers() {
         List<Member> members = (List<Member>) memberRepository.findAll();
         List<SimpleMemberDto> simpleMembers = toSimpleMemberDtos(members);
         return Collections.unmodifiableList(simpleMembers);
     }
 
-    @Transactional
-    public SimpleMemberDto getSimpleMemberDtoById(String id) {
+    /**
+     * id와 일치하는 멤버를 찾아 간략한 정보를 반환한다.
+     */
+    @Transactional(readOnly = true)
+    public SimpleMemberDto getSimpleMemberById(String id) {
         Member member = getMemberOrThrow(id);
         String imgUrl = getImgUrl(member);
         return new SimpleMemberDto(id, imgUrl);
     }
 
-    public List<Member> findMembersById(List<String> issueAssigneeIds) {
-        return (List<Member>) memberRepository.findAllById(issueAssigneeIds);
+    /**
+     * id와 일치하는 모든 멤버의 간략한 정보를 반환한다.
+     */
+    @Transactional(readOnly = true)
+    public List<SimpleMemberDto> findSimpleMembersById(List<String> issueAssigneeIds) {
+        List<Member> members = (List<Member>) memberRepository.findAllById(issueAssigneeIds);
+        return members.stream()
+                .map(member -> new SimpleMemberDto(member.getId(), fileService.getImgUrlById(member.getFileId())))
+                .toList();
     }
 
     @Transactional(readOnly = true)
