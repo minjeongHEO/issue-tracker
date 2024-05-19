@@ -7,9 +7,11 @@ import com.issuetracker.file.dto.UploadedFileDto;
 import com.issuetracker.file.service.FileService;
 import com.issuetracker.issue.domain.Issue;
 import com.issuetracker.issue.dto.IssueDetailDto;
+import com.issuetracker.issue.exception.IssueNotFoundException;
 import com.issuetracker.label.domain.Label;
 import com.issuetracker.label.service.LabelService;
 import com.issuetracker.member.dto.SimpleMemberDto;
+import com.issuetracker.member.model.Member;
 import com.issuetracker.member.service.MemberService;
 import com.issuetracker.milestone.dto.SimpleMilestoneDto;
 import com.issuetracker.milestone.service.MilestoneService;
@@ -31,9 +33,6 @@ public class IssueDetailService {
     private final CommentService commentService;
     private final MemberService memberService;
 
-    /**
-     * 사용자가 요청한 id와 일치하는 이슈 상세 정보를 반환한다. 일치하는 id가 없으면 예외를 발생시킨다.
-     */
     @Transactional
     public IssueDetailDto showIssue(Long id) {
         Issue issue = getIssue(id);
@@ -48,7 +47,7 @@ public class IssueDetailService {
     }
 
     private SimpleMemberDto getWriter(String memberId) {
-        return memberService.getSimpleMemberById(memberId);
+        return memberService.getSimpleMemberDtoById(memberId);
     }
 
     private List<CommentDetailDto> getCommentDetails(Long id) {
@@ -60,7 +59,7 @@ public class IssueDetailService {
 
     private void addCommentDetail(List<Comment> comments, List<CommentDetailDto> commentDetails) {
         for (Comment comment : comments) {
-            SimpleMemberDto writer = memberService.getSimpleMemberById(comment.getMemberId());
+            SimpleMemberDto writer = memberService.getSimpleMemberDtoById(comment.getMemberId());
             UploadedFileDto file = getFileByComment(comment);
             CommentDetailDto commentDetail = CommentDetailDto.builder()
                     .id(comment.getId())
@@ -79,7 +78,7 @@ public class IssueDetailService {
         if (milestoneId == null) {
             return null;
         }
-        return milestoneService.showMilestoneCover(issue.getMilestoneId());
+        return milestoneService.showSimpleMilestone(issue.getMilestoneId());
     }
 
     private UploadedFileDto getFileByIssue(Issue issue) {
@@ -105,7 +104,10 @@ public class IssueDetailService {
 
     private List<SimpleMemberDto> getIssueAssignees(Long id) {
         List<String> issueAssigneeIds = issueQueryService.findAssigneeIdsByIssueId(id);
-        return memberService.findSimpleMembersById(issueAssigneeIds);
+        List<Member> members = memberService.findMembersById(issueAssigneeIds);
+        return members.stream()
+                .map(member -> new SimpleMemberDto(member.getId(), fileService.getImgUrlById(member.getFileId())))
+                .toList();
     }
 
     private Issue getIssue(Long id) {

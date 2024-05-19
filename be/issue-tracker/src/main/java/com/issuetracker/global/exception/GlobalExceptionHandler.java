@@ -1,7 +1,6 @@
 package com.issuetracker.global.exception;
 
 import java.io.IOException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.IncorrectUpdateSemanticsDataAccessException;
@@ -54,13 +53,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(e.getHttpStatus())
                 .body(new ErrorResult(e.getErrorCode(), e.getMessage()));
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<ErrorResult> handleConstraintViolationException(SQLIntegrityConstraintViolationException e) {
-        String errorMessage = "존재하지 않는 id를 입력하셨습니다.";
-        log.error(errorMessage, e);
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResult("NotFound.id", errorMessage));
     }
 }
 

@@ -1,6 +1,5 @@
 package com.issuetracker.milestone.dto;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,9 +18,4 @@ public class MilestoneDetailDto {
     private final boolean isClosed;
     private final Long openIssueCount;
     private final Long closedIssueCount;
-
-    @JsonGetter("isClosed")
-    public boolean isClosed() {
-        return isClosed;
-    }
 }
