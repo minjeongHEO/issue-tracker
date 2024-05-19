@@ -187,6 +187,11 @@ const StyledColor = styled.div`
 const AvatarImage = styled.img`
     border-radius: 50%;
     width: 20px;
+    height: 20px;
+    border: 1px solid;
+    border-color: ${(props) => props.theme.borderColor};
+    background-color: ${(props) => props.theme.bgColorBody};
+    display: block;
 `;
 
 const StyledDropdown = styled(Dropdown)`
