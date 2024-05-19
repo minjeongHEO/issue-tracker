@@ -70,9 +70,7 @@ export default function Main() {
     // const client = useQueryClient();
     //     <button onClick={() => client.invalidateQueries({ queryKey: ['label'] })}>update</button>
 
-    const clearFilter = () => {
-        dispatch({ type: 'SET_CLEAR_FILTER', payload: '' });
-    };
+    const clearFilter = () => dispatch({ type: 'SET_CLEAR_FILTER', payload: '' });
 
     const isFilterActive = () => {
         const selectedLists = filterSelectedLists(selectedFilters);
@@ -126,7 +124,7 @@ export default function Main() {
         }));
 
         setFilterItemsByType((prev) => ({ ...prev, milestones: [...milestoneOpenItems, ...milestoneClosedItems] }));
-    }, [filterResults]);
+    }, [labelsResult.data, membersResult.data, milestonesOpenResult.data, milestonesClosedResult.data]);
 
     return (
         <MainContainer>
