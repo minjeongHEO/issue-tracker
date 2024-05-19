@@ -1,22 +1,30 @@
-import { useContext, useEffect, useState } from 'react';
+import { Suspense, useContext, useEffect, useState } from 'react';
 import { AppRoutes } from './router/routes';
 import styled, { ThemeProvider } from 'styled-components';
 import { GlobalStyle } from './styles/GlobalStyle.js';
 import { DarkModeContext } from './context/DarkModeContext.jsx';
 import { Button } from 'antd';
 import FilterProvider from './context/FilterContext.jsx';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 function App() {
     const { isDarkMode, toggleDarkMode, darkModeTheme } = useContext(DarkModeContext);
+    const queryClient = new QueryClient();
 
     return (
         <ThemeProvider theme={darkModeTheme}>
             <GlobalStyle />
             <DarkThemeBtn onClick={toggleDarkMode}>{isDarkMode ? '🌞' : '🌚'}</DarkThemeBtn>
             <FilterProvider>
-                <Root>
-                    <AppRoutes />
-                </Root>
+                <QueryClientProvider client={queryClient}>
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <Root>
+                            <AppRoutes />
+                        </Root>
+                    </Suspense>
+                    <ReactQueryDevtools initialIsOpen={true} />
+                </QueryClientProvider>
             </FilterProvider>
         </ThemeProvider>
     );

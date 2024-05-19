@@ -9,6 +9,8 @@ import mockIssueList from '../../data/issueList.json';
 import NavStateType from './NavStateType';
 import NavFilterType from './NavFilterType';
 import { MainContainer } from '../../styles/theme';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useFiltersData } from '../../hooks/useFiltersData';
 
 // TODO: fetch 데이터
 const labelTypeItems = [
@@ -19,7 +21,6 @@ const imageTypeItems = [
     { avatarSrc: 'https://avatars.githubusercontent.com/u/96780693?s=40&v=4', userName: 'woody' },
     { avatarSrc: 'https://avatars.githubusercontent.com/u/103445254?s=40&v=4', userName: 'zzawang' },
 ];
-const milestoneTypeItems = [{ title: '⚙️ Etc' }, { title: '💄 Style' }, { title: '🧑🏻 User' }, { title: '🎯 Issue' }];
 
 const stateModifyFilters = [{ title: '선택한 이슈 열기' }, { title: '선택한 이슈 닫기' }];
 // TODO: ----------------------------------
@@ -48,12 +49,26 @@ const issueFilters = {
     mentionsMe: 'mentions:@me',
 };
 
+const initFilterItems = {
+    labels: [],
+    members: [],
+    milestones: [],
+};
 export default function Main() {
     const navigate = useNavigate();
     const { state: selectedFilters, dispatch } = useFilterContext();
     const [inputFilter, setInputFilter] = useState('');
     const [isClearFilter, setIsClearFilter] = useState(false);
     const [checkedItems, setCheckedItems] = useState([]);
+
+    const [filterItemsByType, setFilterItemsByType] = useState(initFilterItems);
+
+    const filterResults = useFiltersData();
+    const [labelsResult, membersResult, milestonesOpenResult, milestonesClosedResult] = filterResults;
+
+    // const { isLoading, error, data: products } = useFiltersData();
+    // const client = useQueryClient();
+    //     <button onClick={() => client.invalidateQueries({ queryKey: ['label'] })}>update</button>
 
     const clearFilter = () => {
         dispatch({ type: 'SET_CLEAR_FILTER', payload: '' });
@@ -99,6 +114,19 @@ export default function Main() {
         setInputFilter(filterSelectedLists(selectedFilters).join(' '));
         setIsClearFilter(isFilterActive());
     }, [selectedFilters]);
+
+    useEffect(() => {
+        if (filterResults.some((result) => !result.data)) return;
+
+        const milestoneOpenItems = milestonesOpenResult.data.milestoneDetailDtos.map(({ name }) => ({
+            title: name,
+        }));
+        const milestoneClosedItems = milestonesClosedResult.data.milestoneDetailDtos.map(({ name }) => ({
+            title: name,
+        }));
+
+        setFilterItemsByType((prev) => ({ ...prev, milestones: [...milestoneOpenItems, ...milestoneClosedItems] }));
+    }, [filterResults]);
 
     return (
         <MainContainer>
@@ -146,7 +174,7 @@ export default function Main() {
                             dispatchTypeByFilterContents={dispatchTypeByFilterContents}
                             imageTypeItems={imageTypeItems}
                             labelTypeItems={labelTypeItems}
-                            milestoneTypeItems={milestoneTypeItems}
+                            milestoneTypeItems={filterItemsByType.milestones}
                             dispatch={dispatch}
                             ischecked={selectedFilters.issues.isClosed}
                         ></NavFilterType>
