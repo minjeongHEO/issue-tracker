@@ -17,4 +17,8 @@ public interface IssueLabelRepository extends CrudRepository<IssueLabel, Long>, 
     @Modifying
     @Query("DELETE FROM issue_label WHERE issue_id = :issueId AND label_id = :labelId")
     void deleteById(Long issueId, Long labelId);
+
+    @Modifying
+    @Query("DELETE FROM issue_label WHERE issue_id = :issueId")
+    void deleteByIssueId(Long issueId);
 }
