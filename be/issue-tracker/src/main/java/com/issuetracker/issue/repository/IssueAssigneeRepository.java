@@ -20,8 +20,4 @@ public interface IssueAssigneeRepository extends CrudRepository<IssueAssignee, L
     @Modifying
     @Query("DELETE FROM issue_assignee WHERE issue_id = :issueId AND member_id = :memberId")
     void deleteById(Long issueId, String memberId);
-
-    @Modifying
-    @Query("DELETE FROM issue_assignee WHERE issue_id = :issueId")
-    void deleteByIssueId(Long issueId);
 }

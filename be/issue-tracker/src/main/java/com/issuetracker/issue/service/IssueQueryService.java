@@ -47,19 +47,8 @@ public class IssueQueryService {
         return issueAssigneeRepository.findAssigneeIdsByIssueId(issueId);
     }
 
-    /**
-     * id와 일치하는 이슈가 존재한다면 반환하고 존재하지 않는다면 예외를 발생시킨다.
-     */
     @Transactional(readOnly = true)
     public Issue getIssueOrThrow(Long id) {
         return issueRepository.findById(id).orElseThrow(IssueNotFoundException::new);
-    }
-
-    /**
-     * 매개변수로 받는 마일스톤 id 및 상태와 일치하는 이슈를 찾아 카운팅한다.
-     */
-    @Transactional(readOnly = true)
-    public Long countIssuesByMilestoneIdAndStatus(Long milestoneId, boolean isClosed) {
-        return issueRepository.countByMilestoneIdAndIsClosed(milestoneId, isClosed);
     }
 }

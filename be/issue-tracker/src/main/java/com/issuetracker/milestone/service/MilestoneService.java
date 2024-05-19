@@ -1,6 +1,6 @@
 package com.issuetracker.milestone.service;
 
-import com.issuetracker.issue.service.IssueQueryService;
+import com.issuetracker.issue.repository.IssueRepository;
 import com.issuetracker.milestone.Repository.MilestoneRepository;
 import com.issuetracker.milestone.domain.Milestone;
 import com.issuetracker.milestone.dto.MilestoneCountDto;
@@ -21,11 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class MilestoneService {
     private final MilestoneRepository milestoneRepository;
-    private final IssueQueryService issueQueryService;
+    private final IssueRepository issueRepository;
 
-    /**
-     * 사용자가 입력한 정보를 바탕으로 새로운 마일스톤을 생성하여 저장한다.
-     */
     @Transactional
     public Milestone createMilestone(MilestoneCreateDto milestoneCreateDto) {
         Milestone milestone = toMilestone(milestoneCreateDto);
@@ -34,9 +31,6 @@ public class MilestoneService {
         return saved;
     }
 
-    /**
-     * id와 일치하는 마일스톤의 정보를 수정한다. 일치하는 id가 없다면 예외를 발생시킨다.
-     */
     @Transactional
     public Milestone modifyMilestone(MilestoneCreateDto milestoneCreateDto, Long id) {
         Milestone milestone = toMilestone(milestoneCreateDto);
@@ -46,9 +40,6 @@ public class MilestoneService {
         return modified;
     }
 
-    /**
-     * id와 일치하는 마일스톤을 삭제한다. 일치하는 id가 없다면 예외를 발생시킨다.
-     */
     @Transactional
     public void deleteMilestone(Long id) {
         validateExists(id);
@@ -56,9 +47,6 @@ public class MilestoneService {
         log.info("마일스톤이 삭제되었습니다. id = {}", id);
     }
 
-    /**
-     * 모든 마일스톤의 개수를 열림, 닫힘으로 구분하여 카운트한다.
-     */
     @Transactional(readOnly = true)
     public MilestoneCountDto countMilestones() {
         Long isClosed = milestoneRepository.countByIsClosed(true);
@@ -66,9 +54,6 @@ public class MilestoneService {
         return new MilestoneCountDto(isOpened, isClosed);
     }
 
-    /**
-     * id와 일치하는 마일스톤을 닫는다. 일치하는 마일스톤이 없다면 예외를 발생시킨다.
-     */
     @Transactional
     public void close(Long id) {
         validateExists(id);
@@ -76,9 +61,6 @@ public class MilestoneService {
         log.info("마일스톤이 닫혔습니다. id = {}", id);
     }
 
-    /**
-     * id와 일치하는 마일스톤을 연다. 일치하는 마일스톤이 없다면 예외를 발생시킨다.
-     */
     @Transactional
     public void open(Long id) {
         validateExists(id);
@@ -86,44 +68,31 @@ public class MilestoneService {
         log.info("마일스톤이 열렸습니다. id = {}", id);
     }
 
-    /**
-     * 저장된 모든 마일스톤의 정보를 반환한다.
-     */
     @Transactional(readOnly = true)
     public MilestoneListDto showMilestoneList(boolean isClosed) {
         List<Milestone> milestones = milestoneRepository.findAllByIsClosed(isClosed);
 
         List<MilestoneDetailDto> milestoneDetailDtos = toMilestoneDetailDtos(milestones);
-        return new MilestoneListDto((long) milestoneDetailDtos.size(), milestoneDetailDtos);
+        return new MilestoneListDto(milestoneDetailDtos);
     }
 
-    /**
-     * id와 일치하는 마일스톤 정보를 찾아 반환한다. id와 일치하는 마일스톤이 없다면 에외를 발생시킨다.
-     */
     @Transactional(readOnly = true)
     public MilestoneDetailDto showMilestoneDetail(Long id) {
-        Milestone milestone = getMilestoneOrThrow(id);
-
-        Long openIssueCount = issueQueryService.countIssuesByMilestoneIdAndStatus(id, false);
-        Long closedIssueCount = issueQueryService.countIssuesByMilestoneIdAndStatus(id, true);
+        Milestone milestone = getMilestone(id);
+        Long openIssueCount = issueRepository.countByMilestoneIdAndIsClosed(id, false);
+        Long closedIssueCount = issueRepository.countByMilestoneIdAndIsClosed(id, true);
 
         return toMilestoneDetailDto(milestone, openIssueCount, closedIssueCount);
     }
 
-    /**
-     * id와 일치하는 마일스톤의 간략한 정보를 반환한다. id와 일치하는 마일스톤이 없다면 예외를 발생시킨다.
-     */
     @Transactional
-    public SimpleMilestoneDto showMilestoneCover(Long id) {
-        Milestone milestone = getMilestoneOrThrow(id);
-        Long openIssueCount = issueQueryService.countIssuesByMilestoneIdAndStatus(id, false);
-        Long closedIssueCount = issueQueryService.countIssuesByMilestoneIdAndStatus(id, true);
+    public SimpleMilestoneDto showSimpleMilestone(Long id) {
+        Milestone milestone = getMilestone(id);
+        Long openIssueCount = issueRepository.countByMilestoneIdAndIsClosed(id, false);
+        Long closedIssueCount = issueRepository.countByMilestoneIdAndIsClosed(id, true);
         return new SimpleMilestoneDto(milestone.getId(), milestone.getName(), openIssueCount, closedIssueCount);
     }
 
-    /**
-     * 마일스톤의 이름과 일치하는 id를 찾아 반환한다.
-     */
     @Transactional(readOnly = true)
     public Long findIdByName(String name) {
         return milestoneRepository.findIdByName(name);
@@ -133,8 +102,8 @@ public class MilestoneService {
         List<MilestoneDetailDto> milestoneDetailDtos = new ArrayList<>();
         for (Milestone milestone : milestones) {
             Long milestoneId = milestone.getId();
-            Long openIssueCount = issueQueryService.countIssuesByMilestoneIdAndStatus(milestoneId, false);
-            Long closedIssueCount = issueQueryService.countIssuesByMilestoneIdAndStatus(milestoneId, true);
+            Long openIssueCount = issueRepository.countByMilestoneIdAndIsClosed(milestoneId, false);
+            Long closedIssueCount = issueRepository.countByMilestoneIdAndIsClosed(milestoneId, true);
             MilestoneDetailDto milestoneDetailDto = toMilestoneDetailDto(milestone, openIssueCount,
                     closedIssueCount);
 
@@ -167,7 +136,7 @@ public class MilestoneService {
         }
     }
 
-    private Milestone getMilestoneOrThrow(Long id) {
+    private Milestone getMilestone(Long id) {
         return milestoneRepository.findById(id)
                 .orElseThrow(MilestoneNotFoundException::new);
     }
