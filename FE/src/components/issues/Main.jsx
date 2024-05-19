@@ -17,10 +17,6 @@ const labelTypeItems = [
     { labelColor: '#F910AC', labelName: '🖥️ BE' },
     { labelColor: '#F9D0F0', labelName: '🌐 FE' },
 ];
-const imageTypeItems = [
-    { avatarSrc: 'https://avatars.githubusercontent.com/u/96780693?s=40&v=4', userName: 'woody' },
-    { avatarSrc: 'https://avatars.githubusercontent.com/u/103445254?s=40&v=4', userName: 'zzawang' },
-];
 
 const stateModifyFilters = [{ title: '선택한 이슈 열기' }, { title: '선택한 이슈 닫기' }];
 // TODO: ----------------------------------
@@ -123,7 +119,12 @@ export default function Main() {
             title: name,
         }));
 
-        setFilterItemsByType((prev) => ({ ...prev, milestones: [...milestoneOpenItems, ...milestoneClosedItems] }));
+        const memberItems = membersResult.data.map(({ id, imgUrl }) => ({
+            avatarSrc: imgUrl,
+            userName: id,
+        }));
+
+        setFilterItemsByType((prev) => ({ ...prev, members: memberItems, milestones: [...milestoneOpenItems, ...milestoneClosedItems] }));
     }, [labelsResult.data, membersResult.data, milestonesOpenResult.data, milestonesClosedResult.data]);
 
     return (
@@ -170,7 +171,7 @@ export default function Main() {
                     ) : (
                         <NavFilterType
                             dispatchTypeByFilterContents={dispatchTypeByFilterContents}
-                            imageTypeItems={imageTypeItems}
+                            imageTypeItems={filterItemsByType.members}
                             labelTypeItems={labelTypeItems}
                             milestoneTypeItems={filterItemsByType.milestones}
                             dispatch={dispatch}
