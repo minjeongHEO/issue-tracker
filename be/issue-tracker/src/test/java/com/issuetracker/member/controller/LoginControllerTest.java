@@ -40,7 +40,7 @@ class LoginControllerTest {
     @BeforeEach
     void setUp() {
         loginTryDto = new LoginTryDto("john.doe", "password123");
-        member = new Member("john.doe", "password123", "johnny", "john.doe@example.com");
+        member = new Member("john.doe", "password123", "johnny", "john.doe@example.com", null);
         loginMemberDto = new LoginMemberDto("john.doe", "johnny", "john.doe@example.com");
     }
 
@@ -48,7 +48,7 @@ class LoginControllerTest {
     @DisplayName("로그인에 성공하면 아이디, 닉네임, 비밀번호를 반환한다.")
     void login_success() throws Exception {
         // Mocking LoginService
-        when(loginService.login(any(LoginTryDto.class))).thenReturn(member);
+        when(loginService.login(any(LoginTryDto.class))).thenReturn(loginMemberDto);
 
         String requestJson = objectMapper.writeValueAsString(loginTryDto);
         String expectedResponseJson = objectMapper.writeValueAsString(loginMemberDto);

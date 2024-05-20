@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -12,6 +13,8 @@ import com.issuetracker.label.dto.LabelDto;
 import com.issuetracker.label.exception.InvalidBgColorException;
 import com.issuetracker.label.exception.LabelNotFoundException;
 import com.issuetracker.label.repository.LabelRepository;
+import java.util.Arrays;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,8 +23,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 class LabelServiceTest {
-    private LabelDto labelDto;
-
     @Mock
     private LabelRepository labelRepository;
 
@@ -31,14 +32,28 @@ class LabelServiceTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        this.labelDto = new LabelDto();
+    }
+
+    @DisplayName("라벨의 전체 리스트를 가져올 수 있다.")
+    @Test
+    public void getLabels() {
+        Label label1 = new Label("Label1", null, "#000000");
+        Label label2 = new Label("Label2", null, "#FFFFFF");
+        List<Label> mockLabels = Arrays.asList(label1, label2);
+
+        when(labelRepository.findAll()).thenReturn(mockLabels);
+
+        List<Label> result = labelService.getLabels();
+        assertThat(result).isEqualTo(mockLabels);
+
+        verify(labelRepository, times(1)).findAll();
     }
 
     @DisplayName("유효한 색상 코드를 가진 라벨 생성 요청이면 새 라벨을 생성할 수 있다.")
     @Test
     public void createLabel_WithValidBgColor() {
-        setupLabelDto("검정", "#000000");
-        createAndReturnMockLabel("검정", "#000000", 1L);
+        LabelDto labelDto = new LabelDto("검정", null, "#000000");
+        createAndReturnMockLabel(labelDto, 1L);
         Label createdLabel = labelService.createLabel(labelDto);
         verifyLabelProperties(createdLabel, 1L, "검정", "#000000");
     }
@@ -46,7 +61,7 @@ class LabelServiceTest {
     @DisplayName("유효하지 않은 색상 코드를 가진 라벨 생성 요청이면 새 라벨을 생성할 수 없다.")
     @Test
     public void createLabel_WithInvalidBgColor() {
-        setupLabelDto("올바르지 않은 색상", "#dasdad");
+        LabelDto labelDto = new LabelDto("올바르지 않은 색상", null, "#dasdad");
         assertThatThrownBy(() -> {
             labelService.createLabel(labelDto);
         }).isInstanceOf(InvalidBgColorException.class);
@@ -56,8 +71,8 @@ class LabelServiceTest {
     @DisplayName("유효한 색상 코드를 가진 라벨 수정 요청이면 라벨을 수정할 수 있다.")
     @Test
     public void modifyLabel_WithValidBgColor() {
-        setupLabelDto("검정", "#000000");
-        Label mockLabel = createAndReturnMockLabel("검정", "#000000", 1L);
+        LabelDto labelDto = new LabelDto("검정", null, "#000000");
+        Label mockLabel = createAndReturnMockLabel(labelDto, 1L);
         Label modifiedLabel = labelService.modifyLabel(labelDto, mockLabel.getId());
         verifyLabelProperties(modifiedLabel, 1L, "검정", "#000000");
     }
@@ -65,7 +80,7 @@ class LabelServiceTest {
     @DisplayName("유효하지 않은 색상 코드를 가진 라벨 수정 요청이면 라벨을 수정할 수 없다.")
     @Test
     public void modifyLabel_WithInvalidBgColor() {
-        setupLabelDto("올바르지 않은 색상", "#dasdad");
+        LabelDto labelDto = new LabelDto("올바르지 않은 색상", null, "#dasdad");
         assertThatThrownBy(() -> {
             labelService.modifyLabel(labelDto, 1L);
         }).isInstanceOf(InvalidBgColorException.class);
@@ -99,13 +114,23 @@ class LabelServiceTest {
         verify(labelRepository, never()).deleteById(id);
     }
 
-    private void setupLabelDto(String name, String bgColor) {
-        labelDto.setName(name);
-        labelDto.setBgColor(bgColor);
+    @DisplayName("라벨의 총 개수를 구할 수 있다.")
+    @Test
+    public void countLabels() {
+        Label label1 = new Label("Label1", null, "#000000");
+        Label label2 = new Label("Label2", null, "#FFFFFF");
+        List<Label> mockLabels = Arrays.asList(label1, label2);
+
+        when(labelRepository.findAll()).thenReturn(mockLabels);
+
+        long result = labelService.countLabels();
+        assertThat(result).isEqualTo(2);
+
+        verify(labelRepository, times(1)).findAll();
     }
 
-    private Label createAndReturnMockLabel(String name, String bgColor, Long id) {
-        Label label = new Label(name, null, bgColor);
+    private Label createAndReturnMockLabel(LabelDto labelDto, Long id) {
+        Label label = new Label(labelDto.getName(), labelDto.getDescription(), labelDto.getBgColor());
         label.setId(id);
         when(labelRepository.save(any(Label.class))).thenReturn(label);
         return label;

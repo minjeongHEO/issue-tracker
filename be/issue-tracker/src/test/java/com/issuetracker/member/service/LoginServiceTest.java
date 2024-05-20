@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
+import com.issuetracker.member.dto.LoginMemberDto;
 import com.issuetracker.member.dto.LoginTryDto;
 import com.issuetracker.member.exception.LoginFailException;
 import com.issuetracker.member.model.Member;
@@ -33,7 +34,7 @@ class LoginServiceTest {
         // Given
         String id = "john.doe";
         String password = "password123";
-        Member member = new Member(id, password, "johnny", "john.doe@example.com");
+        Member member = new Member(id, password, "johnny", "john.doe@example.com", null);
 
         // MemberRepository Mock 설정
         when(memberRepository.findById(id)).thenReturn(Optional.of(member));
@@ -41,10 +42,12 @@ class LoginServiceTest {
         LoginTryDto loginTryDto = new LoginTryDto(id, password);
 
         // When
-        Member loginMember = loginService.login(loginTryDto);
+        LoginMemberDto loginMember = loginService.login(loginTryDto);
 
         // Then
-        assertThat(member).isEqualTo(loginMember);
+        assertThat(member.getId()).isEqualTo(loginMember.getId());
+        assertThat(member.getNickname()).isEqualTo(loginMember.getNickname());
+        assertThat(member.getEmail()).isEqualTo(loginMember.getEmail());
     }
 
     @Test
@@ -71,7 +74,7 @@ class LoginServiceTest {
         String id = "john.doe";
         String correctPassword = "correct_password";
         String wrongPassword = "wrong_password";
-        Member member = new Member(id, correctPassword, "johnny", "john.doe@example.com");
+        Member member = new Member(id, correctPassword, "johnny", "john.doe@example.com", null);
 
         // MemberRepository Mock 설정 (올바른 ID로 멤버 반환)
         when(memberRepository.findById(id)).thenReturn(Optional.of(member));
