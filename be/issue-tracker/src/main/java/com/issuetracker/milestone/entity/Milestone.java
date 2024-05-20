@@ -1,9 +1,8 @@
-package com.issuetracker.milestone.domain;
+package com.issuetracker.milestone.entity;
 
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
 
@@ -11,9 +10,8 @@ import org.springframework.data.annotation.Id;
 @Getter
 @ToString
 public class Milestone {
-    @Setter
     @Id
-    private Long id;
+    private final Long id;
     private final String name;
     private final String description;
     private final LocalDateTime dueDate;
