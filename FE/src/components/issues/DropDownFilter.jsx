@@ -6,6 +6,11 @@ import { DropTitle } from '../../styles/theme.js';
 import DropDownTitle from './DropDownTitle.jsx';
 import { useFilterContext } from '../../context/FilterContext.jsx';
 
+const filterMapping = {
+    issue: '이슈 필터',
+    state: '상태 변경',
+};
+
 export default function DropDownFilter({ filterTitle, filterItems, dispatchTypeByFilterContents, children }) {
     const [selectedKey, setSelectedKey] = useState(null);
     const { state: selectedFilters, dispatch } = useFilterContext();
@@ -48,11 +53,7 @@ export default function DropDownFilter({ filterTitle, filterItems, dispatchTypeB
         }
     };
 
-    const dropBoxTitle = () => {
-        if (filterTitle === 'issue') return '이슈 필터';
-        if (filterTitle === 'state') return '상태 변경';
-        return `${children} 필터`;
-    };
+    const dropBoxTitle = () => filterMapping[filterTitle] || `${children} 필터`;
 
     const titleItem = {
         label: (
