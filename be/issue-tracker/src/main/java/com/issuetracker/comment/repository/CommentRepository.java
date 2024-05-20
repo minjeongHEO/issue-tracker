@@ -1,6 +1,6 @@
 package com.issuetracker.comment.repository;
 
-import com.issuetracker.comment.domain.Comment;
+import com.issuetracker.comment.entity.Comment;
 import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 

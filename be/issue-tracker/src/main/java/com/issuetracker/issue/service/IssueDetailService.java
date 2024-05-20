@@ -1,6 +1,5 @@
 package com.issuetracker.issue.service;
 
-import com.issuetracker.comment.domain.Comment;
 import com.issuetracker.comment.dto.CommentDetailDto;
 import com.issuetracker.comment.service.CommentService;
 import com.issuetracker.file.dto.UploadedFileDto;
@@ -14,7 +13,6 @@ import com.issuetracker.member.dto.SimpleMemberDto;
 import com.issuetracker.member.service.MemberService;
 import com.issuetracker.milestone.dto.SimpleMilestoneDto;
 import com.issuetracker.milestone.service.MilestoneService;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,36 +41,13 @@ public class IssueDetailService {
         UploadedFileDto file = getFileByIssue(issue);
         List<Label> labels = getIssueLabels(id);
         List<SimpleMemberDto> assignees = getIssueAssignees(id);
-        List<CommentDetailDto> comments = getCommentDetails(id);
+        List<CommentDetailDto> comments = commentService.getCommentDetails(id);
 
         return IssueMapper.toIssueDetailDto(issue, writer, milestone, file, labels, assignees, comments);
     }
 
     private SimpleMemberDto getWriter(String memberId) {
         return memberService.getSimpleMemberById(memberId);
-    }
-
-    private List<CommentDetailDto> getCommentDetails(Long id) {
-        List<CommentDetailDto> commentDetails = new ArrayList<>();
-        List<Comment> comments = commentService.findCommentsById(id);
-        addCommentDetail(comments, commentDetails);
-        return commentDetails;
-    }
-
-    private void addCommentDetail(List<Comment> comments, List<CommentDetailDto> commentDetails) {
-        for (Comment comment : comments) {
-            SimpleMemberDto writer = memberService.getSimpleMemberById(comment.getMemberId());
-            UploadedFileDto file = getFileByComment(comment);
-            CommentDetailDto commentDetail = CommentDetailDto.builder()
-                    .id(comment.getId())
-                    .content(comment.getContent())
-                    .writer(writer)
-                    .isWriter(comment.isWriter())
-                    .file(file)
-                    .createDate(comment.getCreateDate())
-                    .build();
-            commentDetails.add(commentDetail);
-        }
     }
 
     private SimpleMilestoneDto getMilestone(Issue issue) {
@@ -85,14 +60,6 @@ public class IssueDetailService {
 
     private UploadedFileDto getFileByIssue(Issue issue) {
         Long fileId = issue.getFileId();
-        if (fileId == null) {
-            return null;
-        }
-        return fileService.showFile(fileId);
-    }
-
-    private UploadedFileDto getFileByComment(Comment comment) {
-        Long fileId = comment.getFileId();
         if (fileId == null) {
             return null;
         }
