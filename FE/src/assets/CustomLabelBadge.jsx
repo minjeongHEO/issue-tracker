@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 import theme from '../styles/theme';
 
-export function CustomLabelBadge({ className, children, backgroundColor, color }) {
+export function CustomLabelBadge({ className, children, backgroundColor, color, visibility }) {
     return (
-        <StyledLabel className={className} $bgColor={backgroundColor} $color={color}>
+        <StyledLabel className={className} $bgColor={backgroundColor} $color={color} $visibility={visibility}>
             {children}
         </StyledLabel>
     );
@@ -20,4 +20,5 @@ const StyledLabel = styled.span`
     font-size: 15px;
     background-color: ${(props) => props.$bgColor || props.theme.bgColorBody};
     color: ${(props) => props.$color || props.theme.fontColor};
+    visibility: ${(props) => props.$visibility || 'visible'};
 `;
