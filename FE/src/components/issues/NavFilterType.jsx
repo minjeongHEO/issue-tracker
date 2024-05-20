@@ -1,4 +1,5 @@
 import React from 'react';
+import { styled } from 'styled-components';
 import { StyledHeaderContents } from '../../styles/theme';
 import DropDownFilter from './DropDownFilter';
 import { useFilterContext } from '../../context/FilterContext';
@@ -22,28 +23,47 @@ export default function NavFilterType({ dispatchTypeByFilterContents, imageTypeI
                     닫힌 이슈()
                 </span>
             </div>
-            <div className="filter">
-                <span className="filterOption">
-                    <DropDownFilter filterTitle={'assignee'} filterItems={imageTypeItems}>
-                        담당자
-                    </DropDownFilter>
-                </span>
-                <span className="filterOption">
-                    <DropDownFilter filterTitle={'label'} filterItems={labelTypeItems}>
-                        레이블
-                    </DropDownFilter>
-                </span>
-                <span className="filterOption">
-                    <DropDownFilter filterTitle={'milestone'} filterItems={milestoneTypeItems}>
-                        마일스톤
-                    </DropDownFilter>
-                </span>
-                <span className="filterOption">
-                    <DropDownFilter filterTitle={'author'} filterItems={imageTypeItems}>
-                        작성자
-                    </DropDownFilter>
-                </span>
-            </div>
+            <StyledDiv>
+                <div className="filter">
+                    <span className="filterOption">
+                        <DropDownFilter filterTitle={'assignee'} filterItems={imageTypeItems}>
+                            담당자
+                        </DropDownFilter>
+                    </span>
+                    <span className="filterOption">
+                        <DropDownFilter filterTitle={'label'} filterItems={labelTypeItems}>
+                            레이블
+                        </DropDownFilter>
+                    </span>
+                    <span className="filterOption">
+                        <DropDownFilter filterTitle={'milestone'} filterItems={milestoneTypeItems}>
+                            마일스톤
+                        </DropDownFilter>
+                    </span>
+                    <span className="filterOption">
+                        <DropDownFilter filterTitle={'author'} filterItems={imageTypeItems}>
+                            작성자
+                        </DropDownFilter>
+                    </span>
+                </div>
+            </StyledDiv>
         </StyledHeaderContents>
     );
 }
+
+const StyledDiv = styled.div`
+    .filterOption {
+        position: relative;
+        ul {
+            /* max-height: 350px; */
+            /* overflow-y: scroll; */
+            background-color: ${(props) => props.theme.bgColorBody};
+            border: 1px solid;
+            border-color: ${(props) => props.theme.borderColor};
+            color: ${(props) => props.theme.fontColor};
+        }
+        ul * {
+            color: ${(props) => props.theme.fontColor};
+        }
+    }
+`;

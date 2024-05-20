@@ -137,7 +137,7 @@ export default function DropDownFilter({ filterTitle, filterItems, dispatchTypeB
                           <ItemContainer>
                               <div className="itemTitle">
                                   <DropTitle>
-                                      <StyledColor style={{ backgroundColor: cur.labelColor }}></StyledColor>
+                                      <StyledColor style={{ backgroundColor: cur.labelColor, color: cur.textColor }}></StyledColor>
                                       <UserName>{cur.labelName}</UserName>
                                   </DropTitle>
                               </div>
@@ -165,7 +165,7 @@ export default function DropDownFilter({ filterTitle, filterItems, dispatchTypeB
     const items = itemByType[filterTitle];
 
     return (
-        <StyledDropdown menu={{ items, onClick: handleMenuClick }} trigger={['click']}>
+        <StyledDropdown menu={{ items, onClick: handleMenuClick }} getPopupContainer={(triggerNode) => triggerNode.parentNode} trigger={['click']}>
             <a onClick={(e) => e.preventDefault()}>
                 <Space>
                     {children}
