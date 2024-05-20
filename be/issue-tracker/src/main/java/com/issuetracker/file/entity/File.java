@@ -1,8 +1,7 @@
-package com.issuetracker.file.domain;
+package com.issuetracker.file.entity;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
 
@@ -11,8 +10,7 @@ import org.springframework.data.annotation.Id;
 @ToString
 public class File {
     @Id
-    @Setter
-    private Long id;
+    private final Long id;
     private final String uploadName;
     private final String storeName;
 }
