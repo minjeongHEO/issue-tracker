@@ -7,6 +7,7 @@ import com.issuetracker.file.dto.UploadedFileDto;
 import com.issuetracker.file.service.FileService;
 import com.issuetracker.issue.dto.IssueDetailDto;
 import com.issuetracker.issue.entity.Issue;
+import com.issuetracker.issue.utils.IssueMapper;
 import com.issuetracker.label.entity.Label;
 import com.issuetracker.label.service.LabelService;
 import com.issuetracker.member.dto.SimpleMemberDto;
@@ -44,7 +45,7 @@ public class IssueDetailService {
         List<SimpleMemberDto> assignees = getIssueAssignees(id);
         List<CommentDetailDto> comments = getCommentDetails(id);
 
-        return toIssueDetailDto(issue, writer, milestone, file, labels, assignees, comments);
+        return IssueMapper.toIssueDetailDto(issue, writer, milestone, file, labels, assignees, comments);
     }
 
     private SimpleMemberDto getWriter(String memberId) {
@@ -110,24 +111,5 @@ public class IssueDetailService {
 
     private Issue getIssue(Long id) {
         return issueQueryService.getIssueOrThrow(id);
-    }
-
-    private IssueDetailDto toIssueDetailDto(Issue issue, SimpleMemberDto writer, SimpleMilestoneDto milestone,
-                                            UploadedFileDto file,
-                                            List<Label> labels, List<SimpleMemberDto> assignees,
-                                            List<CommentDetailDto> comments) {
-        return IssueDetailDto.builder()
-                .id(issue.getId())
-                .title(issue.getTitle())
-                .content(issue.getContent())
-                .writer(writer)
-                .createDate(issue.getCreateDate())
-                .isClosed(issue.isClosed())
-                .milestone(milestone)
-                .file(file)
-                .labels(labels)
-                .assignees(assignees)
-                .comments(comments)
-                .build();
     }
 }

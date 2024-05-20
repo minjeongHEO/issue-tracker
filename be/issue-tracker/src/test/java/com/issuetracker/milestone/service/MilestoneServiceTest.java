@@ -15,6 +15,7 @@ import com.issuetracker.milestone.dto.MilestoneCreateDto;
 import com.issuetracker.milestone.entity.Milestone;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -60,8 +61,7 @@ class MilestoneServiceTest {
                 milestoneCreateDto.getDescription(), null,
                 false);
 
-        when(milestoneRepository.save(any(Milestone.class))).thenReturn(milestone);
-
+        when(milestoneRepository.findById(any(Long.class))).thenReturn(Optional.of(milestone));
         // When
         Milestone modified = milestoneService.modifyMilestone(milestoneCreateDto, milestoneId);
 

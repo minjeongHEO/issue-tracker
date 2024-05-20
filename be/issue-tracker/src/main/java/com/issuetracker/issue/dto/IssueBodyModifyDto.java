@@ -1,4 +1,4 @@
-package com.issuetracker.issue.controller;
+package com.issuetracker.issue.dto;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
