@@ -10,17 +10,18 @@ export default function DropDownFilter({ filterTitle, filterItems, dispatchTypeB
     const [selectedKey, setSelectedKey] = useState(null);
     const { state: selectedFilters, dispatch } = useFilterContext();
 
+    const filterReset = (filterOject, keys) => {
+        return Object.entries(filterOject)
+            .filter(([key, value]) => !keys.includes(key))
+            .every(([key, value]) => value === null);
+    };
+
     const isResetFilters = (selectedFilters) => {
         if (!selectedFilters || Object.keys(selectedFilters).length === 0) return;
 
         const issues = selectedFilters.issues || {};
-        const isResetIssueFilters = Object.entries(issues)
-            .filter(([key, value]) => key !== 'isOpen' || key !== 'isClosed')
-            .every(([key, value]) => value === null);
-
-        const isResetRestFilters = Object.entries(selectedFilters)
-            .filter(([key, value]) => key !== 'issues')
-            .every(([key, value]) => value === null);
+        const isResetIssueFilters = filterReset(issues, ['isOpen', 'isClosed']);
+        const isResetRestFilters = filterReset(selectedFilters, ['issues']);
 
         return isResetIssueFilters && isResetRestFilters;
     };
