@@ -16,7 +16,7 @@ export default function IssueDetailTitle({ editState, toggleEditState }) {
                         <HeaderAction>
                             <StyledBtn>
                                 <IconEdit />
-                                <span>편집 취소</span>
+                                <span onClick={toggleEditState}>편집 취소</span>
                             </StyledBtn>
                             <StyledBtn>
                                 <IconArchive />

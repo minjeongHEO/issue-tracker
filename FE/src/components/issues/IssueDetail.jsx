@@ -44,7 +44,7 @@ export default function IssueDetail() {
 
                 <ContentsContainer>
                     <StyledComments>
-                        <IssueDetailComment detailData={mockData} />
+                        <IssueDetailComment detailCommentData={mockData.comments[0]} />
                         <IssueDetailComment />
                         <IssueDetailComment />
                     </StyledComments>
@@ -61,9 +61,9 @@ export default function IssueDetail() {
 }
 
 const StyledComments = styled.div`
+    /* background-color: azure; */
     width: 700px;
     min-height: 200px;
-    background-color: azure;
     display: flex;
     flex-direction: column;
     justify-content: baseline;
