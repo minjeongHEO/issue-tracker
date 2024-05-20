@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { IconMilestone } from '../../assets/icons/IconMilestone';
 
 export default function IssueList({ isSingleChecked, setCheckedItems, listData }) {
-    const { title, labels, id, createDate, memberId, milestoneName } = listData;
+    const { id, title, createDate, milestoneName, authorId, assignees, labels } = listData;
     const [pastTime, setPastTime] = useState('');
     const navigate = useNavigate();
 
@@ -39,7 +39,7 @@ export default function IssueList({ isSingleChecked, setCheckedItems, listData }
     }, [createDate]);
 
     return (
-        <ListContainer>
+        <ListContainer id={id}>
             <ListTitle>
                 <Checkbox onClick={toggleCheckBox} checked={isSingleChecked} />
                 <ListBody>
@@ -48,8 +48,8 @@ export default function IssueList({ isSingleChecked, setCheckedItems, listData }
                             ! {title}
                         </span>
                         {labels &&
-                            labels.map(({ name, bgColor }) => (
-                                <StyledLabel key={name} style={{ backgroundColor: bgColor }}>
+                            labels.map(({ name, bgColor, textColor }) => (
+                                <StyledLabel key={name} style={{ backgroundColor: bgColor, color: textColor }}>
                                     {name}
                                 </StyledLabel>
                             ))}
@@ -57,7 +57,7 @@ export default function IssueList({ isSingleChecked, setCheckedItems, listData }
                     <div>
                         <span>#{id}</span>
                         <span>
-                            이 이슈가 {pastTime}, {memberId || ''}님에 의해 작성되었습니다.
+                            이 이슈가 {pastTime}, {authorId || ''}님에 의해 작성되었습니다.
                         </span>
 
                         <span>
@@ -69,11 +69,7 @@ export default function IssueList({ isSingleChecked, setCheckedItems, listData }
             </ListTitle>
 
             <StyledProfile>
-                <img
-                    src="https://github.com/codesquad-masters2024-team02/issue-tracker/assets/96780693/d1c7123b-89c9-485b-b9dd-8cc21a1005e0"
-                    className="profile"
-                    alt="profile"
-                ></img>
+                {assignees && assignees.map(({ id, imgUrl }) => <CustomProfile key={id} src={imgUrl} size={'medium'} alt="assigneeProfile" />)}
             </StyledProfile>
         </ListContainer>
     );
@@ -118,6 +114,7 @@ const ListContainer = styled.div`
 
 const StyledProfile = styled.span`
     margin-right: 30px;
+
     & img {
         border-radius: 50%;
         width: 25px;
