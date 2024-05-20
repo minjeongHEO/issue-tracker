@@ -2,25 +2,22 @@ import { useContext, useEffect, useState } from 'react';
 import { AppRoutes } from './router/routes';
 import styled, { ThemeProvider } from 'styled-components';
 import { GlobalStyle } from './styles/GlobalStyle.js';
-import { lightTheme, darkTheme } from './styles/theme.js';
-import DarkModeProvider, { DarkModeContext } from './context/DarkModeContext.jsx';
+import { DarkModeContext } from './context/DarkModeContext.jsx';
+import { Button } from 'antd';
+import FilterProvider from './context/FilterContext.jsx';
 
 function App() {
-    const { isDarkMode, toggleDarkMode } = useContext(DarkModeContext);
-    const [darkModeTheme, setDarkModeTheme] = useState(lightTheme);
-
-    useEffect(() => {
-        if (isDarkMode) setDarkModeTheme(darkTheme);
-        else setDarkModeTheme(lightTheme);
-    }, [isDarkMode]);
+    const { isDarkMode, toggleDarkMode, darkModeTheme } = useContext(DarkModeContext);
 
     return (
         <ThemeProvider theme={darkModeTheme}>
             <GlobalStyle />
             <DarkThemeBtn onClick={toggleDarkMode}>{isDarkMode ? '🌞' : '🌚'}</DarkThemeBtn>
-            <Root>
-                <AppRoutes />
-            </Root>
+            <FilterProvider>
+                <Root>
+                    <AppRoutes />
+                </Root>
+            </FilterProvider>
         </ThemeProvider>
     );
 }
@@ -39,7 +36,7 @@ const Root = styled.div`
     text-align: center;
 `;
 
-const DarkThemeBtn = styled.button`
+const DarkThemeBtn = styled(Button)`
     position: absolute;
     top: 30px;
     left: 30px;

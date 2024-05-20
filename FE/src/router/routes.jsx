@@ -1,9 +1,13 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Join from '../components/Join';
-import Login from '../components/Login';
-import Main from '../components/Main';
+import Join from '../components/members/Join';
+import Login from '../components/members/Login';
+import Index from '../components/Index';
 import NotFound from '../components/NotFound';
+import Milestones from '../components/milestones/Milestones';
+import Labels from '../components/labels/Labels';
 import ProtectedRoute from './ProtectedRoute';
+import NewIssue from '../components/issue/NewIssue';
+import IssueDetail from '../components/issue/IssueDetail';
 
 export const AppRoutes = () => {
     return (
@@ -11,11 +15,15 @@ export const AppRoutes = () => {
             <Routes>
                 <Route path="/members/login" element={<Login />} />
                 <Route path="/members/join" element={<Join />} />
+                <Route path="/milestones" element={<Milestones />} />
+                <Route path="/labels" element={<Labels />} />
+                <Route path="/issues/new" element={<NewIssue />} />
+                <Route path="/issues/:id" element={<IssueDetail />} />
                 <Route
                     path="/"
                     element={
                         <ProtectedRoute>
-                            <Main />
+                            <Index />
                         </ProtectedRoute>
                     }
                 />

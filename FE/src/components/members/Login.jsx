@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { StyledButton, StyledInput } from '../styles/theme';
+import { StyledButton, StyledInput } from '../../styles/theme';
 import { Link, useNavigate } from 'react-router-dom';
-import DarkLogotypeLarge from '../assets/DarkLogotypeLarge.svg';
-import LightLogotypeLarge from '../assets/LightLogotypeLarge.svg';
-import { DarkModeContext } from '../context/DarkModeContext';
-import { fetchLogin } from '../api/fetchMembers';
+import DarkLogotypeLarge from '../../assets/DarkLogotypeLarge.svg';
+import LightLogotypeLarge from '../../assets/LightLogotypeLarge.svg';
+import { DarkModeContext } from '../../context/DarkModeContext';
+import { fetchLogin } from '../../api/fetchMembers';
 
 export default function Login() {
     const { isDarkMode } = useContext(DarkModeContext);
@@ -26,8 +26,18 @@ export default function Login() {
         if (setter) setter(value);
     };
 
+    const lengthSettings = {
+        min: 6,
+        max: 12,
+    };
+
+    const isValidLength = (inputValue, lengthSettings) => {
+        if (inputValue.length >= lengthSettings.min && inputValue.length <= lengthSettings.max) return true;
+        return false;
+    };
+
     const isInputValidation = () => {
-        if (idInput.length >= 6 && idInput.length <= 12 && pwInput.length >= 6 && pwInput.length <= 12) return false;
+        if (isValidLength(idInput, lengthSettings) && isValidLength(pwInput, lengthSettings)) return false;
         return true;
     };
 
@@ -37,10 +47,9 @@ export default function Login() {
         try {
             const loginResult = await fetchLogin({ id: idInput, password: pwInput });
 
-            if (loginResult.result === 'ok') {
+            if (loginResult.result) {
                 setLoginCheck(true);
-                sessionStorage.setItem('storeid', loginResult.data.id);
-                sessionStorage.setItem('storenickname', loginResult.data.nickname);
+                localStorage.setItem('storeUserData', JSON.stringify(loginResult.data));
                 navigate('/');
             }
         } catch (error) {

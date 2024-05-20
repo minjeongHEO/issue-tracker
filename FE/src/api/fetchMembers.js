@@ -10,7 +10,7 @@ const ID_LOGIN_API_URI = '/api/login';
  */
 export const fetchLogin = async ({ id, password }) => {
     try {
-        const response = await fetch(`${import.meta.env.VITE_SANGCHU_SERVER}${ID_LOGIN_API_URI}`, {
+        const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ID_LOGIN_API_URI}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -22,7 +22,7 @@ export const fetchLogin = async ({ id, password }) => {
 
         if (response.status === 200) {
             const result = await response.json();
-            return { result: 'ok', data: result };
+            return { result: true, data: result };
         }
     } catch (error) {
         throw error;
