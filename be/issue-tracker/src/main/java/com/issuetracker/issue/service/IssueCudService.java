@@ -1,10 +1,10 @@
 package com.issuetracker.issue.service;
 
-import com.issuetracker.issue.controller.IssueBodyModifyDto;
 import com.issuetracker.issue.dto.IssueAssigneeModifyDto;
+import com.issuetracker.issue.dto.IssueBodyModifyDto;
 import com.issuetracker.issue.dto.IssueChangeStatusDto;
-import com.issuetracker.issue.dto.IssueCreateRequestDto;
-import com.issuetracker.issue.dto.IssueCreateResponseDto;
+import com.issuetracker.issue.dto.IssueCreateRequest;
+import com.issuetracker.issue.dto.IssueCreateResponse;
 import com.issuetracker.issue.dto.IssueLabelModifyDto;
 import com.issuetracker.issue.dto.IssueMilestoneModifyDto;
 import com.issuetracker.issue.dto.IssueTitleModifyDto;
@@ -34,7 +34,7 @@ public class IssueCudService {
      * 사용자가 입력한 정보를 바탕으로 이슈를 생성한다.
      */
     @Transactional
-    public IssueCreateResponseDto createIssue(IssueCreateRequestDto request) {
+    public IssueCreateResponse createIssue(IssueCreateRequest request) {
         Issue issue = toIssue(request);
         Long issueId = issueRepository.save(issue).getId();
 
@@ -151,15 +151,15 @@ public class IssueCudService {
                 .forEach(issueAssigneeRepository::insert);
     }
 
-    private Issue toIssue(IssueCreateRequestDto request) {
+    private Issue toIssue(IssueCreateRequest request) {
         return new Issue(null, request.getTitle(), request.getContent(), LocalDateTime.now(), false,
                 request.getAuthorId(),
                 request.getMilestoneId(), request.getFileId());
     }
 
-    private IssueCreateResponseDto toIssueCreateResponseDto(Issue issue, List<Long> labelIds,
-                                                            List<String> assigneeIds) {
-        return new IssueCreateResponseDto(issue.getId(), issue.getTitle(), issue.getContent(), issue.getMemberId(),
+    private IssueCreateResponse toIssueCreateResponseDto(Issue issue, List<Long> labelIds,
+                                                         List<String> assigneeIds) {
+        return new IssueCreateResponse(issue.getId(), issue.getTitle(), issue.getContent(), issue.getMemberId(),
                 issue.getCreateDate(), issue.isClosed(), issue.getMilestoneId(), issue.getFileId(),
                 labelIds, assigneeIds);
     }

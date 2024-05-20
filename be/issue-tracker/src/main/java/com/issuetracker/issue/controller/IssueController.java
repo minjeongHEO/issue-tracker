@@ -1,10 +1,11 @@
 package com.issuetracker.issue.controller;
 
 import com.issuetracker.issue.dto.IssueAssigneeModifyDto;
+import com.issuetracker.issue.dto.IssueBodyModifyDto;
 import com.issuetracker.issue.dto.IssueChangeStatusDto;
 import com.issuetracker.issue.dto.IssueCountDto;
-import com.issuetracker.issue.dto.IssueCreateRequestDto;
-import com.issuetracker.issue.dto.IssueCreateResponseDto;
+import com.issuetracker.issue.dto.IssueCreateRequest;
+import com.issuetracker.issue.dto.IssueCreateResponse;
 import com.issuetracker.issue.dto.IssueDetailDto;
 import com.issuetracker.issue.dto.IssueLabelModifyDto;
 import com.issuetracker.issue.dto.IssueMilestoneModifyDto;
@@ -46,9 +47,9 @@ public class IssueController {
     }
 
     @PostMapping
-    public ResponseEntity<IssueCreateResponseDto> createIssue(
-            @Valid @RequestBody IssueCreateRequestDto issueCreateRequestDto) {
-        IssueCreateResponseDto issue = issueCudService.createIssue(issueCreateRequestDto);
+    public ResponseEntity<IssueCreateResponse> createIssue(
+            @Valid @RequestBody IssueCreateRequest issueCreateRequest) {
+        IssueCreateResponse issue = issueCudService.createIssue(issueCreateRequest);
         URI location = URI.create(String.format("/api/issues/%s", issue.getId()));
         return ResponseEntity.created(location).body(issue);
     }

@@ -5,7 +5,7 @@ import com.issuetracker.issue.dto.IssueFilterDto;
 import com.issuetracker.issue.dto.IssueFilterResponse;
 import com.issuetracker.issue.dto.IssueQueryDto;
 import com.issuetracker.issue.repository.IssueCustomRepository;
-import com.issuetracker.issue.utils.IssueFilterResponseDtoMapper;
+import com.issuetracker.issue.utils.IssueMapper;
 import com.issuetracker.label.dto.LabelCoverDto;
 import com.issuetracker.label.service.LabelService;
 import com.issuetracker.member.dto.SimpleMemberDto;
@@ -41,7 +41,7 @@ public class IssueFilterService {
                     Long filterId = filterDto.getId();
                     List<SimpleMemberDto> simpleMembers = getSimpleMembers(filterId);
                     List<LabelCoverDto> labelCovers = getLabels(filterId);
-                    return IssueFilterResponseDtoMapper.toIssueFilterResponse(filterDto, simpleMembers, labelCovers);
+                    return IssueMapper.toIssueFilterResponse(filterDto, simpleMembers, labelCovers);
                 })
                 .collect(Collectors.toList());
     }

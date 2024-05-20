@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 @Builder
-public class IssueCreateRequestDto {
+public class IssueCreateRequest {
     @NotBlank
     private final String title;
     @NotBlank

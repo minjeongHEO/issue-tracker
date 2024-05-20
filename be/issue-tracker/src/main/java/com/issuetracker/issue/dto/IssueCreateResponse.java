@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Builder
 @Getter
-public class IssueCreateResponseDto {
+public class IssueCreateResponse {
     private final Long id;
     private final String title;
     private final String content;
