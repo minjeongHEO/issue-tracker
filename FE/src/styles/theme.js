@@ -86,6 +86,18 @@ export const MainContainer = styled.main`
     padding-left: 85px;
     padding-right: 85px;
 `;
+
+export const FlexRow = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+`;
+export const FlexCol = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+`;
 ////////////////////
 
 const colorValue = {
@@ -212,6 +224,11 @@ const radius = {
     large: '16px',
 };
 
+const imgSize = {
+    medium: '32px',
+    small: '25px',
+};
+
 const buttonStates = css`
     text-align: center;
     transition: opacity 0.3s;
@@ -271,6 +288,7 @@ export const theme = {
     color,
     typography,
     radius,
+    imgSize,
     buttonSizes,
     buttonStyles,
     buttonStates,
