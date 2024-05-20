@@ -8,11 +8,11 @@ import { CustomLabelBadge } from '../../assets/CustomLabelBadge';
 import { IconEdit } from '../../assets/icons/IconEdit';
 import { IconSmile } from '../../assets/icons/IconSmile';
 
-export default function IssueDetailComment({ detailData }) {
+export default function IssueDetailComment({ detailCommentData }) {
     //TODO: React Query + Suspense
-    if (!detailData) return <div>Loading...</div>;
+    if (!detailCommentData) return <div>Loading...</div>;
 
-    const { id, title, content, createDate, writer, milestone, file, labels, assignees, comments, isclosed } = detailData;
+    const { id, content, createDate, writer, file, isWriter } = detailCommentData;
     const [pastTime, setPastTime] = useState('');
 
     useEffect(() => {
@@ -31,29 +31,45 @@ export default function IssueDetailComment({ detailData }) {
         <StyledCommentContainer>
             <CommentNav>
                 <CommentData>
-                    <StyledProfile
-                        src={'https://github.com/codesquad-masters2024-team02/issue-tracker/assets/96780693/d1c7123b-89c9-485b-b9dd-8cc21a1005e0'}
-                        alt={'userProfile'}
-                        size={'medium'}
-                    />
-                    <span className="userName">woody</span>
+                    <StyledProfile src={writer.imgUrl} alt={'userProfile'} size={'medium'} />
+                    <span className="userName">{writer.id}</span>
                     <span className="">{pastTime}</span>
                 </CommentData>
                 <NavBtnContainer>
-                    <StyledLabel>작성자</StyledLabel>
-                    <div>
+                    <StyledLabel visibility={isWriter ? 'visible' : 'hidden'}>작성자</StyledLabel>
+                    <NavBtn>
                         <IconEdit />
                         편집
-                    </div>
-                    <div>
+                    </NavBtn>
+                    <NavBtn>
                         <IconSmile />
                         반응
-                    </div>
+                    </NavBtn>
                 </NavBtnContainer>
             </CommentNav>
+            <CommentMain>
+                <Content>{content}</Content>
+            </CommentMain>
         </StyledCommentContainer>
     );
 }
+
+const Content = styled.div`
+    /* background-color: aliceblue; */
+    width: 95%;
+    margin: 15px 0px;
+    word-wrap: break-word;
+    text-align: justify;
+`;
+const CommentMain = styled(FlexRow)`
+    justify-content: center;
+    width: 100%;
+    /* height: 50px; */
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    background-color: ${(props) => props.theme.bgColorBody};
+    color: ${(props) => props.theme.fontColor};
+`;
 
 const StyledLabel = styled(CustomLabelBadge)`
     font-size: 12px;
@@ -62,21 +78,23 @@ const StyledLabel = styled(CustomLabelBadge)`
 const StyledProfile = styled(CustomProfile)`
     margin-left: 10px;
 `;
+const NavBtn = styled(FlexRow)`
+    font-size: 12px;
+    * {
+        margin-right: 2px;
+    }
+    cursor: pointer;
+`;
 const NavBtnContainer = styled(FlexRow)`
     justify-content: space-around;
     /* background-color: red; */
     width: 190px;
+    margin-right: 10px;
 `;
 
 const CommentData = styled(FlexRow)`
     * {
         margin-left: 10px;
-    }
-`;
-
-const StyledFlexRow = styled(FlexRow)`
-    & .commentData {
-        /* flex-basis: 70%; */
     }
 `;
 
@@ -89,6 +107,7 @@ const CommentNav = styled(FlexRow)`
     background-color: ${(props) => props.theme.listHeaderColor};
     color: ${(props) => props.theme.fontColor};
 `;
+
 const StyledCommentContainer = styled.div`
     /* background-color: antiquewhite; */
     display: flex;
