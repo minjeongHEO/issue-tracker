@@ -62,4 +62,10 @@ public class IssueQueryService {
     public Long countIssuesByMilestoneIdAndStatus(Long milestoneId, boolean isClosed) {
         return issueRepository.countByMilestoneIdAndIsClosed(milestoneId, isClosed);
     }
+
+    @Transactional(readOnly = true)
+    public boolean hasSameWriter(Long issueId, String memberId) {
+        String writer = issueRepository.findWriterById(issueId);
+        return writer.equals(memberId);
+    }
 }
