@@ -11,7 +11,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @Builder
-public class IssueFilterResponseDto {
+public class IssueFilterResponse {
     private final Long id;
     private final String title;
     private final String authorId;

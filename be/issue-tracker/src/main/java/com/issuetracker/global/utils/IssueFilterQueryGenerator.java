@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.util.StringUtils;
 
 public class IssueFilterQueryGenerator {
     private final IssueQueryDto issueQueryDto;
@@ -42,14 +43,14 @@ public class IssueFilterQueryGenerator {
     }
 
     private void appendAuthorFilter(StringBuilder sql, List<Object> params, String authorId) {
-        if (authorId != null) { // 작성자 필터 조건이 있다면
+        if (StringUtils.hasText(authorId)) { // 작성자 필터 조건이 있다면
             sql.append("AND i.member_id = ? ");
             params.add(authorId);
         }
     }
 
     private void appendAssigneeFilter(StringBuilder sql, List<Object> params, String assigneeId) {
-        if (assigneeId != null) { // 담당자 필터 조건이 있다면
+        if (StringUtils.hasText(assigneeId)) { // 담당자 필터 조건이 있다면
             sql.append("AND ia.member_id = ? ");
             params.add(assigneeId);
         }
@@ -59,7 +60,7 @@ public class IssueFilterQueryGenerator {
     }
 
     private void appendMentionedFilter(StringBuilder sql, List<Object> params, String mentionedId) {
-        if (mentionedId != null) { // 댓글을 작성한 사용자 필터 조건이 있다면
+        if (StringUtils.hasText(mentionedId)) { // 댓글을 작성한 사용자 필터 조건이 있다면
             sql.append("AND c.member_id = ? ");
             params.add(mentionedId);
         }

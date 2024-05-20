@@ -1,7 +1,7 @@
 package com.issuetracker.issue.repository;
 
 import com.issuetracker.global.repository.WithInsert;
-import com.issuetracker.issue.domain.IssueAssignee;
+import com.issuetracker.issue.entity.IssueAssignee;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jdbc.repository.query.Modifying;

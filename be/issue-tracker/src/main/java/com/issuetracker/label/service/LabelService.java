@@ -1,12 +1,14 @@
 package com.issuetracker.label.service;
 
-import com.issuetracker.label.domain.Label;
+import com.issuetracker.label.dto.LabelBgColorDto;
 import com.issuetracker.label.dto.LabelCoverDto;
 import com.issuetracker.label.dto.LabelDto;
+import com.issuetracker.label.entity.Label;
 import com.issuetracker.label.exception.InvalidBgColorException;
 import com.issuetracker.label.exception.LabelNotFoundException;
 import com.issuetracker.label.repository.LabelRepository;
 import com.issuetracker.label.utils.BackgroundColorValidator;
+import com.issuetracker.label.utils.HexColorGenerator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class LabelService {
     private final LabelRepository labelRepository;
+    private final HexColorGenerator hexColorGenerator;
 
     /**
      * 레이블의 전체 리스트를 반환한다.
@@ -48,8 +51,6 @@ public class LabelService {
         validateBgColor(labelDto);
 
         Label label = toLabel(labelDto);
-        label.setId(id);
-
         Label modifiedlabel = labelRepository.save(label);
         log.info("{} 라벨이 수정되었습니다. - {}", id, modifiedlabel);
         return modifiedlabel;
@@ -83,14 +84,27 @@ public class LabelService {
         return labelRepository.findLabelCoverDtoByIds(ids);
     }
 
+    /**
+     * 라벨의 아이디 리스트에 포함되는 라벨 리스트를 반환한다.
+     */
     @Transactional(readOnly = true)
     public List<Label> findLabelsByIds(List<Long> issueLabelIds) {
         return (List<Label>) labelRepository.findAllById(issueLabelIds);
     }
 
+    /**
+     * 라벨의 이름으로 아이디를 찾아 반환한다.
+     */
     @Transactional(readOnly = true)
     public Long findIdByName(String name) {
         return labelRepository.findIdByName(name);
+    }
+
+    /**
+     * 라벨의 배경색을 랜덤으로 생성한다.
+     */
+    public LabelBgColorDto refreshLabelBackgroundColor() {
+        return new LabelBgColorDto(hexColorGenerator.generateRandomHexColor());
     }
 
     private void validateLabelExists(Long id) {
@@ -108,6 +122,7 @@ public class LabelService {
     }
 
     private Label toLabel(LabelDto labelDto) {
-        return new Label(labelDto.getName(), labelDto.getDescription(), labelDto.getTextColor(), labelDto.getBgColor());
+        return new Label(null, labelDto.getName(), labelDto.getDescription(), labelDto.getTextColor(),
+                labelDto.getBgColor());
     }
 }

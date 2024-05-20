@@ -1,7 +1,7 @@
 package com.issuetracker.global.controller;
 
-import com.issuetracker.global.dto.HomeResponseDto;
-import com.issuetracker.issue.dto.IssueFilterResponseDto;
+import com.issuetracker.global.dto.HomeResponse;
+import com.issuetracker.issue.dto.IssueFilterResponse;
 import com.issuetracker.issue.dto.IssueQueryDto;
 import com.issuetracker.issue.service.IssueFilterService;
 import com.issuetracker.issue.service.IssueQueryService;
@@ -21,9 +21,9 @@ public class HomeController {
     private final IssueFilterService issueFilterService;
 
     @GetMapping("/issues")
-    public ResponseEntity<HomeResponseDto> getFilteredIssues(@ModelAttribute IssueQueryDto issueQueryDto) {
-        List<IssueFilterResponseDto> issueFilterResponses = issueFilterService.getFilteredIssues(issueQueryDto);
-        HomeResponseDto homeResponseDto = new HomeResponseDto(issueQueryService.countIssues(), issueFilterResponses);
-        return ResponseEntity.ok().body(homeResponseDto);
+    public ResponseEntity<HomeResponse> getFilteredIssues(@ModelAttribute IssueQueryDto issueQueryDto) {
+        List<IssueFilterResponse> issueFilterResponses = issueFilterService.getFilteredIssues(issueQueryDto);
+        HomeResponse homeResponse = new HomeResponse(issueQueryService.countIssues(), issueFilterResponses);
+        return ResponseEntity.ok().body(homeResponse);
     }
 }
