@@ -1,9 +1,6 @@
 package com.issuetracker.issue.service;
 
 import com.issuetracker.issue.controller.IssueBodyModifyDto;
-import com.issuetracker.issue.domain.Issue;
-import com.issuetracker.issue.domain.IssueAssignee;
-import com.issuetracker.issue.domain.IssueLabel;
 import com.issuetracker.issue.dto.IssueAssigneeModifyDto;
 import com.issuetracker.issue.dto.IssueChangeStatusDto;
 import com.issuetracker.issue.dto.IssueCreateRequestDto;
@@ -11,6 +8,9 @@ import com.issuetracker.issue.dto.IssueCreateResponseDto;
 import com.issuetracker.issue.dto.IssueLabelModifyDto;
 import com.issuetracker.issue.dto.IssueMilestoneModifyDto;
 import com.issuetracker.issue.dto.IssueTitleModifyDto;
+import com.issuetracker.issue.entity.Issue;
+import com.issuetracker.issue.entity.IssueAssignee;
+import com.issuetracker.issue.entity.IssueLabel;
 import com.issuetracker.issue.exception.IssueNotFoundException;
 import com.issuetracker.issue.repository.IssueAssigneeRepository;
 import com.issuetracker.issue.repository.IssueLabelRepository;
@@ -152,7 +152,7 @@ public class IssueCudService {
     }
 
     private Issue toIssue(IssueCreateRequestDto request) {
-        return new Issue(request.getTitle(), request.getContent(), LocalDateTime.now(), false,
+        return new Issue(null, request.getTitle(), request.getContent(), LocalDateTime.now(), false,
                 request.getAuthorId(),
                 request.getMilestoneId(), request.getFileId());
     }

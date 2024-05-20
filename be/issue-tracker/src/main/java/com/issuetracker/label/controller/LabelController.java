@@ -1,12 +1,11 @@
 package com.issuetracker.label.controller;
 
-import com.issuetracker.label.domain.Label;
 import com.issuetracker.label.dto.LabelBgColorDto;
 import com.issuetracker.label.dto.LabelCountDto;
 import com.issuetracker.label.dto.LabelDto;
 import com.issuetracker.label.dto.LabelListDto;
+import com.issuetracker.label.entity.Label;
 import com.issuetracker.label.service.LabelService;
-import com.issuetracker.label.utils.HexColorGenerator;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -56,8 +55,8 @@ public class LabelController {
 
     @GetMapping("/bgcolor")
     public ResponseEntity<LabelBgColorDto> refreshLabelBackgroundColor() {
-        LabelBgColorDto randomHexColor = new LabelBgColorDto(HexColorGenerator.generateRandomHexColor());
-        return ResponseEntity.ok().body(randomHexColor);
+        LabelBgColorDto labelBgColorDto = labelService.refreshLabelBackgroundColor();
+        return ResponseEntity.ok().body(labelBgColorDto);
     }
 
     @GetMapping("/count")

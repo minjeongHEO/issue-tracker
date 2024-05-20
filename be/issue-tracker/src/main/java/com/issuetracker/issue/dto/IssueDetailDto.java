@@ -3,7 +3,7 @@ package com.issuetracker.issue.dto;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.issuetracker.comment.dto.CommentDetailDto;
 import com.issuetracker.file.dto.UploadedFileDto;
-import com.issuetracker.label.domain.Label;
+import com.issuetracker.label.entity.Label;
 import com.issuetracker.member.dto.SimpleMemberDto;
 import com.issuetracker.milestone.dto.SimpleMilestoneDto;
 import java.time.LocalDateTime;

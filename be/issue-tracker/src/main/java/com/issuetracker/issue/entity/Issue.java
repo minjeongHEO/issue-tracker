@@ -1,9 +1,8 @@
-package com.issuetracker.issue.domain;
+package com.issuetracker.issue.entity;
 
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
 
@@ -12,8 +11,7 @@ import org.springframework.data.annotation.Id;
 @ToString
 public class Issue {
     @Id
-    @Setter
-    private Long id;
+    private final Long id;
     private final String title;
     private final String content;
     private final LocalDateTime createDate;

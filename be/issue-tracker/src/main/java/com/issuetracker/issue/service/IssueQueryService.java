@@ -1,7 +1,7 @@
 package com.issuetracker.issue.service;
 
-import com.issuetracker.issue.domain.Issue;
 import com.issuetracker.issue.dto.IssueCountDto;
+import com.issuetracker.issue.entity.Issue;
 import com.issuetracker.issue.exception.IssueNotFoundException;
 import com.issuetracker.issue.repository.IssueAssigneeRepository;
 import com.issuetracker.issue.repository.IssueLabelRepository;

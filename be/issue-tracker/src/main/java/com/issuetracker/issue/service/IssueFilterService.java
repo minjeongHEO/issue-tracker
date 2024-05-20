@@ -2,9 +2,10 @@ package com.issuetracker.issue.service;
 
 import com.issuetracker.global.utils.IssueFilterQueryGenerator;
 import com.issuetracker.issue.dto.IssueFilterDto;
-import com.issuetracker.issue.dto.IssueFilterResponseDto;
+import com.issuetracker.issue.dto.IssueFilterResponse;
 import com.issuetracker.issue.dto.IssueQueryDto;
 import com.issuetracker.issue.repository.IssueCustomRepository;
+import com.issuetracker.issue.utils.IssueFilterResponseDtoMapper;
 import com.issuetracker.label.dto.LabelCoverDto;
 import com.issuetracker.label.service.LabelService;
 import com.issuetracker.member.dto.SimpleMemberDto;
@@ -33,10 +34,15 @@ public class IssueFilterService {
      * 사용자가 설정한 필터조건에 따라 필터링된 이슈 리스트를 반환한다.
      */
     @Transactional(readOnly = true)
-    public List<IssueFilterResponseDto> getFilteredIssues(IssueQueryDto issueQueryDto) {
+    public List<IssueFilterResponse> getFilteredIssues(IssueQueryDto issueQueryDto) {
         Set<IssueFilterDto> issueWithFilter = findIssueWithFilter(issueQueryDto);
         return issueWithFilter.stream()
-                .map(this::buildIssueFilterResponseDto)
+                .map(filterDto -> {
+                    Long filterId = filterDto.getId();
+                    List<SimpleMemberDto> simpleMembers = getSimpleMembers(filterId);
+                    List<LabelCoverDto> labelCovers = getLabels(filterId);
+                    return IssueFilterResponseDtoMapper.toIssueFilterResponse(filterDto, simpleMembers, labelCovers);
+                })
                 .collect(Collectors.toList());
     }
 
@@ -48,19 +54,6 @@ public class IssueFilterService {
         IssueFilterQueryGenerator filterQueryGenerator = new IssueFilterQueryGenerator(issueQueryDto);
         Map<String, Object> filter = filterQueryGenerator.generate(labelId, milestoneId);
         return issueCustomRepository.findIssueWithFilter(filter, issueQueryDto);
-    }
-
-    private IssueFilterResponseDto buildIssueFilterResponseDto(IssueFilterDto filterDto) {
-        Long filterId = filterDto.getId();
-        return IssueFilterResponseDto.builder()
-                .id(filterId)
-                .title(filterDto.getTitle())
-                .authorId(filterDto.getAuthorId())
-                .createDate(filterDto.getCreateDate())
-                .assignees(getSimpleMembers(filterId))
-                .labels(getLabels(filterId))
-                .milestoneName(filterDto.getMilestoneName())
-                .build();
     }
 
     private List<SimpleMemberDto> getSimpleMembers(Long filterId) {

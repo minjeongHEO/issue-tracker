@@ -1,8 +1,7 @@
-package com.issuetracker.label.domain;
+package com.issuetracker.label.entity;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
@@ -12,8 +11,7 @@ import org.springframework.data.relational.core.mapping.Column;
 @RequiredArgsConstructor
 public class Label {
     @Id
-    @Setter
-    private Long id;
+    private final Long id;
     private final String name;
     private final String description;
     @Column("text_color")

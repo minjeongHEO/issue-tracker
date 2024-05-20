@@ -2,7 +2,7 @@ package com.issuetracker.issue.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.issuetracker.issue.domain.IssueLabel;
+import com.issuetracker.issue.entity.IssueLabel;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
