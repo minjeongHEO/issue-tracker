@@ -9,7 +9,7 @@ import org.springframework.data.annotation.Id;
 @Getter
 public class Comment {
     @Id
-    private Long id;
+    private final Long id;
     private final String content;
     private final LocalDateTime createDate;
     private final boolean isWriter;
