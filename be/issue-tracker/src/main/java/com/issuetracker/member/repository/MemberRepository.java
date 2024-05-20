@@ -1,7 +1,7 @@
 package com.issuetracker.member.repository;
 
 import com.issuetracker.global.repository.WithInsert;
-import com.issuetracker.member.model.Member;
+import com.issuetracker.member.entity.Member;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
 

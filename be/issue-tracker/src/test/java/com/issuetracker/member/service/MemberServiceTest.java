@@ -6,7 +6,7 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
 import com.issuetracker.member.dto.MemberCreateDto;
-import com.issuetracker.member.model.Member;
+import com.issuetracker.member.entity.Member;
 import com.issuetracker.member.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

@@ -4,9 +4,10 @@ import com.issuetracker.file.dto.UploadedFileDto;
 import com.issuetracker.file.service.FileService;
 import com.issuetracker.member.dto.MemberCreateDto;
 import com.issuetracker.member.dto.SimpleMemberDto;
+import com.issuetracker.member.entity.Member;
 import com.issuetracker.member.exception.MemberNotFoundException;
-import com.issuetracker.member.model.Member;
 import com.issuetracker.member.repository.MemberRepository;
+import com.issuetracker.member.util.MemberMapper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -28,7 +29,7 @@ public class MemberService {
      */
     @Transactional
     public Member create(MemberCreateDto memberCreateDto) {
-        Member member = toMember(memberCreateDto);
+        Member member = MemberMapper.toMember(memberCreateDto);
         Member created = memberRepository.insert(member);
 
         log.info("새로운 유저가 생성되었습니다. {}", created);
@@ -52,7 +53,7 @@ public class MemberService {
     public SimpleMemberDto getSimpleMemberById(String id) {
         Member member = getMemberOrThrow(id);
         String imgUrl = getImgUrl(member);
-        return new SimpleMemberDto(id, imgUrl);
+        return MemberMapper.toSimpleMemberDto(member, imgUrl);
     }
 
     /**
@@ -62,7 +63,7 @@ public class MemberService {
     public List<SimpleMemberDto> findSimpleMembersById(List<String> issueAssigneeIds) {
         List<Member> members = (List<Member>) memberRepository.findAllById(issueAssigneeIds);
         return members.stream()
-                .map(member -> new SimpleMemberDto(member.getId(), fileService.getImgUrlById(member.getFileId())))
+                .map(member -> MemberMapper.toSimpleMemberDto(member, fileService.getImgUrlById(member.getFileId())))
                 .toList();
     }
 
@@ -81,16 +82,11 @@ public class MemberService {
         return memberRepository.findById(id).orElseThrow(MemberNotFoundException::new);
     }
 
-    private Member toMember(MemberCreateDto memberCreateDto) {
-        return new Member(memberCreateDto.getId(), memberCreateDto.getPassword(),
-                memberCreateDto.getNickname(), memberCreateDto.getEmail(), null);
-    }
-
     private List<SimpleMemberDto> toSimpleMemberDtos(List<Member> members) {
         List<SimpleMemberDto> simpleMemberDtos = new ArrayList<>();
         for (Member member : members) {
             String imgUrl = getImgUrl(member);
-            simpleMemberDtos.add(new SimpleMemberDto(member.getId(), imgUrl));
+            simpleMemberDtos.add(MemberMapper.toSimpleMemberDto(member, imgUrl));
         }
         return simpleMemberDtos;
     }

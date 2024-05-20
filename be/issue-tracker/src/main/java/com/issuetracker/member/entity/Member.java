@@ -1,4 +1,4 @@
-package com.issuetracker.member.model;
+package com.issuetracker.member.entity;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -17,7 +17,7 @@ public class Member {
     private final String nickname;
     private final String email;
     private final Long fileId;
-    
+
     public boolean hasSamePassword(String password) {
         return this.password.equals(password);
     }
