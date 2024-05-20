@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { IconMilestone } from '../../assets/icons/IconMilestone';
 import { calculatePastTime } from '../../utils/dateUtils';
+import { CustomLabelBadge } from '../../assets/CustomLabelBadge';
+import { CustomProfile } from '../../assets/CustomProfile';
 
 export default function IssueList({ isSingleChecked, setCheckedItems, listData }) {
     const { id, title, createDate, milestoneName, authorId, assignees, labels } = listData;
@@ -16,7 +18,7 @@ export default function IssueList({ isSingleChecked, setCheckedItems, listData }
     };
 
     useEffect(() => {
-        setPastTime(calculatePastTimelatePastTime(createDate));
+        setPastTime(calculatePastTime(createDate));
 
         const intervalPerTime = () => {
             setInterval(() => {
@@ -38,7 +40,7 @@ export default function IssueList({ isSingleChecked, setCheckedItems, listData }
                         </span>
                         {labels &&
                             labels.map(({ name, bgColor, textColor }) => (
-                                <StyledLabel key={name} style={{ backgroundColor: bgColor, color: textColor }}>
+                                <StyledLabel key={name} backgroundColor={bgColor} color={textColor}>
                                     {name}
                                 </StyledLabel>
                             ))}
@@ -112,15 +114,6 @@ const StyledProfile = styled.span`
     }
 `;
 
-const StyledLabel = styled.span`
-    display: inline-block;
-    align-content: center;
+const StyledLabel = styled(CustomLabelBadge)`
     margin-left: 10px;
-    min-width: 20px;
-    height: 23px;
-    padding: 2px 10px;
-    border-radius: 25px;
-    border: 1px solid;
-    border-color: ${(props) => props.theme.borderColor};
-    font-size: 15px;
 `;
