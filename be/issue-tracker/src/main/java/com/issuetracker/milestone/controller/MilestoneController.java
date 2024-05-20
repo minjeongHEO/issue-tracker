@@ -1,10 +1,10 @@
 package com.issuetracker.milestone.controller;
 
-import com.issuetracker.milestone.domain.Milestone;
 import com.issuetracker.milestone.dto.MilestoneCountDto;
 import com.issuetracker.milestone.dto.MilestoneCreateDto;
 import com.issuetracker.milestone.dto.MilestoneDetailDto;
 import com.issuetracker.milestone.dto.MilestoneListDto;
+import com.issuetracker.milestone.entity.Milestone;
 import com.issuetracker.milestone.service.MilestoneService;
 import jakarta.validation.Valid;
 import java.net.URI;

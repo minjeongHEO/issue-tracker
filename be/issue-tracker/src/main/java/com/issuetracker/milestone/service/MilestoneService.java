@@ -2,13 +2,14 @@ package com.issuetracker.milestone.service;
 
 import com.issuetracker.issue.service.IssueQueryService;
 import com.issuetracker.milestone.Repository.MilestoneRepository;
-import com.issuetracker.milestone.domain.Milestone;
 import com.issuetracker.milestone.dto.MilestoneCountDto;
 import com.issuetracker.milestone.dto.MilestoneCreateDto;
 import com.issuetracker.milestone.dto.MilestoneDetailDto;
 import com.issuetracker.milestone.dto.MilestoneListDto;
 import com.issuetracker.milestone.dto.SimpleMilestoneDto;
+import com.issuetracker.milestone.entity.Milestone;
 import com.issuetracker.milestone.exception.MilestoneNotFoundException;
+import com.issuetracker.milestone.util.MilestoneMapper;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -28,30 +29,30 @@ public class MilestoneService {
      */
     @Transactional
     public Milestone createMilestone(MilestoneCreateDto milestoneCreateDto) {
-        Milestone milestone = toMilestone(milestoneCreateDto);
+        Milestone milestone = MilestoneMapper.toMilestone(milestoneCreateDto, null, false);
         Milestone saved = milestoneRepository.save(milestone);
+
         log.info("새로운 마일스톤이 생성되었습니다. {}", saved);
         return saved;
     }
 
     /**
-     * id와 일치하는 마일스톤의 정보를 수정한다. 일치하는 id가 없다면 예외를 발생시킨다.
+     * id와 일치하는 마일스톤의 정보를 수정한다.
      */
     @Transactional
     public Milestone modifyMilestone(MilestoneCreateDto milestoneCreateDto, Long id) {
-        Milestone milestone = toMilestone(milestoneCreateDto);
-        milestone.setId(id);
-        Milestone modified = milestoneRepository.save(milestone);
+        milestoneRepository.updateById(id, milestoneCreateDto.getName(), milestoneCreateDto.getDescription(),
+                milestoneCreateDto.getDueDate());
+        Milestone modified = getMilestoneOrThrow(id);
         log.info("마일스톤이 수정되었습니다. {}", modified);
         return modified;
     }
 
     /**
-     * id와 일치하는 마일스톤을 삭제한다. 일치하는 id가 없다면 예외를 발생시킨다.
+     * id와 일치하는 마일스톤을 삭제한다.
      */
     @Transactional
     public void deleteMilestone(Long id) {
-        validateExists(id);
         milestoneRepository.deleteById(id);
         log.info("마일스톤이 삭제되었습니다. id = {}", id);
     }
@@ -71,7 +72,6 @@ public class MilestoneService {
      */
     @Transactional
     public void close(Long id) {
-        validateExists(id);
         milestoneRepository.closeById(id);
         log.info("마일스톤이 닫혔습니다. id = {}", id);
     }
@@ -81,7 +81,6 @@ public class MilestoneService {
      */
     @Transactional
     public void open(Long id) {
-        validateExists(id);
         milestoneRepository.openById(id);
         log.info("마일스톤이 열렸습니다. id = {}", id);
     }
@@ -107,13 +106,13 @@ public class MilestoneService {
         Long openIssueCount = issueQueryService.countIssuesByMilestoneIdAndStatus(id, false);
         Long closedIssueCount = issueQueryService.countIssuesByMilestoneIdAndStatus(id, true);
 
-        return toMilestoneDetailDto(milestone, openIssueCount, closedIssueCount);
+        return MilestoneMapper.toMilestoneDetailDto(milestone, openIssueCount, closedIssueCount);
     }
 
     /**
      * id와 일치하는 마일스톤의 간략한 정보를 반환한다. id와 일치하는 마일스톤이 없다면 예외를 발생시킨다.
      */
-    @Transactional
+    @Transactional(readOnly = true)
     public SimpleMilestoneDto showMilestoneCover(Long id) {
         Milestone milestone = getMilestoneOrThrow(id);
         Long openIssueCount = issueQueryService.countIssuesByMilestoneIdAndStatus(id, false);
@@ -135,36 +134,12 @@ public class MilestoneService {
             Long milestoneId = milestone.getId();
             Long openIssueCount = issueQueryService.countIssuesByMilestoneIdAndStatus(milestoneId, false);
             Long closedIssueCount = issueQueryService.countIssuesByMilestoneIdAndStatus(milestoneId, true);
-            MilestoneDetailDto milestoneDetailDto = toMilestoneDetailDto(milestone, openIssueCount,
+            MilestoneDetailDto milestoneDetailDto = MilestoneMapper.toMilestoneDetailDto(milestone, openIssueCount,
                     closedIssueCount);
 
             milestoneDetailDtos.add(milestoneDetailDto);
         }
         return milestoneDetailDtos;
-    }
-
-    private MilestoneDetailDto toMilestoneDetailDto(Milestone milestone, Long openIssueCount,
-                                                    Long closedIssueCount) {
-        return MilestoneDetailDto.builder()
-                .id(milestone.getId())
-                .name(milestone.getName())
-                .description(milestone.getDescription())
-                .dueDate(milestone.getDueDate())
-                .openIssueCount(openIssueCount)
-                .closedIssueCount(closedIssueCount)
-                .isClosed(milestone.isClosed())
-                .build();
-    }
-
-    private Milestone toMilestone(MilestoneCreateDto milestoneCreateDto) {
-        return new Milestone(milestoneCreateDto.getName(), milestoneCreateDto.getDescription(),
-                milestoneCreateDto.getDueDate(), false);
-    }
-
-    private void validateExists(Long id) {
-        if (!milestoneRepository.existsById(id)) {
-            throw new MilestoneNotFoundException();
-        }
     }
 
     private Milestone getMilestoneOrThrow(Long id) {
