@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.issuetracker.member.dto.MemberCreateDto;
-import com.issuetracker.member.model.Member;
+import com.issuetracker.member.entity.Member;
 import com.issuetracker.member.service.MemberService;
 import java.net.URI;
 import org.junit.jupiter.api.Test;

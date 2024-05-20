@@ -6,8 +6,8 @@ import static org.mockito.Mockito.when;
 
 import com.issuetracker.member.dto.LoginMemberDto;
 import com.issuetracker.member.dto.LoginTryDto;
+import com.issuetracker.member.entity.Member;
 import com.issuetracker.member.exception.LoginFailException;
-import com.issuetracker.member.model.Member;
 import com.issuetracker.member.repository.MemberRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;

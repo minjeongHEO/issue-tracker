@@ -9,8 +9,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.issuetracker.member.dto.LoginMemberDto;
 import com.issuetracker.member.dto.LoginTryDto;
+import com.issuetracker.member.entity.Member;
 import com.issuetracker.member.exception.LoginFailException;
-import com.issuetracker.member.model.Member;
 import com.issuetracker.member.service.LoginService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
