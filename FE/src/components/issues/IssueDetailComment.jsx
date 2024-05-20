@@ -4,8 +4,12 @@ import styled from 'styled-components';
 import { FlexCol, FlexRow } from '../../styles/theme';
 import { CustomProfile } from '../../assets/CustomProfile';
 import { calculatePastTime } from '../../utils/dateUtils';
+import { CustomLabelBadge } from '../../assets/CustomLabelBadge';
+import { IconEdit } from '../../assets/icons/IconEdit';
+import { IconSmile } from '../../assets/icons/IconSmile';
 
 export default function IssueDetailComment({ detailData }) {
+    //TODO: React Query + Suspense
     if (!detailData) return <div>Loading...</div>;
 
     const { id, title, content, createDate, writer, milestone, file, labels, assignees, comments, isclosed } = detailData;
@@ -33,26 +37,35 @@ export default function IssueDetailComment({ detailData }) {
                         size={'medium'}
                     />
                     <span className="userName">woody</span>
-                    {/* <span className="">{calculatePastTime(createDate)}</span> */}
                     <span className="">{pastTime}</span>
                 </CommentData>
                 <NavBtnContainer>
-                    <div>작성자</div>
-                    <div>편집</div>
-                    <div>반응</div>
+                    <StyledLabel>작성자</StyledLabel>
+                    <div>
+                        <IconEdit />
+                        편집
+                    </div>
+                    <div>
+                        <IconSmile />
+                        반응
+                    </div>
                 </NavBtnContainer>
             </CommentNav>
         </StyledCommentContainer>
     );
 }
 
+const StyledLabel = styled(CustomLabelBadge)`
+    font-size: 12px;
+`;
+
 const StyledProfile = styled(CustomProfile)`
     margin-left: 10px;
 `;
 const NavBtnContainer = styled(FlexRow)`
     justify-content: space-around;
-    background-color: red;
-    width: 150px;
+    /* background-color: red; */
+    width: 190px;
 `;
 
 const CommentData = styled(FlexRow)`
