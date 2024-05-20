@@ -1,16 +1,14 @@
-package com.issuetracker.comment.domain;
+package com.issuetracker.comment.entity;
 
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.springframework.data.annotation.Id;
 
 @RequiredArgsConstructor
 @Getter
 public class Comment {
     @Id
-    @Setter
     private Long id;
     private final String content;
     private final LocalDateTime createDate;
