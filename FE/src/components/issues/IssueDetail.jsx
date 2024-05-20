@@ -1,64 +1,53 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Header from '../header/Header';
-import { IndexContainer } from '../../styles/theme';
+import { IndexContainer, StyledInput } from '../../styles/theme';
 import styled from 'styled-components';
 import { MainContainer } from '../../styles/theme';
 import { Button } from 'antd';
-import { IconEdit } from '../../assets/icons/IconEdit';
-import { IconArchive } from '../../assets/icons/IconArchive';
+import { IconAlertCircle } from '../../assets/icons/IconAlertCircle';
+import IssueDetailTitle from './IssueDetailTitle';
+import IssueDetailComment from './IssueDetailComment';
+import mockData from '../../data/issueDetail.json';
 
 export default function IssueDetail() {
     let { id } = useParams();
 
+    const [editState, setEditState] = useState(false);
+    const toggleEditState = () => {
+        setEditState((prev) => !prev);
+    };
+
     return (
-        <IndexContainer>
+        <StyledDetailContainer>
             <Header />
             <MainContainer>
-                <TitleContainer>
-                    {/* display:none */}
+                <TitleContainer className="title">
                     <HeaderShow>
-                        <FlexRow>
-                            <h1>
-                                이슈 상세<span className="issueId">#41</span>
-                            </h1>
-                            <HeaderAction>
-                                <StyledBtn>
-                                    <IconEdit />
-                                    <span>제목 편집</span>
-                                </StyledBtn>
-                                <StyledBtn>
-                                    <IconArchive />
-                                    <span>이슈 닫기</span>
-                                </StyledBtn>
-                            </HeaderAction>
-                        </FlexRow>
+                        <IssueDetailTitle editState={editState} toggleEditState={toggleEditState}></IssueDetailTitle>
+
                         <HeaderSummary>
                             <StyledIssueState>
-                                {/* <StyledAlertIcon /> */}
+                                <IconAlertCircle />
                                 <span>열린 이슈</span>
                             </StyledIssueState>
                             <div>
-                                <span>이 이슈가 3분전에 woody님에 의해서 열렸습니다.</span>💭<span>코멘트 1개</span>
+                                <span>
+                                    이 이슈가 3분전에 <b>woody</b>님에 의해서 열렸습니다.
+                                </span>
+                                <span>💭</span>
+                                <span>코멘트 1개</span>
                             </div>
                         </HeaderSummary>
                     </HeaderShow>
-                    {/* display:none */}
-                    <HeaderEdit>
-                        <FlexRow>
-                            <h1>
-                                이슈 상세<span>#41</span>
-                            </h1>
-                            <HeaderAction></HeaderAction>
-                        </FlexRow>
-                    </HeaderEdit>
                 </TitleContainer>
 
                 <ContentsContainer>
-                    <Comments>
-                        <Comment>댓글</Comment>
-                        <Comment>댓글</Comment>
-                    </Comments>
+                    <StyledComments>
+                        <IssueDetailComment detailData={mockData} />
+                        <IssueDetailComment />
+                        <IssueDetailComment />
+                    </StyledComments>
                     <Filters>
                         <Filter>담당자</Filter>
                         <Filter>레이블</Filter>
@@ -67,10 +56,34 @@ export default function IssueDetail() {
                     </Filters>
                 </ContentsContainer>
             </MainContainer>
-        </IndexContainer>
+        </StyledDetailContainer>
     );
 }
 
+const StyledComments = styled.div`
+    width: 700px;
+    min-height: 200px;
+    background-color: azure;
+    display: flex;
+    flex-direction: column;
+    justify-content: baseline;
+    align-items: center;
+`;
+
+const StyledDetailContainer = styled(IndexContainer)`
+    .title {
+        position: relative;
+    }
+    .title::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 1px;
+        left: 0;
+        bottom: 0;
+        background-color: ${(props) => props.theme.borderColor};
+    }
+`;
 const StyledIssueState = styled.div`
     background-color: var(--primary-color);
     color: var(--font-color);
@@ -84,30 +97,16 @@ const StyledIssueState = styled.div`
     justify-content: center;
     align-items: center;
 `;
-const StyledBtn = styled(Button)`
-    height: 40px;
-    background-color: white;
-    color: var(--primary-color);
-    border-color: var(--primary-color);
-    & span {
-        margin-left: 5px;
-    }
-`;
+
 const HeaderSummary = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
+    margin-top: 15px;
+    span {
+        margin-left: 5px;
+    }
 `;
-const HeaderAction = styled.div`
-    display: flex;
-    flex-direction: row;
-`;
-const FlexRow = styled.div`
-    display: flex;
-    flex-direction: row;
-`;
-const DefaultTitle = styled.div``;
-const ModifyTitle = styled.input``;
 
 const HeaderShow = styled.div`
     & h1 {
@@ -119,7 +118,6 @@ const HeaderShow = styled.div`
         color: #6e7191;
     }
 `;
-const HeaderEdit = styled.div``;
 
 const TitleContainer = styled.div`
     width: 100%;
@@ -132,17 +130,6 @@ const ContentsContainer = styled.div`
     width: 100%;
     height: 700px;
     /* background-color: aquamarine; */
-`;
-const Comments = styled.div`
-    width: 700px;
-    height: 200px;
-    /* background-color: azure; */
-`;
-const Comment = styled.div`
-    width: 90%;
-    min-height: 100px;
-    margin-bottom: 10px;
-    /* background-color: #fff; */
 `;
 const Filters = styled.div`
     width: 200px;
