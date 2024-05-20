@@ -76,11 +76,11 @@ export default function DropDownFilter({ filterTitle, filterItems, dispatchTypeB
                     </DropDownTitle>
                 </div>
                 <div className="ItemRadio">
-                    <Radio checked={selectedKey === 'no'} onChange={() => setSelectedKey('no')}></Radio>
+                    <Radio checked={selectedKey === 'nonSelected'} onChange={() => setSelectedKey('nonSelected')}></Radio>
                 </div>
             </ItemContainer>
         ),
-        key: 'no',
+        key: 'nonSelected',
     };
 
     const defaultTypeItems = () => {
