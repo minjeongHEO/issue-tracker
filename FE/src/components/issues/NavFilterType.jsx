@@ -4,7 +4,7 @@ import { StyledHeaderContents } from '../../styles/theme';
 import DropDownFilter from './DropDownFilter';
 import { useFilterContext } from '../../context/FilterContext';
 
-export default function NavFilterType({ dispatchTypeByFilterContents, imageTypeItems, labelTypeItems, milestoneTypeItems, ischecked }) {
+export default function NavFilterType({ issueCount, dispatchTypeByFilterContents, imageTypeItems, labelTypeItems, milestoneTypeItems, ischecked }) {
     const { dispatch } = useFilterContext();
 
     const dispatchIssue = ({ target }) => {
@@ -17,10 +17,10 @@ export default function NavFilterType({ dispatchTypeByFilterContents, imageTypeI
         <StyledHeaderContents>
             <div className="issue">
                 <span className={`issueOption click ${ischecked ? '' : `checked`}`} attr-key="is:open" onClick={dispatchIssue}>
-                    열린 이슈()
+                    열린 이슈({issueCount.isOpen})
                 </span>
                 <span className={`issueOption click ${ischecked ? `checked` : ''}`} attr-key="is:closed" onClick={dispatchIssue}>
-                    닫힌 이슈()
+                    닫힌 이슈({issueCount.isClosed})
                 </span>
             </div>
             <StyledDiv>
@@ -55,8 +55,8 @@ const StyledDiv = styled.div`
     .filterOption {
         position: relative;
         ul {
-            /* max-height: 350px; */
-            /* overflow-y: scroll; */
+            max-height: 350px;
+            overflow-y: scroll;
             background-color: ${(props) => props.theme.bgColorBody};
             border: 1px solid;
             border-color: ${(props) => props.theme.borderColor};

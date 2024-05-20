@@ -12,14 +12,7 @@ import { MainContainer } from '../../styles/theme';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useFiltersData } from '../../hooks/useFiltersData';
 
-// TODO: fetch 데이터
-const labelTypeItems = [
-    { labelColor: '#F910AC', labelName: '🖥️ BE' },
-    { labelColor: '#F9D0F0', labelName: '🌐 FE' },
-];
-
 const stateModifyFilters = [{ title: '선택한 이슈 열기' }, { title: '선택한 이슈 닫기' }];
-// TODO: ----------------------------------
 
 const mainIssueFilters = [
     { title: '열린 이슈', value: 'is:open' },
@@ -44,11 +37,17 @@ const issueFilters = {
     assigneeMe: 'assignee:@me',
     mentionsMe: 'mentions:@me',
 };
-
 const initFilterItems = {
     labels: [],
     members: [],
     milestones: [],
+};
+const initIssueDatas = {
+    count: {
+        isOpen: 0,
+        isClosed: 0,
+    },
+    list: [],
 };
 export default function Main() {
     const navigate = useNavigate();
@@ -58,9 +57,10 @@ export default function Main() {
     const [checkedItems, setCheckedItems] = useState([]);
 
     const [filterItemsByType, setFilterItemsByType] = useState(initFilterItems);
+    const [issueDatas, setIssueDatas] = useState(initIssueDatas);
 
     const filterResults = useFiltersData();
-    const [labelsResult, membersResult, milestonesOpenResult, milestonesClosedResult] = filterResults;
+    const [labelsResult, membersResult, milestonesOpenResult, milestonesClosedResult, issueListResult] = filterResults;
 
     // const { isLoading, error, data: products } = useFiltersData();
     // const client = useQueryClient();
@@ -110,6 +110,18 @@ export default function Main() {
     }, [selectedFilters]);
 
     useEffect(() => {
+        const issueList = issueListResult.data;
+        if (!issueList) return;
+
+        const newIsOpenCount = issueList.count.openedIssueCount;
+        const newIsClosedCount = issueList.count.closedIssueCount;
+        const newIssueList = issueList.filteredIssues;
+        setIssueDatas((prev) => ({ ...prev, count: { ...prev.count, isOpen: newIsOpenCount } }));
+        setIssueDatas((prev) => ({ ...prev, count: { ...prev.count, idClosed: newIsClosedCount } }));
+        setIssueDatas((prev) => ({ ...prev, list: newIssueList }));
+    }, [issueListResult.data]);
+
+    useEffect(() => {
         if (filterResults.some((result) => !result.data)) return;
 
         const milestoneOpenItems = milestonesOpenResult.data.milestoneDetailDtos.map(({ name }) => ({
@@ -118,13 +130,22 @@ export default function Main() {
         const milestoneClosedItems = milestonesClosedResult.data.milestoneDetailDtos.map(({ name }) => ({
             title: name,
         }));
-
         const memberItems = membersResult.data.map(({ id, imgUrl }) => ({
             avatarSrc: imgUrl,
             userName: id,
         }));
+        const labelItems = labelsResult.data.labels.map(({ name, bgColor, textColor }) => ({
+            labelName: name,
+            labelColor: bgColor,
+            textColor: textColor,
+        }));
 
-        setFilterItemsByType((prev) => ({ ...prev, members: memberItems, milestones: [...milestoneOpenItems, ...milestoneClosedItems] }));
+        setFilterItemsByType((prev) => ({
+            ...prev,
+            labels: labelItems,
+            members: memberItems,
+            milestones: [...milestoneOpenItems, ...milestoneClosedItems],
+        }));
     }, [labelsResult.data, membersResult.data, milestonesOpenResult.data, milestonesClosedResult.data]);
 
     return (
@@ -163,25 +184,22 @@ export default function Main() {
                 <StyledBoxHeader>
                     <Checkbox onClick={() => toggleEntireCheckBox()} checked={checkedItems.length === mockIssueList.length} className="checkbox" />
                     {checkedItems.length > 0 ? (
-                        <NavStateType
-                            checkedItemsCount={checkedItems.length}
-                            stateModifyFilters={stateModifyFilters}
-                            dispatch={dispatch}
-                        ></NavStateType>
+                        <NavStateType checkedItemsCount={checkedItems.length} stateModifyFilters={stateModifyFilters} dispatch={dispatch} />
                     ) : (
                         <NavFilterType
+                            issueCount={issueDatas.count}
                             dispatchTypeByFilterContents={dispatchTypeByFilterContents}
                             imageTypeItems={filterItemsByType.members}
-                            labelTypeItems={labelTypeItems}
+                            labelTypeItems={filterItemsByType.labels}
                             milestoneTypeItems={filterItemsByType.milestones}
                             dispatch={dispatch}
                             ischecked={selectedFilters.issues.isClosed}
-                        ></NavFilterType>
+                        />
                     )}
                 </StyledBoxHeader>
 
                 <StyledBoxBody>
-                    {mockIssueList.map((list) => (
+                    {issueDatas.list.map((list) => (
                         <IssueList
                             key={list.id}
                             isSingleChecked={isSingleChecked(list.id)}
