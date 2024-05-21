@@ -14,4 +14,8 @@ public class MemberMapper {
     public static SimpleMemberDto toSimpleMemberDto(Member member, String imgUrl) {
         return new SimpleMemberDto(member.getId(), imgUrl);
     }
+
+    public static SimpleMemberDto toDeactivatedMember() {
+        return new SimpleMemberDto(null, null);
+    }
 }

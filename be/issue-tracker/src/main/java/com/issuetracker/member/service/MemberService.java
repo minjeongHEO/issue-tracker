@@ -11,11 +11,11 @@ import com.issuetracker.member.util.MemberMapper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -47,35 +47,21 @@ public class MemberService {
     }
 
     /**
-     * id와 일치하는 멤버를 찾아 간략한 정보를 반환한다.
+     * 탈퇴한 사용자인 경우 기본 정보를 반환한다. 존재하는 사용자인 경우 id와 일치하는 멤버를 찾아 간략한 정보를 반환한다.
      */
     @Transactional(readOnly = true)
     public SimpleMemberDto getSimpleMemberById(String id) {
+        if (isUserDeactivated(id)) {
+            return MemberMapper.toDeactivatedMember();
+        }
+
         Member member = getMemberOrThrow(id);
         String imgUrl = getImgUrl(member);
         return MemberMapper.toSimpleMemberDto(member, imgUrl);
     }
 
-    /**
-     * id와 일치하는 모든 멤버의 간략한 정보를 반환한다.
-     */
-    @Transactional(readOnly = true)
-    public List<SimpleMemberDto> findSimpleMembersById(List<String> issueAssigneeIds) {
-        List<Member> members = (List<Member>) memberRepository.findAllById(issueAssigneeIds);
-        return members.stream()
-                .map(member -> MemberMapper.toSimpleMemberDto(member, fileService.getImgUrlById(member.getFileId())))
-                .toList();
-    }
-
-    @Transactional(readOnly = true)
-    public List<SimpleMemberDto> findSimpleMembers(List<String> assigneeIds) {
-        return assigneeIds.stream()
-                .map(assigneeId -> {
-                    Long fileId = memberRepository.findFileIdById(assigneeId);
-                    String imgUrl = fileService.getImgUrlById(fileId);
-                    return new SimpleMemberDto(assigneeId, imgUrl);
-                })
-                .collect(Collectors.toList());
+    private boolean isUserDeactivated(String id) {
+        return !StringUtils.hasText(id);
     }
 
     private Member getMemberOrThrow(String id) {

@@ -1,4 +1,4 @@
-package com.issuetracker.label.utils;
+package com.issuetracker.label.util;
 
 import java.awt.Color;
 import java.util.regex.Matcher;

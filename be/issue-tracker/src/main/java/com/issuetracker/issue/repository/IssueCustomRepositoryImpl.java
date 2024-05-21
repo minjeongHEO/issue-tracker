@@ -1,6 +1,6 @@
 package com.issuetracker.issue.repository;
 
-import com.issuetracker.issue.dto.IssueFilterDto;
+import com.issuetracker.issue.dto.IssueFilterResponse;
 import com.issuetracker.issue.dto.IssueQueryDto;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -17,18 +17,17 @@ public class IssueCustomRepositoryImpl implements IssueCustomRepository {
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public Set<IssueFilterDto> findIssueWithFilter(Map<String, Object> filter, IssueQueryDto issueQueryDto) {
+    public Set<IssueFilterResponse> findIssueWithFilter(Map<String, Object> filter, IssueQueryDto issueQueryDto) {
         String sql = (String) filter.get("sql");
         Object[] params = (Object[]) filter.get("params");
-        List<IssueFilterDto> result = jdbcTemplate.query(sql, params, issueFilterDtoMapper());
+        List<IssueFilterResponse> result = jdbcTemplate.query(sql, params, issueFilterDtoMapper());
         return new LinkedHashSet<>(result);
     }
 
-    private RowMapper<IssueFilterDto> issueFilterDtoMapper() {
-        return (rs, rowNum) -> (IssueFilterDto.builder()
+    private RowMapper<IssueFilterResponse> issueFilterDtoMapper() {
+        return (rs, rowNum) -> (IssueFilterResponse.builder()
                 .id(rs.getLong("id"))
                 .title(rs.getString("title"))
-                .authorId(rs.getString("member_id"))
                 .createDate(rs.getTimestamp("create_date").toLocalDateTime())
                 .milestoneName(rs.getString("name"))
                 .build()

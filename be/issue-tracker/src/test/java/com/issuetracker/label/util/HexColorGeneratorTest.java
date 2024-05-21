@@ -1,4 +1,4 @@
-package com.issuetracker.label.utils;
+package com.issuetracker.label.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

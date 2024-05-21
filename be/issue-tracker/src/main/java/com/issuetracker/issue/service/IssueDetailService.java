@@ -6,7 +6,7 @@ import com.issuetracker.file.dto.UploadedFileDto;
 import com.issuetracker.file.service.FileService;
 import com.issuetracker.issue.dto.IssueDetailDto;
 import com.issuetracker.issue.entity.Issue;
-import com.issuetracker.issue.utils.IssueMapper;
+import com.issuetracker.issue.util.IssueMapper;
 import com.issuetracker.label.entity.Label;
 import com.issuetracker.label.service.LabelService;
 import com.issuetracker.member.dto.SimpleMemberDto;
@@ -14,6 +14,7 @@ import com.issuetracker.member.service.MemberService;
 import com.issuetracker.milestone.dto.SimpleMilestoneDto;
 import com.issuetracker.milestone.service.MilestoneService;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -73,7 +74,9 @@ public class IssueDetailService {
 
     private List<SimpleMemberDto> getIssueAssignees(Long id) {
         List<String> issueAssigneeIds = issueQueryService.findAssigneeIdsByIssueId(id);
-        return memberService.findSimpleMembersById(issueAssigneeIds);
+        return issueAssigneeIds.stream()
+                .map(memberService::getSimpleMemberById)
+                .collect(Collectors.toList());
     }
 
     private Issue getIssue(Long id) {

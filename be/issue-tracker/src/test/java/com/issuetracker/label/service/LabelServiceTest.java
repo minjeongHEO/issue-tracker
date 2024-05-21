@@ -31,22 +31,7 @@ class LabelServiceTest {
     public void setUp() {
         MockitoAnnotations.openMocks(this);
     }
-
-//    @DisplayName("라벨의 전체 리스트를 가져올 수 있다.")
-//    @Test
-//    public void getLabels() {
-//        Label label1 = new Label(null, "Label1", null, "#000000", "#000000");
-//        Label label2 = new Label(null, "Label2", null, "#000000", "#FFFFFF");
-//        List<Label> mockLabels = Arrays.asList(label1, label2);
-//
-//        when(labelRepository.findAll()).thenReturn(mockLabels);
-//
-//        List<Label> result = labelService.getLabels();
-//        assertThat(result).isEqualTo(mockLabels);
-//
-//        verify(labelRepository, times(1)).findAll();
-//    }
-
+    
     @DisplayName("유효한 색상 코드를 가진 라벨 생성 요청이면 새 라벨을 생성할 수 있다.")
     @Test
     public void createLabel_WithValidBgColor() {
