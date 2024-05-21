@@ -4,6 +4,7 @@ import { IconArchive } from '../../assets/icons/IconArchive';
 import { Button } from 'antd';
 import styled from 'styled-components';
 import { StyledInput } from '../../styles/theme';
+import { CustomButton } from '../../assets/CustomButton';
 
 export default function IssueDetailTitle({ editState, toggleEditState }) {
     return (
@@ -14,11 +15,11 @@ export default function IssueDetailTitle({ editState, toggleEditState }) {
                         <PlaceholdText className="placeholdText">제목</PlaceholdText>
                         <ModifyInput type="text" value="이슈 상세" />
                         <HeaderAction>
-                            <StyledBtn>
+                            <StyledBtn size={'medium'} type={'outline'}>
                                 <IconEdit />
                                 <span onClick={toggleEditState}>편집 취소</span>
                             </StyledBtn>
-                            <StyledBtn>
+                            <StyledBtn size={'medium'} type={'outline'}>
                                 <IconArchive />
                                 <span>편집 완료</span>
                             </StyledBtn>
@@ -31,11 +32,11 @@ export default function IssueDetailTitle({ editState, toggleEditState }) {
                         이슈 상세<span className="issueId">#41</span>
                     </h1>
                     <HeaderAction>
-                        <StyledBtn>
+                        <StyledBtn size={'medium'} type={'outline'}>
                             <IconEdit />
                             <span onClick={toggleEditState}>제목 편집</span>
                         </StyledBtn>
-                        <StyledBtn>
+                        <StyledBtn size={'medium'} type={'outline'}>
                             <IconArchive />
                             <span>이슈 닫기</span>
                         </StyledBtn>
@@ -68,13 +69,8 @@ const FlexRow = styled.div`
     flex-direction: row;
     justify-content: space-between;
 `;
-const StyledBtn = styled(Button)`
+
+const StyledBtn = styled(CustomButton)`
     height: 40px;
-    background-color: white;
-    color: var(--primary-color);
-    border-color: var(--primary-color);
     margin-left: 10px;
-    & span {
-        margin-left: 5px;
-    }
 `;
