@@ -196,6 +196,7 @@ const StyledProfile = styled(CustomProfile)`
     margin-left: 10px;
 `;
 const NavBtn = styled(FlexRow)`
+    visibility: ${(props) => props.visibility};
     font-size: 12px;
     * {
         margin-right: 2px;
