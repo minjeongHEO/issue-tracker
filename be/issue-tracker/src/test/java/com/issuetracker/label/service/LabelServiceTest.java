@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -31,7 +30,7 @@ class LabelServiceTest {
     public void setUp() {
         MockitoAnnotations.openMocks(this);
     }
-    
+
     @DisplayName("유효한 색상 코드를 가진 라벨 생성 요청이면 새 라벨을 생성할 수 있다.")
     @Test
     public void createLabel_WithValidBgColor() {
@@ -95,17 +94,6 @@ class LabelServiceTest {
         }).isInstanceOf(LabelNotFoundException.class);
 
         verify(labelRepository, never()).deleteById(id);
-    }
-
-    @DisplayName("라벨의 총 개수를 구할 수 있다.")
-    @Test
-    public void countLabels() {
-        when(labelRepository.countAll()).thenReturn(2L);
-
-        long result = labelService.countLabels();
-        assertThat(result).isEqualTo(2L);
-
-        verify(labelRepository, times(1)).countAll();
     }
 
     private Label createAndReturnMockLabel(LabelDto labelDto, Long id) {

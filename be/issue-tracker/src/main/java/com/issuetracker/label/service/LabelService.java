@@ -3,6 +3,7 @@ package com.issuetracker.label.service;
 import com.issuetracker.label.dto.LabelBgColorDto;
 import com.issuetracker.label.dto.LabelCoverDto;
 import com.issuetracker.label.dto.LabelDto;
+import com.issuetracker.label.dto.LabelListDto;
 import com.issuetracker.label.entity.Label;
 import com.issuetracker.label.exception.InvalidBgColorException;
 import com.issuetracker.label.exception.LabelNotFoundException;
@@ -21,13 +22,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class LabelService {
     private final LabelRepository labelRepository;
     private final HexColorGenerator hexColorGenerator;
-
+    
     /**
-     * 레이블의 전체 리스트를 반환한다.
+     * 라벨의 개수와 함께 라벨의 전체 리스트를 반환한다.
      */
     @Transactional(readOnly = true)
-    public List<Label> getLabels() {
-        return (List<Label>) labelRepository.findAll();
+    public LabelListDto getLabelListDto() {
+        long count = labelRepository.countAll();
+        List<Label> labels = (List<Label>) labelRepository.findAll();
+        return new LabelListDto(count, labels);
     }
 
     /**
@@ -66,14 +69,6 @@ public class LabelService {
         labelRepository.deleteById(id);
         log.info("{} 라벨이 삭제되었습니다.", id);
         return id;
-    }
-
-    /**
-     * 레이블의 총 개수를 반환한다.
-     */
-    @Transactional(readOnly = true)
-    public long countLabels() {
-        return labelRepository.countAll();
     }
 
     /**

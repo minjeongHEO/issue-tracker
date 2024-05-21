@@ -1,14 +1,12 @@
 package com.issuetracker.label.controller;
 
 import com.issuetracker.label.dto.LabelBgColorDto;
-import com.issuetracker.label.dto.LabelCountDto;
 import com.issuetracker.label.dto.LabelDto;
 import com.issuetracker.label.dto.LabelListDto;
 import com.issuetracker.label.entity.Label;
 import com.issuetracker.label.service.LabelService;
 import jakarta.validation.Valid;
 import java.net.URI;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,9 +26,7 @@ public class LabelController {
 
     @GetMapping
     public ResponseEntity<LabelListDto> getLabels() {
-        long count = labelService.countLabels();
-        List<Label> labels = labelService.getLabels();
-        LabelListDto labelListDto = new LabelListDto(count, labels);
+        LabelListDto labelListDto = labelService.getLabelListDto();
         return ResponseEntity.ok().body(labelListDto);
     }
 
@@ -57,11 +53,5 @@ public class LabelController {
     public ResponseEntity<LabelBgColorDto> refreshLabelBackgroundColor() {
         LabelBgColorDto labelBgColorDto = labelService.refreshLabelBackgroundColor();
         return ResponseEntity.ok().body(labelBgColorDto);
-    }
-
-    @GetMapping("/count")
-    public ResponseEntity<LabelCountDto> countLabels() {
-        LabelCountDto labelCountDto = new LabelCountDto(labelService.countLabels());
-        return ResponseEntity.ok().body(labelCountDto);
     }
 }
