@@ -1,4 +1,4 @@
-package com.issuetracker.global.utils;
+package com.issuetracker.global.util;
 
 import com.issuetracker.issue.dto.IssueQueryDto;
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ public class IssueFilterQueryGenerator {
 
     public Map<String, Object> generate(Long labelId, Long milestoneId) {
         Map<String, Object> result = new HashMap<>();
-        StringBuilder sql = new StringBuilder("SELECT i.id, i.title, i.member_id, i.create_date, m.name " +
+        StringBuilder sql = new StringBuilder("SELECT i.id, i.title, i.create_date, m.name " +
                 "FROM issue i " +
                 "LEFT JOIN issue_label il ON i.id = il.issue_id " +
                 "LEFT JOIN issue_assignee ia ON i.id = ia.issue_id " +

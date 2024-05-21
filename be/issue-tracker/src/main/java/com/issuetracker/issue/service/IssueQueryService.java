@@ -63,9 +63,20 @@ public class IssueQueryService {
         return issueRepository.countByMilestoneIdAndIsClosed(milestoneId, isClosed);
     }
 
+    /**
+     * 코멘트의 작성자가 이슈의 작성자와 같은지 확인한다.
+     */
     @Transactional(readOnly = true)
     public boolean hasSameWriter(Long issueId, String memberId) {
         String writer = issueRepository.findWriterById(issueId);
         return writer.equals(memberId);
+    }
+
+    /**
+     * 특정 이슈에 있는 작성자 아이디를 반환한다.
+     */
+    @Transactional(readOnly = true)
+    public String findAuthorIdByIssueId(Long filterId) {
+        return issueRepository.findWriterById(filterId);
     }
 }
