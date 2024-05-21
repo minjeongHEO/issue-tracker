@@ -45,7 +45,7 @@
     "comments": [
         {
             "id": 1,
-            "content": "첫번째 댓글",
+            "content": "# Hello World\n\nThis is a **Markdown** text.",
             "createDate": "2024-05-16T08:53:50",
             "writer": {
                 "id": "sangchu",

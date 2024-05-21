@@ -1,5 +1,9 @@
 import { Button } from 'antd';
 import React, { useEffect, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { dark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import styled from 'styled-components';
 import { FlexCol, FlexRow } from '../../styles/theme';
 import { CustomProfile } from '../../assets/CustomProfile';
@@ -8,6 +12,8 @@ import { CustomLabelBadge } from '../../assets/CustomLabelBadge';
 import { IconEdit } from '../../assets/icons/IconEdit';
 import { IconSmile } from '../../assets/icons/IconSmile';
 import { IconPaperClip } from '../../assets/icons/IconPaperClip';
+import { CustomButton } from '../../assets/CustomButton';
+import { IconXsquare } from '../../assets/icons/IconXsquare';
 
 export default function IssueDetailComment({ detailCommentData }) {
     //TODO: React Query + Suspense
@@ -17,7 +23,10 @@ export default function IssueDetailComment({ detailCommentData }) {
     const [contentArea, setContentArea] = useState(content);
     const [pastTime, setPastTime] = useState('');
     const [editState, SetEditState] = useState(false);
+    const [isFocused, setIsFocused] = useState(false);
 
+    const handleFocus = () => setIsFocused(true);
+    const handleBlur = () => setIsFocused(false);
     const toggleEditState = () => SetEditState((prev) => !prev);
 
     const handleChange = ({ target }) => {
@@ -39,7 +48,7 @@ export default function IssueDetailComment({ detailCommentData }) {
 
     return (
         <>
-            <StyledCommentContainer>
+            <StyledCommentContainer $isfocused={isFocused}>
                 <CommentNav>
                     <CommentData>
                         <StyledProfile src={writer.imgUrl} alt={'userProfile'} size={'medium'} />
@@ -60,35 +69,66 @@ export default function IssueDetailComment({ detailCommentData }) {
                 </CommentNav>
                 <CommentMain>
                     {editState ? (
-                        <>
-                            <Content>
-                                <StyledTextArea value={contentArea} onChange={handleChange}></StyledTextArea>
-                                <StyledNotifiy>띄어쓰기 포함 {contentArea.length}자</StyledNotifiy>
-                                <StyledLine />
-                                <StyledFileBtn>
-                                    <IconPaperClip />
-                                    <div>파일 첨부하기</div>
-                                </StyledFileBtn>
-                            </Content>
-                        </>
+                        <Content>
+                            <StyledTextArea value={contentArea} onChange={handleChange} onFocus={handleFocus} onBlur={handleBlur}></StyledTextArea>
+                            <StyledNotifiy>띄어쓰기 포함 {contentArea.length}자</StyledNotifiy>
+                            <StyledLine />
+                            <StyledFileBtn>
+                                <IconPaperClip />
+                                <div>파일 첨부하기</div>
+                            </StyledFileBtn>
+                        </Content>
                     ) : (
                         <Content>
-                            <div className="defaultContent">content</div>
+                            <ResetMarkDownStyles>
+                                <StyledReactMarkdown
+                                    children={content}
+                                    remarkPlugins={[remarkGfm]}
+                                    components={{
+                                        code({ node, inline, className, children, ...props }) {
+                                            const match = /language-(\w+)/.exec(className || '');
+                                            return !inline && match ? (
+                                                <SyntaxHighlighter
+                                                    children={String(children).replace(/\n$/, '')}
+                                                    style={dark}
+                                                    language={match[1]}
+                                                    PreTag="div"
+                                                    {...props}
+                                                />
+                                            ) : (
+                                                <code className={className} {...props}>
+                                                    {children}
+                                                </code>
+                                            );
+                                        },
+                                    }}
+                                />
+                            </ResetMarkDownStyles>
                         </Content>
                     )}
                 </CommentMain>
             </StyledCommentContainer>
             {editState && (
                 <MainBtnContainer>
-                    <Button>편집 취소</Button>
-                    <Button>편집 완료</Button>
+                    <StyledBtn size={'medium'} type={'outline'}>
+                        <IconXsquare />
+                        편집 취소
+                    </StyledBtn>
+                    <StyledBtn size={'medium'}>
+                        <IconEdit />
+                        편집 완료
+                    </StyledBtn>
                 </MainBtnContainer>
             )}
         </>
     );
 }
+const StyledReactMarkdown = styled(ReactMarkdown)`
+    padding: 15px;
+`;
 const StyledFileBtn = styled(FlexRow)`
-    margin-top: 20px;
+    margin: 20px 0 0 15px;
+    font-size: 13px;
     justify-content: flex-start;
     align-items: flex-start;
     cursor: pointer;
@@ -104,8 +144,9 @@ const StyledLine = styled.div`
 
 const StyledNotifiy = styled.span`
     position: absolute;
-    bottom: 60px;
-    right: 2px;
+    bottom: 70px;
+    right: 15px;
+    font-size: 13px;
 `;
 const StyledTextArea = styled.textarea`
     /* background-color: aliceblue; */
@@ -117,12 +158,12 @@ const StyledTextArea = styled.textarea`
     background-color: ${(props) => props.theme.bgColorBody};
     color: ${(props) => props.theme.fontColor};
     caret-color: var(--primary-color);
-    position: relative; /* ::after를 위한 상대적 위치 설정 */
+    position: relative;
 `;
 
 const Content = styled.div`
     /* background-color: red; */
-    width: 95%;
+    width: 100%;
     height: 100%;
     /* padding: 15px; */
     /* margin: 15px 0px; */
@@ -171,9 +212,9 @@ const MainBtnContainer = styled(FlexRow)`
     justify-content: end;
     width: 100%;
     margin: 10px 0;
-    Button {
-        margin-left: 10px;
-    }
+`;
+const StyledBtn = styled(CustomButton)`
+    margin-left: 10px;
 `;
 
 const CommentData = styled(FlexRow)`
@@ -201,6 +242,44 @@ const StyledCommentContainer = styled.div`
     background-color: ${(props) => props.theme.bgColorBody};
     border-radius: 10px;
     border: 1px solid;
-    border-color: ${(props) => props.theme.borderColor};
+    border-color: ${(props) => (props.$isfocused ? 'var(--primary-color)' : props.theme.borderColor)};
     color: ${(props) => props.theme.fontColor};
+`;
+
+const ResetMarkDownStyles = styled.div`
+    //TODO: reset.css 때문에 마크다운 제대로 적용안되는 이슈 해결하기
+    /* 기본 스타일 재정의 */
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        margin: 1em 0 0.5em;
+        font-weight: bold;
+    }
+    p {
+        margin: 0.5em 0;
+    }
+    ul,
+    ol {
+        padding-left: 2em;
+        margin: 0.5em 0;
+    }
+    code {
+        background-color: #f5f5f5;
+        padding: 0.2em 0.4em;
+        border-radius: 3px;
+    }
+    pre {
+        background-color: #f5f5f5;
+        padding: 1em;
+        border-radius: 3px;
+        overflow: auto;
+    }
+    blockquote {
+        border-left: 4px solid #ddd;
+        padding-left: 1em;
+        color: #555;
+    }
 `;
