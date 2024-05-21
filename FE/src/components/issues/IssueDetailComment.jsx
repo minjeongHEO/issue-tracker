@@ -57,7 +57,7 @@ export default function IssueDetailComment({ detailCommentData }) {
                     </CommentData>
                     <NavBtnContainer>
                         <StyledLabel visibility={isWriter ? 'visible' : 'hidden'}>작성자</StyledLabel>
-                        <NavBtn onClick={toggleEditState}>
+                        <NavBtn visibility={isWriter ? 'visible' : 'hidden'} onClick={toggleEditState}>
                             <IconEdit />
                             편집
                         </NavBtn>
@@ -110,7 +110,7 @@ export default function IssueDetailComment({ detailCommentData }) {
             </StyledCommentContainer>
             {editState && (
                 <MainBtnContainer>
-                    <StyledBtn size={'medium'} type={'outline'}>
+                    <StyledBtn size={'medium'} type={'outline'} onClick={toggleEditState}>
                         <IconXsquare />
                         편집 취소
                     </StyledBtn>
