@@ -253,12 +253,12 @@ const buttonSizes = {
     medium: `
     border-radius: ${radius.medium};
     font-size: 16px;
-    padding: 12px 0;
+    padding: 12px 10px;
     ${typography.medium[16]}
   `,
     large: `
     border-radius: ${radius.medium};
-    padding: 12px 0;
+    padding: 17px 10px;
     
     ${typography.medium[20]}
   `,
