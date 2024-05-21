@@ -5,12 +5,13 @@ import { FlexRow } from '../../styles/theme';
 import { CustomProfile } from '../../assets/CustomProfile';
 import { CustomLabelBadge } from '../../assets/CustomLabelBadge';
 import { IconProgressBar } from '../../assets/icons/IconProgressBar';
+import { IconTrash } from '../../assets/icons/IconTrash';
 
 export default function IssueDetailSidebar() {
     const calulatePercentage = (openCount, closedCount) => (closedCount / (openCount + closedCount)).toFixed(2);
 
     return (
-        <TestDiv>
+        <StyledDiv>
             <SidebarContainer>
                 <Filter>
                     <FilterTitle>
@@ -33,11 +34,11 @@ export default function IssueDetailSidebar() {
                         <IconPlus />
                     </FilterTitle>
 
-                    <FilterContentContainer>
+                    <LabelContentContainer>
                         <StyledLabel backgroundColor={'black'} color={'white'}>
                             레이블이름
                         </StyledLabel>
-                    </FilterContentContainer>
+                    </LabelContentContainer>
                 </Filter>
                 <StyledLine />
                 <Filter>
@@ -46,14 +47,19 @@ export default function IssueDetailSidebar() {
                         <IconPlus />
                     </FilterTitle>
                     <FilterContentContainer>
-                        <IconProgressBar percentage={calulatePercentage(2, 1)} />
+                        <IconProgressBar percentage={calulatePercentage(2, 2)} />
                     </FilterContentContainer>
+                    <FilterContentContainer>그룹프로젝트:이슈트래커</FilterContentContainer>
                 </Filter>
             </SidebarContainer>
-            이슈삭제
-        </TestDiv>
+            <DeleteContentContainer>
+                <IconTrash />
+                이슈삭제
+            </DeleteContentContainer>
+        </StyledDiv>
     );
 }
+
 const StyledLabel = styled(CustomLabelBadge)`
     height: 30px;
     margin-right: 10px;
@@ -65,7 +71,20 @@ const StyledLine = styled.div`
     border-bottom: 1px solid ${(props) => props.theme.borderColor};
 `;
 
+const LabelContentContainer = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    margin: 20px 0;
+`;
+
+const DeleteContentContainer = styled(FlexRow)`
+    width:100%
+    margin: 20px 0 10px 0;
+    justify-content: right;
+
+`;
 const FilterContentContainer = styled(FlexRow)`
+    flex-basis: 30%;
     margin: 20px 0 10px 0;
     justify-content: left;
 
@@ -96,6 +115,6 @@ const SidebarContainer = styled.div`
     /* background-color: red; */
 `;
 
-const TestDiv = styled.div`
+const StyledDiv = styled.div`
     flex-basis: 30%;
 `;
