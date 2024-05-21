@@ -14,6 +14,7 @@ import { IconSmile } from '../../assets/icons/IconSmile';
 import { IconPaperClip } from '../../assets/icons/IconPaperClip';
 import { CustomButton } from '../../assets/CustomButton';
 import { IconXsquare } from '../../assets/icons/IconXsquare';
+import { StyledRestoreCSS } from '../../styles/StyledRestoreCSS';
 
 export default function IssueDetailComment({ detailCommentData }) {
     //TODO: React Query + Suspense
@@ -80,7 +81,7 @@ export default function IssueDetailComment({ detailCommentData }) {
                         </Content>
                     ) : (
                         <Content>
-                            <ResetMarkDownStyles>
+                            <StyledRestoreCSS>
                                 <StyledReactMarkdown
                                     children={content}
                                     remarkPlugins={[remarkGfm]}
@@ -103,7 +104,7 @@ export default function IssueDetailComment({ detailCommentData }) {
                                         },
                                     }}
                                 />
-                            </ResetMarkDownStyles>
+                            </StyledRestoreCSS>
                         </Content>
                     )}
                 </CommentMain>
@@ -245,42 +246,4 @@ const StyledCommentContainer = styled.div`
     border: 1px solid;
     border-color: ${(props) => (props.$isfocused ? 'var(--primary-color)' : props.theme.borderColor)};
     color: ${(props) => props.theme.fontColor};
-`;
-
-const ResetMarkDownStyles = styled.div`
-    //TODO: reset.css 때문에 마크다운 제대로 적용안되는 이슈 해결하기
-    /* 기본 스타일 재정의 */
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-        margin: 1em 0 0.5em;
-        font-weight: bold;
-    }
-    p {
-        margin: 0.5em 0;
-    }
-    ul,
-    ol {
-        padding-left: 2em;
-        margin: 0.5em 0;
-    }
-    code {
-        background-color: #f5f5f5;
-        padding: 0.2em 0.4em;
-        border-radius: 3px;
-    }
-    pre {
-        background-color: #f5f5f5;
-        padding: 1em;
-        border-radius: 3px;
-        overflow: auto;
-    }
-    blockquote {
-        border-left: 4px solid #ddd;
-        padding-left: 1em;
-        color: #555;
-    }
 `;
