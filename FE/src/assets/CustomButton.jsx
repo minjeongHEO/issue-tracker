@@ -8,9 +8,9 @@ import { Button } from 'antd';
  * @param {buttonType} - container / outline / ghost
  * @returns
  */
-export function CustomButton({ className, children, type = 'container', size = 'small' }) {
+export function CustomButton({ className, children, type = 'container', size = 'small', onClick = () => {} }) {
     return (
-        <StyledButton className={className} $buttonType={type} $size={size}>
+        <StyledButton className={className} $buttonType={type} $size={size} onClick={onClick}>
             {children}
         </StyledButton>
     );
