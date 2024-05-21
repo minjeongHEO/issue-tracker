@@ -212,7 +212,7 @@ const NavBtnContainer = styled(FlexRow)`
 const MainBtnContainer = styled(FlexRow)`
     justify-content: end;
     width: 100%;
-    margin: 10px 0;
+    margin-bottom: 20px;
 `;
 const StyledBtn = styled(CustomButton)`
     margin-left: 10px;
@@ -239,7 +239,7 @@ const StyledCommentContainer = styled.div`
     flex-direction: column;
     width: 100%;
     min-height: 200px;
-    margin-top: 15px;
+    margin-bottom: 15px;
     background-color: ${(props) => props.theme.bgColorBody};
     border-radius: 10px;
     border: 1px solid;

@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Header from '../header/Header';
-import { IndexContainer, StyledInput } from '../../styles/theme';
+import { FlexCol, IndexContainer, StyledInput } from '../../styles/theme';
 import styled from 'styled-components';
 import { MainContainer } from '../../styles/theme';
-import { Button } from 'antd';
 import { IconAlertCircle } from '../../assets/icons/IconAlertCircle';
 import IssueDetailTitle from './IssueDetailTitle';
 import IssueDetailComment from './IssueDetailComment';
 import mockData from '../../data/issueDetail.json';
+import IssueDetailSidebar from './IssueDetailSidebar';
 
 export default function IssueDetail() {
     let { id } = useParams();
@@ -45,27 +45,24 @@ export default function IssueDetail() {
                 <ContentsContainer>
                     <StyledComments>
                         <IssueDetailComment detailCommentData={mockData.comments[0]} />
-                        <IssueDetailComment />
-                        <IssueDetailComment />
+                        <IssueDetailComment detailCommentData={mockData.comments[1]} />
+                        <IssueDetailComment detailCommentData={mockData.comments[2]} />
                     </StyledComments>
-                    <Filters>
-                        <Filter>담당자</Filter>
-                        <Filter>레이블</Filter>
-                        <Filter>마일스톤</Filter>
-                        이슈삭제
-                    </Filters>
+                    <IssueDetailSidebar />
                 </ContentsContainer>
             </MainContainer>
         </StyledDetailContainer>
     );
 }
 
-const StyledComments = styled.div`
+const StyledComments = styled(FlexCol)`
     /* background-color: azure; */
-    width: 700px;
+    flex-basis: 70%;
+    margin-right: 30px;
+    min-width: 700px;
     min-height: 200px;
-    display: flex;
-    flex-direction: column;
+    /* display: flex;
+    flex-direction: column; */
     justify-content: baseline;
     align-items: center;
 `;
@@ -127,18 +124,9 @@ const TitleContainer = styled.div`
 const ContentsContainer = styled.div`
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
+    margin-top: 15px;
     width: 100%;
     height: 700px;
     /* background-color: aquamarine; */
-`;
-const Filters = styled.div`
-    width: 200px;
-    height: 200px;
-    /* background-color: beige; */
-`;
-const Filter = styled.div`
-    width: 90%;
-    min-height: 100px;
-    margin-bottom: 10px;
-    /* background-color: #fff; */
 `;
