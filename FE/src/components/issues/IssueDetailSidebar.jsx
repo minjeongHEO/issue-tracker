@@ -54,15 +54,16 @@ export default function IssueDetailSidebar() {
             </SidebarContainer>
             <DeleteContentContainer>
                 <IconTrash />
-                이슈삭제
+                <span>이슈삭제</span>
             </DeleteContentContainer>
         </StyledDiv>
     );
 }
 
 const StyledLabel = styled(CustomLabelBadge)`
-    height: 30px;
+    /* height: 30px; */
     margin-right: 10px;
+    font-size: 13px;
 `;
 
 const StyledLine = styled.div`
@@ -78,14 +79,17 @@ const LabelContentContainer = styled.div`
 `;
 
 const DeleteContentContainer = styled(FlexRow)`
-    width:100%
+    width: 100%;
     margin: 20px 0 10px 0;
     justify-content: right;
-
+    color: red;
+    span {
+        margin-left: 5px;
+    }
 `;
 const FilterContentContainer = styled(FlexRow)`
     flex-basis: 30%;
-    margin: 20px 0 10px 0;
+    margin: 10px 0 10px 0;
     justify-content: left;
 
     & .userName {
@@ -95,15 +99,14 @@ const FilterContentContainer = styled(FlexRow)`
 
 const FilterTitle = styled(FlexRow)`
     font-size: 15px;
+    margin-bottom: 15px;
     svg {
         width: 20px;
     }
 `;
 const Filter = styled.div`
-    /* width: 100%; */
     min-height: 100px;
     margin: 35px 30px;
-    /* background-color: beige; */
 `;
 
 const SidebarContainer = styled.div`
