@@ -1,12 +1,8 @@
 import styled from 'styled-components';
 import theme from '../styles/theme';
 
-export function CustomProfile({ className, children, src = '', alt = '', size = 'small' }) {
-    return (
-        <StyledImg className={className} src={src} $size={size} alt={alt}>
-            {children}
-        </StyledImg>
-    );
+export function CustomProfile({ className, src = '', alt = '', size = 'small' }) {
+    return <StyledImg className={className} src={src} $size={size} alt={alt} />;
 }
 
 const StyledImg = styled.img`
