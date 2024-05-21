@@ -9,6 +9,7 @@ import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -29,6 +30,12 @@ public class CommentController {
 
         URI location = URI.create(String.format("/api/comments/%s", commentDetailDto.getId()));
         return ResponseEntity.created(location).body(commentDetailDto);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CommentDetailDto> showComment(@PathVariable Long id) {
+        CommentDetailDto comment = commentService.getCommentDetail(id);
+        return ResponseEntity.ok(comment);
     }
 
     @PutMapping("/{id}")

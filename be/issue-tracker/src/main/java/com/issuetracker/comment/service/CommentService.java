@@ -29,6 +29,19 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final FileService fileService;
 
+    /**
+     * id와 일치하는 코멘트를 찾아 세부내역을 반환한다.
+     */
+    @Transactional
+    public CommentDetailDto getCommentDetail(Long id) {
+        Comment comment = getCommentOrThrow(id);
+        return addDetail(comment);
+    }
+
+    /**
+     * 특정 이슈가 가지고 있는 코멘트 세부내역을 반환한다.
+     */
+    @Transactional
     public List<CommentDetailDto> getCommentDetails(Long issueId) {
         List<Comment> comments = commentRepository.findAllByIssueId(issueId);
         return toCommentDetails(comments);
@@ -46,11 +59,12 @@ public class CommentService {
         Comment saved = commentRepository.save(comment);
         log.info("새로운 코멘트가 작성되었습니다. {}", saved);
 
-        SimpleMemberDto writer = memberService.getSimpleMemberById(request.getWriterId());
-        UploadedFileDto file = getFileByComment(saved);
-        return CommentMapper.toCommentDetailDto(saved, writer, file);
+        return addDetail(saved);
     }
 
+    /**
+     * 코멘트의 본문을 수정한다. id와 일치하는 코멘트가 없다면 예외를 발생시킨다.
+     */
     @Transactional
     public void modifyComment(Long id, CommentModifyRequest commentModifyRequest) {
         int affectedRow = commentRepository.updateBodyById(id, commentModifyRequest.getContent(),
@@ -60,6 +74,9 @@ public class CommentService {
         }
     }
 
+    /**
+     * 코멘트를 삭제한다. id와 일치하는 코멘트가 없다면 예외를 발생시킨다.
+     */
     @Transactional
     public void deleteComment(Long id) {
         validateCommentExists(id);
@@ -69,9 +86,7 @@ public class CommentService {
     private List<CommentDetailDto> toCommentDetails(List<Comment> comments) {
         List<CommentDetailDto> commentDetails = new ArrayList<>();
         for (Comment comment : comments) {
-            SimpleMemberDto writer = memberService.getSimpleMemberById(comment.getMemberId());
-            UploadedFileDto file = getFileByComment(comment);
-            CommentDetailDto commentDetail = CommentMapper.toCommentDetailDto(comment, writer, file);
+            CommentDetailDto commentDetail = addDetail(comment);
             commentDetails.add(commentDetail);
         }
         return commentDetails;
@@ -90,4 +105,15 @@ public class CommentService {
             throw new CommentNotFoundException();
         }
     }
+
+    private Comment getCommentOrThrow(Long id) {
+        return commentRepository.findById(id).orElseThrow(CommentNotFoundException::new);
+    }
+
+    private CommentDetailDto addDetail(Comment comment) {
+        SimpleMemberDto writer = memberService.getSimpleMemberById(comment.getMemberId());
+        UploadedFileDto file = getFileByComment(comment);
+        return CommentMapper.toCommentDetailDto(comment, writer, file);
+    }
+
 }
