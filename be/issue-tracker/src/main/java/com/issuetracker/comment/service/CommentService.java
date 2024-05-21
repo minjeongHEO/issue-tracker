@@ -2,7 +2,9 @@ package com.issuetracker.comment.service;
 
 import com.issuetracker.comment.dto.CommentCreateRequest;
 import com.issuetracker.comment.dto.CommentDetailDto;
+import com.issuetracker.comment.dto.CommentModifyRequest;
 import com.issuetracker.comment.entity.Comment;
+import com.issuetracker.comment.exception.CommentNotFoundException;
 import com.issuetracker.comment.repository.CommentRepository;
 import com.issuetracker.comment.util.CommentMapper;
 import com.issuetracker.file.dto.UploadedFileDto;
@@ -45,6 +47,14 @@ public class CommentService {
         SimpleMemberDto writer = memberService.getSimpleMemberById(request.getWriterId());
         UploadedFileDto file = getFileByComment(saved);
         return CommentMapper.toCommentDetailDto(saved, writer, file);
+    }
+
+    public void modifyComment(Long id, CommentModifyRequest commentModifyRequest) {
+        int affectedRow = commentRepository.updateBodyById(id, commentModifyRequest.getContent(),
+                commentModifyRequest.getFileId());
+        if (affectedRow == 0) {
+            throw new CommentNotFoundException();
+        }
     }
 
     private List<CommentDetailDto> toCommentDetails(List<Comment> comments) {
