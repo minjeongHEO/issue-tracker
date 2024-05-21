@@ -18,6 +18,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +37,7 @@ public class CommentService {
     /**
      * 새로운 코멘트를 작성한다. 작성시간은 현재 시간을 넣고, isWriter 변수는 이슈의 작성자와 동일한지 여부를 확인하여 입력한다.
      */
+    @Transactional
     public CommentDetailDto createComment(CommentCreateRequest request) {
         LocalDateTime createDate = LocalDateTime.now();
         boolean isWriter = issueQueryService.hasSameWriter(request.getIssueId(), request.getWriterId());
@@ -49,12 +51,19 @@ public class CommentService {
         return CommentMapper.toCommentDetailDto(saved, writer, file);
     }
 
+    @Transactional
     public void modifyComment(Long id, CommentModifyRequest commentModifyRequest) {
         int affectedRow = commentRepository.updateBodyById(id, commentModifyRequest.getContent(),
                 commentModifyRequest.getFileId());
         if (affectedRow == 0) {
             throw new CommentNotFoundException();
         }
+    }
+
+    @Transactional
+    public void deleteComment(Long id) {
+        validateCommentExists(id);
+        commentRepository.deleteById(id);
     }
 
     private List<CommentDetailDto> toCommentDetails(List<Comment> comments) {
@@ -74,5 +83,11 @@ public class CommentService {
             return null;
         }
         return fileService.showFile(fileId);
+    }
+
+    private void validateCommentExists(Long id) {
+        if (!commentRepository.existsById(id)) {
+            throw new CommentNotFoundException();
+        }
     }
 }
