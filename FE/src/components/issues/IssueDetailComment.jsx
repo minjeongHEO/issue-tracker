@@ -10,6 +10,7 @@ import { IconPaperClip } from '../../assets/icons/IconPaperClip';
 import { CustomButton } from '../../assets/CustomButton';
 import { IconXsquare } from '../../assets/icons/IconXsquare';
 import CustomMarkdownText from '../../assets/CustomMarkdownText';
+import CustomTextEditor from '../../assets/CustomTextEditor';
 
 export default function IssueDetailComment({ detailCommentData }) {
     //TODO: React Query + Suspense
@@ -66,13 +67,7 @@ export default function IssueDetailComment({ detailCommentData }) {
                 <CommentMain>
                     {editState ? (
                         <Content>
-                            <StyledTextArea value={contentArea} onChange={handleChange} onFocus={handleFocus} onBlur={handleBlur}></StyledTextArea>
-                            <StyledNotifiy>띄어쓰기 포함 {contentArea.length}자</StyledNotifiy>
-                            <StyledLine />
-                            <StyledFileBtn>
-                                <IconPaperClip />
-                                <div>파일 첨부하기</div>
-                            </StyledFileBtn>
+                            <CustomTextEditor $value={contentArea} $onChange={handleChange} $onFocus={handleFocus} $onBlur={handleBlur} />
                         </Content>
                     ) : (
                         <Content>
@@ -96,40 +91,6 @@ export default function IssueDetailComment({ detailCommentData }) {
         </>
     );
 }
-const StyledFileBtn = styled(FlexRow)`
-    margin: 20px 0 0 15px;
-    font-size: 13px;
-    justify-content: flex-start;
-    align-items: flex-start;
-    cursor: pointer;
-    * {
-        margin-right: 2px;
-    }
-`;
-const StyledLine = styled.div`
-    width: 100%;
-    height: 1px;
-    border-bottom: 2px dashed ${(props) => props.theme.borderColor};
-`;
-
-const StyledNotifiy = styled.span`
-    position: absolute;
-    bottom: 70px;
-    right: 15px;
-    font-size: 13px;
-`;
-const StyledTextArea = styled.textarea`
-    /* background-color: aliceblue; */
-    border: none;
-    resize: none;
-    width: 100%;
-    min-height: 100px;
-    padding: 15px;
-    background-color: ${(props) => props.theme.bgColorBody};
-    color: ${(props) => props.theme.fontColor};
-    caret-color: var(--primary-color);
-    position: relative;
-`;
 
 const Content = styled.div`
     /* background-color: red; */
