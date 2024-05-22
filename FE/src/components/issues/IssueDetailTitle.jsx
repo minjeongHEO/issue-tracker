@@ -15,11 +15,11 @@ export default function IssueDetailTitle({ editState, toggleEditState }) {
                         <PlaceholdText className="placeholdText">제목</PlaceholdText>
                         <ModifyInput type="text" value="이슈 상세" />
                         <HeaderAction>
-                            <StyledBtn size={'medium'} type={'outline'}>
+                            <StyledBtn size={'medium'} type={'outline'} isDisabled={false}>
                                 <IconEdit />
                                 <span onClick={toggleEditState}>편집 취소</span>
                             </StyledBtn>
-                            <StyledBtn size={'medium'} type={'outline'}>
+                            <StyledBtn size={'medium'} type={'outline'} isDisabled={false}>
                                 <IconArchive />
                                 <span>편집 완료</span>
                             </StyledBtn>
@@ -32,11 +32,11 @@ export default function IssueDetailTitle({ editState, toggleEditState }) {
                         이슈 상세<span className="issueId">#41</span>
                     </h1>
                     <HeaderAction>
-                        <StyledBtn size={'medium'} type={'outline'}>
+                        <StyledBtn size={'medium'} type={'outline'} isDisabled={false}>
                             <IconEdit />
                             <span onClick={toggleEditState}>제목 편집</span>
                         </StyledBtn>
-                        <StyledBtn size={'medium'} type={'outline'}>
+                        <StyledBtn size={'medium'} type={'outline'} isDisabled={false}>
                             <IconArchive />
                             <span>이슈 닫기</span>
                         </StyledBtn>

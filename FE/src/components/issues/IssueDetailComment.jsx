@@ -78,11 +78,11 @@ export default function IssueDetailComment({ detailCommentData }) {
             </StyledCommentContainer>
             {editState && (
                 <MainBtnContainer>
-                    <StyledBtn size={'medium'} type={'outline'} onClick={toggleEditState}>
+                    <StyledBtn size={'medium'} type={'outline'} onClick={toggleEditState} isDisabled={false}>
                         <IconXsquare />
                         편집 취소
                     </StyledBtn>
-                    <StyledBtn size={'medium'}>
+                    <StyledBtn size={'medium'} isDisabled={false}>
                         <IconEdit />
                         편집 완료
                     </StyledBtn>
