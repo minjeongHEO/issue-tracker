@@ -12,17 +12,17 @@ import IssueDetailSidebar from './IssueDetailSidebar';
 import CustomTextEditor from '../../assets/CustomTextEditor';
 import { IconPlus } from '../../assets/icons/IconPlus';
 import { CustomButton } from '../../assets/CustomButton';
+import { useIssueDetailData } from '../../hooks/useIssueDetailData';
 
 export default function IssueDetail() {
-    let { id } = useParams();
+    const { issueId } = useParams();
+    const { data, isSuccess, isLoading } = useIssueDetailData(issueId);
 
     const [newCommentArea, setNewCommentArea] = useState('');
     const [isNewCommetDisabled, setIsNewCommetDisabled] = useState(true);
     const [isNewCommentFocused, setIsNewCommentFocused] = useState(false);
     const [editState, setEditState] = useState(false);
-    const toggleEditState = () => {
-        setEditState((prev) => !prev);
-    };
+    const toggleEditState = () => setEditState((prev) => !prev);
     const handleFocus = () => setIsNewCommentFocused(true);
     const handleBlur = () => setIsNewCommentFocused(false);
     const handleChange = ({ target }) => {
@@ -38,46 +38,49 @@ export default function IssueDetail() {
     return (
         <StyledDetailContainer>
             <Header />
-            <MainContainer>
-                <TitleContainer className="title">
-                    <HeaderShow>
-                        <IssueDetailTitle editState={editState} toggleEditState={toggleEditState}></IssueDetailTitle>
+            {isLoading && <div>...Loading</div>}
+            {isSuccess && (
+                <MainContainer>
+                    <TitleContainer className="title">
+                        <HeaderShow>
+                            <IssueDetailTitle editState={editState} toggleEditState={toggleEditState}></IssueDetailTitle>
 
-                        <HeaderSummary>
-                            <StyledIssueState>
-                                <IconAlertCircle />
-                                <span>열린 이슈</span>
-                            </StyledIssueState>
-                            <div>
-                                <span>
-                                    이 이슈가 3분전에 <b>woody</b>님에 의해서 열렸습니다.
-                                </span>
-                                <span>💭</span>
-                                <span>코멘트 1개</span>
-                            </div>
-                        </HeaderSummary>
-                    </HeaderShow>
-                </TitleContainer>
+                            <HeaderSummary>
+                                <StyledIssueState>
+                                    <IconAlertCircle />
+                                    <span>열린 이슈</span>
+                                </StyledIssueState>
+                                <div>
+                                    <span>
+                                        이 이슈가 3분전에 <b>woody</b>님에 의해서 열렸습니다.
+                                    </span>
+                                    <span>💭</span>
+                                    <span>코멘트 1개</span>
+                                </div>
+                            </HeaderSummary>
+                        </HeaderShow>
+                    </TitleContainer>
 
-                <ContentsContainer>
-                    <StyledComments>
-                        <IssueDetailComment detailCommentData={mockData.comments[0]} />
-                        <IssueDetailComment detailCommentData={mockData.comments[1]} />
-                        <IssueDetailComment detailCommentData={mockData.comments[2]} />
+                    <ContentsContainer>
+                        <StyledComments>
+                            <IssueDetailComment detailCommentData={mockData.comments[0]} />
+                            <IssueDetailComment detailCommentData={mockData.comments[1]} />
+                            <IssueDetailComment detailCommentData={mockData.comments[2]} />
 
-                        <Content $isfocused={isNewCommentFocused}>
-                            <CustomTextEditor $value={newCommentArea} $onChange={handleChange} $onFocus={handleFocus} $onBlur={handleBlur} />
-                        </Content>
-                        <MainBtnContainer>
-                            <CustomButton size={'medium'} isDisabled={isNewCommetDisabled}>
-                                <IconPlus />
-                                코멘트 작성
-                            </CustomButton>
-                        </MainBtnContainer>
-                    </StyledComments>
-                    <IssueDetailSidebar />
-                </ContentsContainer>
-            </MainContainer>
+                            <Content $isfocused={isNewCommentFocused}>
+                                <CustomTextEditor $value={newCommentArea} $onChange={handleChange} $onFocus={handleFocus} $onBlur={handleBlur} />
+                            </Content>
+                            <MainBtnContainer>
+                                <CustomButton size={'medium'} isDisabled={isNewCommetDisabled}>
+                                    <IconPlus />
+                                    코멘트 작성
+                                </CustomButton>
+                            </MainBtnContainer>
+                        </StyledComments>
+                        <IssueDetailSidebar />
+                    </ContentsContainer>
+                </MainContainer>
+            )}
         </StyledDetailContainer>
     );
 }
