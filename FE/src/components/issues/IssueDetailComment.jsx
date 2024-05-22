@@ -1,9 +1,4 @@
-import { Button } from 'antd';
 import React, { useEffect, useState } from 'react';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { dark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import styled from 'styled-components';
 import { FlexCol, FlexRow } from '../../styles/theme';
 import { CustomProfile } from '../../assets/CustomProfile';
@@ -14,7 +9,7 @@ import { IconSmile } from '../../assets/icons/IconSmile';
 import { IconPaperClip } from '../../assets/icons/IconPaperClip';
 import { CustomButton } from '../../assets/CustomButton';
 import { IconXsquare } from '../../assets/icons/IconXsquare';
-import { StyledRestoreCSS } from '../../styles/StyledRestoreCSS';
+import CustomMarkdownText from '../../assets/CustomMarkdownText';
 
 export default function IssueDetailComment({ detailCommentData }) {
     //TODO: React Query + Suspense
@@ -81,30 +76,7 @@ export default function IssueDetailComment({ detailCommentData }) {
                         </Content>
                     ) : (
                         <Content>
-                            <StyledRestoreCSS>
-                                <StyledReactMarkdown
-                                    children={content}
-                                    remarkPlugins={[remarkGfm]}
-                                    components={{
-                                        code({ node, inline, className, children, ...props }) {
-                                            const match = /language-(\w+)/.exec(className || '');
-                                            return !inline && match ? (
-                                                <SyntaxHighlighter
-                                                    children={String(children).replace(/\n$/, '')}
-                                                    style={dark}
-                                                    language={match[1]}
-                                                    PreTag="div"
-                                                    {...props}
-                                                />
-                                            ) : (
-                                                <code className={className} {...props}>
-                                                    {children}
-                                                </code>
-                                            );
-                                        },
-                                    }}
-                                />
-                            </StyledRestoreCSS>
+                            <CustomMarkdownText content={content} />
                         </Content>
                     )}
                 </CommentMain>
@@ -124,9 +96,6 @@ export default function IssueDetailComment({ detailCommentData }) {
         </>
     );
 }
-const StyledReactMarkdown = styled(ReactMarkdown)`
-    padding: 15px;
-`;
 const StyledFileBtn = styled(FlexRow)`
     margin: 20px 0 0 15px;
     font-size: 13px;
@@ -171,12 +140,6 @@ const Content = styled.div`
     word-wrap: break-word;
     text-align: justify;
     position: relative;
-
-    & .defaultContent {
-        width: 100%;
-        height: 100%;
-        padding: 15px;
-    }
 `;
 
 const CommentMain = styled(FlexCol)`
