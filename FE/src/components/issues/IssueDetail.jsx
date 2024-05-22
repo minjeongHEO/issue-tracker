@@ -13,15 +13,17 @@ import CustomTextEditor from '../../assets/CustomTextEditor';
 import { IconPlus } from '../../assets/icons/IconPlus';
 import { CustomButton } from '../../assets/CustomButton';
 import { useIssueDetailData } from '../../hooks/useIssueDetailData';
+import { calculatePastTime } from '../../utils/dateUtils';
 
 export default function IssueDetail() {
     const { issueId } = useParams();
-    const { data, isSuccess, isLoading } = useIssueDetailData(issueId);
+    const { data, isLoading } = useIssueDetailData(issueId);
 
     const [newCommentArea, setNewCommentArea] = useState('');
     const [isNewCommetDisabled, setIsNewCommetDisabled] = useState(true);
     const [isNewCommentFocused, setIsNewCommentFocused] = useState(false);
     const [editState, setEditState] = useState(false);
+    const [pastTime, setPastTime] = useState('');
     const toggleEditState = () => setEditState((prev) => !prev);
     const handleFocus = () => setIsNewCommentFocused(true);
     const handleBlur = () => setIsNewCommentFocused(false);
@@ -35,27 +37,40 @@ export default function IssueDetail() {
         else setIsNewCommetDisabled(true);
     }, [newCommentArea]);
 
+    useEffect(() => {
+        if (!data) return;
+        const createIssueDate = data.createDate;
+        setPastTime(calculatePastTime(createIssueDate));
+
+        const intervalPerTime = () => {
+            setInterval(() => {
+                setPastTime(calculatePastTime(createIssueDate));
+            }, 1000 * 60);
+        };
+        return () => clearInterval(intervalPerTime);
+    }, [data?.createDate]);
+
     return (
         <StyledDetailContainer>
             <Header />
             {isLoading && <div>...Loading</div>}
-            {isSuccess && (
+            {data && (
                 <MainContainer>
                     <TitleContainer className="title">
                         <HeaderShow>
-                            <IssueDetailTitle editState={editState} toggleEditState={toggleEditState}></IssueDetailTitle>
+                            <IssueDetailTitle editState={editState} toggleEditState={toggleEditState} id={data.id} title={data.title} />
 
                             <HeaderSummary>
                                 <StyledIssueState>
                                     <IconAlertCircle />
-                                    <span>열린 이슈</span>
+                                    <span>{data.isClosed ? '닫힌 이슈' : '열린 이슈'}</span>
                                 </StyledIssueState>
                                 <div>
                                     <span>
-                                        이 이슈가 3분전에 <b>woody</b>님에 의해서 열렸습니다.
+                                        이 이슈가 {pastTime} <b>{data.writer.id}</b>님에 의해서 열렸습니다.
                                     </span>
                                     <span>💭</span>
-                                    <span>코멘트 1개</span>
+                                    <span>코멘트 {data.comments.length}개</span>
                                 </div>
                             </HeaderSummary>
                         </HeaderShow>
@@ -63,9 +78,24 @@ export default function IssueDetail() {
 
                     <ContentsContainer>
                         <StyledComments>
-                            <IssueDetailComment detailCommentData={mockData.comments[0]} />
-                            <IssueDetailComment detailCommentData={mockData.comments[1]} />
-                            <IssueDetailComment detailCommentData={mockData.comments[2]} />
+                            <IssueDetailComment
+                                id={data.id}
+                                content={data.content}
+                                writer={data.writer}
+                                file={data.file}
+                                isWriter={true}
+                                createDate={data.createDate}
+                            />
+                            {data.comments.map(({ id, content, writer, file, isWriter, createDate }) => (
+                                <IssueDetailComment
+                                    key={id}
+                                    content={content}
+                                    writer={writer}
+                                    file={file}
+                                    isWriter={isWriter}
+                                    createDate={createDate}
+                                />
+                            ))}
 
                             <Content $isfocused={isNewCommentFocused}>
                                 <CustomTextEditor $value={newCommentArea} $onChange={handleChange} $onFocus={handleFocus} $onBlur={handleBlur} />
@@ -77,7 +107,8 @@ export default function IssueDetail() {
                                 </CustomButton>
                             </MainBtnContainer>
                         </StyledComments>
-                        <IssueDetailSidebar />
+
+                        <IssueDetailSidebar milestone={data.milestone} assignees={data.assignees} labels={data.labels} />
                     </ContentsContainer>
                 </MainContainer>
             )}
@@ -114,7 +145,7 @@ const StyledComments = styled(FlexCol)`
     min-height: 200px;
     /* display: flex;
     flex-direction: column; */
-    justify-content: baseline;
+    justify-content: flex-start;
     align-items: center;
 `;
 

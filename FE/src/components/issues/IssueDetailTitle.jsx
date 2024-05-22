@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { IconEdit } from '../../assets/icons/IconEdit';
 import { IconArchive } from '../../assets/icons/IconArchive';
 import { Button } from 'antd';
@@ -6,20 +6,33 @@ import styled from 'styled-components';
 import { StyledInput } from '../../styles/theme';
 import { CustomButton } from '../../assets/CustomButton';
 
-export default function IssueDetailTitle({ editState, toggleEditState }) {
+export default function IssueDetailTitle({ editState, toggleEditState, id, title }) {
+    const [modifyTitle, setModifyTitle] = useState(title);
+    const [isTitleDisabled, setIsTitleDisabled] = useState(false);
+
+    const handleTitleChange = ({ target }) => {
+        const { value } = target;
+        setModifyTitle(value);
+    };
+
+    useEffect(() => {
+        if (modifyTitle.length > 0) setIsTitleDisabled(false);
+        else setIsTitleDisabled(true);
+    }, [modifyTitle]);
+
     return (
         <>
             {editState ? (
                 <form>
                     <FlexRow>
                         <PlaceholdText className="placeholdText">제목</PlaceholdText>
-                        <ModifyInput type="text" value="이슈 상세" />
+                        <ModifyInput type="text" value={modifyTitle} onChange={handleTitleChange} />
                         <HeaderAction>
-                            <StyledBtn size={'medium'} type={'outline'} isDisabled={false}>
+                            <StyledBtn size={'medium'} type={'outline'} isDisabled={false} onClick={toggleEditState}>
                                 <IconEdit />
-                                <span onClick={toggleEditState}>편집 취소</span>
+                                <span>편집 취소</span>
                             </StyledBtn>
-                            <StyledBtn size={'medium'} type={'outline'} isDisabled={false}>
+                            <StyledBtn size={'medium'} type={'outline'} isDisabled={isTitleDisabled} onClick={toggleEditState}>
                                 <IconArchive />
                                 <span>편집 완료</span>
                             </StyledBtn>
@@ -29,7 +42,8 @@ export default function IssueDetailTitle({ editState, toggleEditState }) {
             ) : (
                 <FlexRow>
                     <h1>
-                        이슈 상세<span className="issueId">#41</span>
+                        {title}
+                        <span className="issueId">#{id}</span>
                     </h1>
                     <HeaderAction>
                         <StyledBtn size={'medium'} type={'outline'} isDisabled={false}>

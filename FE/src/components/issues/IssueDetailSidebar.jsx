@@ -7,7 +7,10 @@ import { CustomLabelBadge } from '../../assets/CustomLabelBadge';
 import { IconProgressBar } from '../../assets/icons/IconProgressBar';
 import { IconTrash } from '../../assets/icons/IconTrash';
 
-export default function IssueDetailSidebar() {
+export default function IssueDetailSidebar({ milestone, assignees, labels }) {
+    const openIssueCount = milestone?.openIssueCount ?? 0;
+    const closedIssueCount = milestone?.closedIssueCount ?? 0;
+
     const calulatePercentage = (openCount, closedCount) => (closedCount / (openCount + closedCount)).toFixed(2);
 
     return (
@@ -18,14 +21,12 @@ export default function IssueDetailSidebar() {
                         <div>담당자</div>
                         <IconPlus />
                     </FilterTitle>
-                    <FilterContentContainer>
-                        <CustomProfile src={'https://avatars.githubusercontent.com/u/96780693?v=4'} alt={'assineeProfile'} />
-                        <span className="userName">woody</span>
-                    </FilterContentContainer>
-                    <FilterContentContainer>
-                        <CustomProfile src={'https://avatars.githubusercontent.com/u/96780693?v=4'} alt={'assineeProfile'} />
-                        <span className="userName">sangchu</span>
-                    </FilterContentContainer>
+                    {assignees.map(({ id, imgUrl }) => (
+                        <FilterContentContainer key={id}>
+                            <CustomProfile src={imgUrl} alt={'assineeProfile'} />
+                            <span className="userName">{id}</span>
+                        </FilterContentContainer>
+                    ))}
                 </Filter>
                 <StyledLine />
                 <Filter>
@@ -34,9 +35,11 @@ export default function IssueDetailSidebar() {
                         <IconPlus />
                     </FilterTitle>
                     <LabelContentContainer>
-                        <StyledLabel backgroundColor={'black'} color={'white'}>
-                            레이블이름
-                        </StyledLabel>
+                        {labels.map(({ id, name, description, textColor, bgColor }) => (
+                            <StyledLabel key={id} backgroundColor={bgColor} color={textColor}>
+                                {name}
+                            </StyledLabel>
+                        ))}
                     </LabelContentContainer>
                 </Filter>
                 <StyledLine />
@@ -45,10 +48,14 @@ export default function IssueDetailSidebar() {
                         <div>마일스톤</div>
                         <IconPlus />
                     </FilterTitle>
-                    <FilterContentContainer>
-                        <IconProgressBar percentage={calulatePercentage(2, 2)} />
-                    </FilterContentContainer>
-                    <FilterContentContainer>그룹프로젝트:이슈트래커</FilterContentContainer>
+                    {milestone && (
+                        <>
+                            <FilterContentContainer>
+                                <IconProgressBar percentage={calulatePercentage(openIssueCount, closedIssueCount)} />
+                            </FilterContentContainer>
+                            <FilterContentContainer>{milestone.name}</FilterContentContainer>)
+                        </>
+                    )}
                 </Filter>
             </SidebarContainer>
             <DeleteContentContainer>

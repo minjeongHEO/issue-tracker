@@ -6,18 +6,14 @@ import { calculatePastTime } from '../../utils/dateUtils';
 import { CustomLabelBadge } from '../../assets/CustomLabelBadge';
 import { IconEdit } from '../../assets/icons/IconEdit';
 import { IconSmile } from '../../assets/icons/IconSmile';
-import { IconPaperClip } from '../../assets/icons/IconPaperClip';
 import { CustomButton } from '../../assets/CustomButton';
 import { IconXsquare } from '../../assets/icons/IconXsquare';
 import CustomMarkdownText from '../../assets/CustomMarkdownText';
 import CustomTextEditor from '../../assets/CustomTextEditor';
+import { DEFAULT_SRC } from '../../utils/imageUtils';
 
-export default function IssueDetailComment({ detailCommentData }) {
-    //TODO: React Query + Suspense
-    if (!detailCommentData) return <div>Loading...</div>;
-
-    const { id, content, createDate, writer, file, isWriter } = detailCommentData;
-    const [contentArea, setContentArea] = useState(content);
+export default function IssueDetailComment({ id, content, writer, file, isWriter, createDate }) {
+    const [contentArea, setContentArea] = useState(content || '');
     const [pastTime, setPastTime] = useState('');
     const [editState, SetEditState] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
@@ -48,7 +44,7 @@ export default function IssueDetailComment({ detailCommentData }) {
             <StyledCommentContainer $isfocused={isFocused}>
                 <CommentNav>
                     <CommentData>
-                        <StyledProfile src={writer.imgUrl} alt={'userProfile'} size={'medium'} />
+                        <StyledProfile src={writer.imgUrl || DEFAULT_SRC} alt={'userProfile'} size={'medium'} />
                         <span className="userName">{writer.id}</span>
                         <span className="">{pastTime}</span>
                     </CommentData>

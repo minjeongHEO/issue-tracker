@@ -8,7 +8,7 @@ export default function CustomTextEditor({ className, $value, $onChange, $onFocu
     return (
         <>
             <StyledTextArea value={$value} onChange={$onChange} onFocus={$onFocus} onBlur={$onBlur} />
-            <StyledNotifiy>띄어쓰기 포함 {$value.length}자</StyledNotifiy>
+            <StyledNotifiy>띄어쓰기 포함 {$value?.length ?? 0}자</StyledNotifiy>
             <StyledLine />
             <StyledFileBtn onClick={$fileOnClick}>
                 <IconPaperClip />
@@ -30,14 +30,19 @@ const StyledTextArea = styled.textarea`
     caret-color: var(--primary-color);
     border-radius: 10px 10px 0 0;
     margin-bottom: 15px;
-    /* background-color: aliceblue; */
+
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    outline: none;
 `;
+
 const StyledNotifiy = styled.span`
     position: absolute;
     bottom: 45px;
     right: 20px;
     font-size: 13px;
 `;
+
 const StyledLine = styled.div`
     width: 100%;
     height: 1px;
