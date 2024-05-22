@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Header from '../header/Header';
-import { FlexCol, IndexContainer, StyledInput } from '../../styles/theme';
+import { FlexCol, FlexRow, IndexContainer, StyledInput } from '../../styles/theme';
 import styled from 'styled-components';
 import { MainContainer } from '../../styles/theme';
 import { IconAlertCircle } from '../../assets/icons/IconAlertCircle';
@@ -9,14 +9,31 @@ import IssueDetailTitle from './IssueDetailTitle';
 import IssueDetailComment from './IssueDetailComment';
 import mockData from '../../data/issueDetail.json';
 import IssueDetailSidebar from './IssueDetailSidebar';
+import CustomTextEditor from '../../assets/CustomTextEditor';
+import { IconPlus } from '../../assets/icons/IconPlus';
+import { CustomButton } from '../../assets/CustomButton';
 
 export default function IssueDetail() {
     let { id } = useParams();
 
+    const [newCommentArea, setNewCommentArea] = useState('');
+    const [isNewCommetDisabled, setIsNewCommetDisabled] = useState(true);
+    const [isNewCommentFocused, setIsNewCommentFocused] = useState(false);
     const [editState, setEditState] = useState(false);
     const toggleEditState = () => {
         setEditState((prev) => !prev);
     };
+    const handleFocus = () => setIsNewCommentFocused(true);
+    const handleBlur = () => setIsNewCommentFocused(false);
+    const handleChange = ({ target }) => {
+        const { value } = target;
+        setNewCommentArea(value);
+    };
+
+    useEffect(() => {
+        if (newCommentArea.length > 0) setIsNewCommetDisabled(false);
+        else setIsNewCommetDisabled(true);
+    }, [newCommentArea]);
 
     return (
         <StyledDetailContainer>
@@ -47,6 +64,16 @@ export default function IssueDetail() {
                         <IssueDetailComment detailCommentData={mockData.comments[0]} />
                         <IssueDetailComment detailCommentData={mockData.comments[1]} />
                         <IssueDetailComment detailCommentData={mockData.comments[2]} />
+
+                        <Content $isfocused={isNewCommentFocused}>
+                            <CustomTextEditor $value={newCommentArea} $onChange={handleChange} $onFocus={handleFocus} $onBlur={handleBlur} />
+                        </Content>
+                        <MainBtnContainer>
+                            <CustomButton size={'medium'} isDisabled={isNewCommetDisabled}>
+                                <IconPlus />
+                                코멘트 작성
+                            </CustomButton>
+                        </MainBtnContainer>
                     </StyledComments>
                     <IssueDetailSidebar />
                 </ContentsContainer>
@@ -54,6 +81,27 @@ export default function IssueDetail() {
         </StyledDetailContainer>
     );
 }
+
+const MainBtnContainer = styled(FlexRow)`
+    justify-content: end;
+    width: 100%;
+    margin-bottom: 20px;
+`;
+
+const Content = styled.div`
+    /* display: flex;
+    flex-direction: column; */
+    width: 100%;
+    /* min-height: 200px; */
+    margin-bottom: 15px;
+    background-color: ${(props) => props.theme.bgColorBody};
+    border-radius: 10px;
+    border: 1px solid;
+    border-color: ${(props) => (props.$isfocused ? 'var(--primary-color)' : props.theme.borderColor)};
+    color: ${(props) => props.theme.fontColor};
+    background-color: ${(props) => (props.$isfocused ? props.theme.bgColorBody : props.theme.disabledColor)};
+    position: relative;
+`;
 
 const StyledComments = styled(FlexCol)`
     /* background-color: azure; */

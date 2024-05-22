@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { IconPaperClip } from '../assets/icons/IconPaperClip';
 import { FlexRow } from '../styles/theme';
+import themes from '../styles/theme';
 
 export default function CustomTextEditor({ className, $value, $onChange, $onFocus, $onBlur, $fileOnClick = () => {} }) {
     return (
@@ -19,32 +20,36 @@ export default function CustomTextEditor({ className, $value, $onChange, $onFocu
 
 const StyledTextArea = styled.textarea`
     border: none;
+    position: relative;
     resize: none;
     width: 100%;
     min-height: 100px;
     padding: 15px;
-    background-color: ${(props) => props.theme.bgColorBody};
+    background-color: transparent;
     color: ${(props) => props.theme.fontColor};
     caret-color: var(--primary-color);
-    position: relative;
+    border-radius: 10px 10px 0 0;
+    margin-bottom: 15px;
     /* background-color: aliceblue; */
 `;
 const StyledNotifiy = styled.span`
     position: absolute;
-    bottom: 70px;
-    right: 15px;
+    bottom: 45px;
+    right: 20px;
     font-size: 13px;
 `;
 const StyledLine = styled.div`
     width: 100%;
     height: 1px;
-    border-bottom: 2px dashed ${(props) => props.theme.borderColor};
+    border-bottom: 2px dashed ${themes.colorValue.grayscale[300]};
 `;
 const StyledFileBtn = styled(FlexRow)`
-    margin: 20px 0 0 15px;
-    font-size: 13px;
+    margin: 5px 0 5px 15px;
+    font-size: 12px;
     justify-content: flex-start;
-    align-items: flex-start;
+    /* align-items: flex-start; */
+    width: 100px;
+    height: 30px;
     cursor: pointer;
     * {
         margin-right: 2px;

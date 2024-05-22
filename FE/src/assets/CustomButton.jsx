@@ -8,9 +8,9 @@ import { Button } from 'antd';
  * @param {buttonType} - container / outline / ghost
  * @returns
  */
-export function CustomButton({ className, children, type = 'container', size = 'small', onClick = () => {} }) {
+export function CustomButton({ className, children, type = 'container', size = 'small', onClick = () => {}, isDisabled = true }) {
     return (
-        <StyledButton className={className} $buttonType={type} $size={size} onClick={onClick}>
+        <StyledButton className={className} $buttonType={type} $size={size} onClick={onClick} disabled={isDisabled}>
             {children}
         </StyledButton>
     );
@@ -27,5 +27,18 @@ const StyledButton = styled(Button)`
     /*visibility: ${(props) => props.$visibility || 'visible'};*/
     & span {
         margin-left: 5px;
+    }
+    &:hover {
+        opacity: 0.8;
+    }
+    &:active {
+        opacity: 0.6;
+    }
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    &:focus {
+        filter: brightness(110%);
     }
 `;

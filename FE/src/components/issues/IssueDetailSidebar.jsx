@@ -33,7 +33,6 @@ export default function IssueDetailSidebar() {
                         <div>레이블</div>
                         <IconPlus />
                     </FilterTitle>
-
                     <LabelContentContainer>
                         <StyledLabel backgroundColor={'black'} color={'white'}>
                             레이블이름

@@ -98,7 +98,7 @@ const Content = styled.div`
     height: 100%;
     /* padding: 15px; */
     /* margin: 15px 0px; */
-    word-wrap: break-word;
+    /* word-wrap: break-word; */
     text-align: justify;
     position: relative;
 `;
