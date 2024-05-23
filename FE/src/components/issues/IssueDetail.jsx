@@ -11,12 +11,14 @@ import IssueDetailSidebar from './IssueDetailSidebar';
 import CustomTextEditor from '../../assets/CustomTextEditor';
 import { IconPlus } from '../../assets/icons/IconPlus';
 import { CustomButton } from '../../assets/CustomButton';
-import { useIssueDetailData } from '../../hooks/useIssueDetailData';
+import { useCreateIssueComment, useIssueDetailData } from '../../hooks/useIssueDetailData';
 import { calculatePastTime } from '../../utils/dateUtils';
+import { getUserId } from '../../utils/userUtils';
 
 export default function IssueDetail() {
     const { issueId } = useParams();
     const { data, isLoading } = useIssueDetailData(issueId);
+    const { mutate: createIssueComment } = useCreateIssueComment(issueId);
 
     const [newCommentArea, setNewCommentArea] = useState('');
     const [isNewCommetDisabled, setIsNewCommetDisabled] = useState(true);
@@ -29,6 +31,11 @@ export default function IssueDetail() {
     const handleChange = ({ target }) => {
         const { value } = target;
         setNewCommentArea(value);
+    };
+    //TODO: fileId
+    const submitNewComment = () => {
+        createIssueComment({ writerId: getUserId(), content: newCommentArea });
+        setNewCommentArea('');
     };
 
     useEffect(() => {
@@ -109,7 +116,7 @@ export default function IssueDetail() {
                                 <CustomTextEditor $value={newCommentArea} $onChange={handleChange} $onFocus={handleFocus} $onBlur={handleBlur} />
                             </Content>
                             <MainBtnContainer>
-                                <CustomButton size={'medium'} isDisabled={isNewCommetDisabled}>
+                                <CustomButton size={'medium'} isDisabled={isNewCommetDisabled} onClick={submitNewComment}>
                                     <IconPlus />
                                     코멘트 작성
                                 </CustomButton>

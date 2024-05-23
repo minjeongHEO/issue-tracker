@@ -1,5 +1,5 @@
 const ISSUE_DEFAULT_API_URI = '/api/issues/';
-const ISSUE_COMMENTS_DEFAULT_API_URI = '/api/comments/';
+const ISSUE_COMMENTS_DEFAULT_API_URI = '/api/comments';
 
 /**
  * 이슈 상세 조회
@@ -122,12 +122,44 @@ export const fetchModifyIssueContent = async (content, fileId, issueId) => {
  */
 export const fetchModifyIssueComment = async (content, fileId, commentId) => {
     try {
-        const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ISSUE_COMMENTS_DEFAULT_API_URI}${commentId}`, {
+        const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ISSUE_COMMENTS_DEFAULT_API_URI}/${commentId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({ content, fileId }),
+        });
+
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+        return {
+            status: response.status,
+            statusText: response.statusText,
+        };
+    } catch (error) {
+        throw error;
+    }
+};
+
+/**
+ * 이슈 댓글 생성
+ * @param {*String} writerId - 작성자 아이디
+ * @param {*String} content - 댓글내용
+ * @param {*Number} issueId - 이슈 아이디
+ * @param {*Number} fileId - 파일아이디(없을 시 null)
+ * @returns 
+ *  - 성공: 201
+    - 바인딩 에러시: 400
+    - 서버 내부 오류시: 500
+ */
+export const fetchCreateIssueComment = async (writerId, content, issueId, fileId) => {
+    try {
+        const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ISSUE_COMMENTS_DEFAULT_API_URI}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ writerId, content, issueId, fileId }),
         });
 
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
