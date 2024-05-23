@@ -11,8 +11,11 @@ import { IconXsquare } from '../../assets/icons/IconXsquare';
 import CustomMarkdownText from '../../assets/CustomMarkdownText';
 import CustomTextEditor from '../../assets/CustomTextEditor';
 import { DEFAULT_SRC } from '../../utils/imageUtils';
+import { useModifyIssueContent } from '../../hooks/useIssueDetailData';
 
-export default function IssueDetailComment({ id, content, writer, file, isWriter, createDate }) {
+export default function IssueDetailComment({ id, content, writer, file, isWriter, createDate, isComment = true }) {
+    const { mutate: modifyIssueContent } = useModifyIssueContent(String(id));
+
     const [contentArea, setContentArea] = useState(content || '');
     const [pastTime, setPastTime] = useState('');
     const [editState, SetEditState] = useState(false);
@@ -25,6 +28,14 @@ export default function IssueDetailComment({ id, content, writer, file, isWriter
     const handleChange = ({ target }) => {
         const { value } = target;
         setContentArea(value);
+    };
+
+    //TODO: fileId
+    const submitModifyContent = () => {
+        if (!isComment) modifyIssueContent({ content: contentArea });
+        // else 댓글 수정
+
+        toggleEditState();
     };
 
     useEffect(() => {
@@ -78,7 +89,7 @@ export default function IssueDetailComment({ id, content, writer, file, isWriter
                         <IconXsquare />
                         편집 취소
                     </StyledBtn>
-                    <StyledBtn size={'medium'} isDisabled={false}>
+                    <StyledBtn size={'medium'} isDisabled={false} onClick={submitModifyContent}>
                         <IconEdit />
                         편집 완료
                     </StyledBtn>

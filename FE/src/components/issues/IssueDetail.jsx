@@ -90,6 +90,7 @@ export default function IssueDetail() {
                                 file={data.file}
                                 isWriter={true}
                                 createDate={data.createDate}
+                                isComment={false}
                             />
                             {data.comments.map(({ id, content, writer, file, isWriter, createDate }) => (
                                 <IssueDetailComment

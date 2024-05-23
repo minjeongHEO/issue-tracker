@@ -80,3 +80,34 @@ export const fetchModifyIssueTitle = async (title, issueId) => {
         throw error;
     }
 };
+
+/**
+ * 이슈 본문 수정
+ * @param {*String} content - 수정하는 제목
+ * @param {*String} fileId - 파일아이디(없을 시 null)
+ * @returns 
+ *  - 성공: 200
+    - 아이디 미존재시 : 404
+    - 바인딩 에러시: 400
+    - 서버 내부 오류시: 500
+ */
+export const fetchModifyIssueContent = async (content, fileId, issueId) => {
+    try {
+        const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ISSUE_DEFAULT_API_URI}${issueId}/body`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ content, fileId }),
+        });
+
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+        return {
+            status: response.status,
+            statusText: response.statusText,
+        };
+    } catch (error) {
+        throw error;
+    }
+};
