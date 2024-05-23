@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -69,7 +70,10 @@ public class IssueQueryService {
     @Transactional(readOnly = true)
     public boolean hasSameWriter(Long issueId, String memberId) {
         String writer = issueRepository.findWriterById(issueId);
-        return writer.equals(memberId);
+        if (StringUtils.hasText(writer)) {  // 이슈의 작성자가 탈퇴한 사용자가 아닌 경우만 비교한다.
+            return writer.equals(memberId);
+        }
+        return false;
     }
 
     /**
