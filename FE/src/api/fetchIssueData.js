@@ -1,7 +1,5 @@
 const ISSUE_DEFAULT_API_URI = '/api/issues/';
-const ISSUE_DETAIL_API_URI = '/api/issues/';
-const ISSUE_STATE_CLOSE_API_URI = '/api/issues/close';
-const ISSUE_STATE_OPEN_API_URI = '/api/issues/open';
+const ISSUE_COMMENTS_DEFAULT_API_URI = '/api/comments/';
 
 /**
  * 이슈 상세 조회
@@ -95,6 +93,37 @@ export const fetchModifyIssueContent = async (content, fileId, issueId) => {
     try {
         const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ISSUE_DEFAULT_API_URI}${issueId}/body`, {
             method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ content, fileId }),
+        });
+
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+        return {
+            status: response.status,
+            statusText: response.statusText,
+        };
+    } catch (error) {
+        throw error;
+    }
+};
+
+/**
+ * 이슈 댓글 수정
+ * @param {*String} content - 수정하는 댓글내용
+ * @param {*String} fileId - 파일아이디(없을 시 null)
+ * @returns 
+ *  - 성공: 200
+    - 아이디 미존재시 : 404
+    - 바인딩 에러시: 400
+    - 서버 내부 오류시: 500
+ */
+export const fetchModifyIssueComment = async (content, fileId, commentId) => {
+    try {
+        const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ISSUE_COMMENTS_DEFAULT_API_URI}${commentId}`, {
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },

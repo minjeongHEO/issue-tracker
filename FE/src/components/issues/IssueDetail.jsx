@@ -84,7 +84,7 @@ export default function IssueDetail() {
                     <ContentsContainer>
                         <StyledComments>
                             <IssueDetailComment
-                                id={data.id}
+                                issueId={data.id}
                                 content={data.content}
                                 writer={data.writer}
                                 file={data.file}
@@ -95,6 +95,8 @@ export default function IssueDetail() {
                             {data.comments.map(({ id, content, writer, file, isWriter, createDate }) => (
                                 <IssueDetailComment
                                     key={id}
+                                    issueId={data.id}
+                                    commentId={id}
                                     content={content}
                                     writer={writer}
                                     file={file}

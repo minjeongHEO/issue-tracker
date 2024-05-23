@@ -11,10 +11,11 @@ import { IconXsquare } from '../../assets/icons/IconXsquare';
 import CustomMarkdownText from '../../assets/CustomMarkdownText';
 import CustomTextEditor from '../../assets/CustomTextEditor';
 import { DEFAULT_SRC } from '../../utils/imageUtils';
-import { useModifyIssueContent } from '../../hooks/useIssueDetailData';
+import { useModifyIssueComment, useModifyIssueContent } from '../../hooks/useIssueDetailData';
 
-export default function IssueDetailComment({ id, content, writer, file, isWriter, createDate, isComment = true }) {
-    const { mutate: modifyIssueContent } = useModifyIssueContent(String(id));
+export default function IssueDetailComment({ issueId, commentId, content, writer, file, isWriter, createDate, isComment = true }) {
+    const { mutate: modifyIssueContent } = useModifyIssueContent(String(issueId));
+    const { mutate: modifyIssueComment } = useModifyIssueComment(String(issueId));
 
     const [contentArea, setContentArea] = useState(content || '');
     const [pastTime, setPastTime] = useState('');
@@ -33,8 +34,7 @@ export default function IssueDetailComment({ id, content, writer, file, isWriter
     //TODO: fileId
     const submitModifyContent = () => {
         if (!isComment) modifyIssueContent({ content: contentArea });
-        // else 댓글 수정
-
+        else modifyIssueComment({ commentId, content: contentArea });
         toggleEditState();
     };
 
