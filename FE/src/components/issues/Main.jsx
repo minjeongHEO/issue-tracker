@@ -64,10 +64,6 @@ export default function Main() {
     const [filterItemsByType, setFilterItemsByType] = useState(initFilterItems);
     const [issueDatas, setIssueDatas] = useState(initIssueDatas);
 
-    //*before
-    // const filterResults = useFiltersData();
-    // const [labelsResult, membersResult, milestonesOpenResult, milestonesClosedResult, issueListResult] = filterResults;
-    //*after
     const { data: issueList, isLoading: issueListIsLoading } = usefilteredIssueData();
     const { data: labelsFilter, isLoading: labelsFilterIsLoading } = useLabelsFilter();
     const { data: milestonesFilter, isLoading: milestonesFilterIsLoading } = useMilestonesFilter();
@@ -177,6 +173,7 @@ export default function Main() {
             members: memberItems,
         }));
     }, [membersFilter]);
+
     // useEffect(() => {
     //     const issueList = issueListResult.data;
     //     if (!issueList) return;
