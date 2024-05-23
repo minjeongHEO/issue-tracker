@@ -4,10 +4,11 @@ import { IconArchive } from '../../assets/icons/IconArchive';
 import styled from 'styled-components';
 import { StyledInput } from '../../styles/theme';
 import { CustomButton } from '../../assets/CustomButton';
-import { useIssueStateToggle } from '../../hooks/useIssueDetailData';
+import { useIssueStateToggle, useModifyIssueTitle } from '../../hooks/useIssueDetailData';
 
 export default function IssueDetailTitle({ editState, toggleEditState, id, title, isClosed }) {
-    const { mutate: toggleIssueState } = useIssueStateToggle(String(id)); // mutate 함수를 ToggleIssueState로 이름 변경하여 사용
+    const { mutate: toggleIssueState } = useIssueStateToggle(String(id));
+    const { mutate: modifyIssuetitle } = useModifyIssueTitle(String(id));
 
     const [modifyTitle, setModifyTitle] = useState(title);
     const [isTitleDisabled, setIsTitleDisabled] = useState(false);
@@ -15,6 +16,11 @@ export default function IssueDetailTitle({ editState, toggleEditState, id, title
     const handleTitleChange = ({ target }) => {
         const { value } = target;
         setModifyTitle(value);
+    };
+
+    const submitModifyTitle = () => {
+        modifyIssuetitle({ title: modifyTitle });
+        toggleEditState();
     };
 
     useEffect(() => {
@@ -34,7 +40,7 @@ export default function IssueDetailTitle({ editState, toggleEditState, id, title
                                 <IconEdit />
                                 <span>편집 취소</span>
                             </StyledBtn>
-                            <StyledBtn size={'medium'} type={'outline'} isDisabled={isTitleDisabled} onClick={toggleEditState}>
+                            <StyledBtn size={'medium'} type={'outline'} isDisabled={isTitleDisabled} onClick={submitModifyTitle}>
                                 <IconArchive />
                                 <span>편집 완료</span>
                             </StyledBtn>

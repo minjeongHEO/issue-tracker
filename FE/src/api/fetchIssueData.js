@@ -12,7 +12,7 @@ export const fetchIssueDetailData = async (issueId) => {
     const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
     try {
-        await delay(2000);
+        // await delay(2000);
         const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ISSUE_DEFAULT_API_URI}${issueId}`);
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
@@ -37,6 +37,37 @@ export const fetchIssueStateToggle = async (toIssueState, issueIds) => {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({ issueIds }),
+        });
+
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+        return {
+            status: response.status,
+            statusText: response.statusText,
+        };
+    } catch (error) {
+        throw error;
+    }
+};
+
+/**
+ * 이슈 제목 수정
+ * @param {*String} title - 수정하는 제목
+ * @param {*Number} issueId - 이슈 id
+ * @returns 
+ *  - 성공: 200
+    - 아이디 미존재시 : 404
+    - 바인딩 에러시: 400
+    - 서버 내부 오류시: 500
+ */
+export const fetchModifyIssueTitle = async (title, issueId) => {
+    try {
+        const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ISSUE_DEFAULT_API_URI}${issueId}/title`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ title }),
         });
 
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
