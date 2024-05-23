@@ -6,6 +6,8 @@ import com.issuetracker.comment.entity.Comment;
 import com.issuetracker.file.dto.UploadedFileDto;
 import com.issuetracker.member.dto.SimpleMemberDto;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 public class CommentMapper {
     public static CommentDetailDto toCommentDetailDto(Comment comment, SimpleMemberDto writer, UploadedFileDto file) {
@@ -19,7 +21,11 @@ public class CommentMapper {
                 .build();
     }
 
-    public static Comment toComment(CommentCreateRequest request, LocalDateTime createDate, boolean isWriter) {
+    public static Comment toComment(CommentCreateRequest request, boolean isWriter) {
+        ZoneId seoulZoneId = ZoneId.of("Asia/Seoul");
+        ZonedDateTime seoulZonedDateTime = ZonedDateTime.now(seoulZoneId);
+        LocalDateTime createDate = seoulZonedDateTime.toLocalDateTime();
+        
         return new Comment(null, request.getContent(), createDate, isWriter, request.getIssueId(),
                 request.getWriterId(), request.getFileId());
     }
