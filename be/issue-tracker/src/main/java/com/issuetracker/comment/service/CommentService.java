@@ -13,6 +13,8 @@ import com.issuetracker.issue.service.IssueQueryService;
 import com.issuetracker.member.dto.SimpleMemberDto;
 import com.issuetracker.member.service.MemberService;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -52,7 +54,9 @@ public class CommentService {
      */
     @Transactional
     public CommentDetailDto createComment(CommentCreateRequest request) {
-        LocalDateTime createDate = LocalDateTime.now();
+        ZoneId seoulZoneId = ZoneId.of("Asia/Seoul");
+        ZonedDateTime seoulZonedDateTime = ZonedDateTime.now(seoulZoneId);
+        LocalDateTime createDate = seoulZonedDateTime.toLocalDateTime();
         boolean isWriter = issueQueryService.hasSameWriter(request.getIssueId(), request.getWriterId());
 
         Comment comment = CommentMapper.toComment(request, createDate, isWriter);
