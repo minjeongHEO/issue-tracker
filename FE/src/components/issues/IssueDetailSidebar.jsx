@@ -53,7 +53,7 @@ export default function IssueDetailSidebar({ milestone, assignees, labels }) {
                             <FilterContentContainer>
                                 <IconProgressBar percentage={calulatePercentage(openIssueCount, closedIssueCount)} />
                             </FilterContentContainer>
-                            <FilterContentContainer>{milestone.name}</FilterContentContainer>)
+                            <FilterContentContainer>{milestone.name}</FilterContentContainer>
                         </>
                     )}
                 </Filter>
