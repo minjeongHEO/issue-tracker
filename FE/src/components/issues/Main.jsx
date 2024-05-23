@@ -174,17 +174,17 @@ export default function Main() {
         }));
     }, [membersFilter]);
 
-    // useEffect(() => {
-    //     const issueList = issueListResult.data;
-    //     if (!issueList) return;
+    useEffect(() => {
+        if (!issueList) return;
+        const issueListCount = issueList.count;
+        const newIsOpenCount = issueListCount.openedIssueCount;
+        const newIsClosedCount = issueListCount.closedIssueCount;
 
-    //     const newIsOpenCount = issueList.count.openedIssueCount;
-    //     const newIsClosedCount = issueList.count.closedIssueCount;
-    //     const newIssueList = issueList.filteredIssues;
-    //     setIssueDatas((prev) => ({ ...prev, count: { ...prev.count, isOpen: newIsOpenCount } }));
-    //     setIssueDatas((prev) => ({ ...prev, count: { ...prev.count, idClosed: newIsClosedCount } }));
-    //     setIssueDatas((prev) => ({ ...prev, list: newIssueList }));
-    // }, [issueListResult.data]);
+        const newIssueList = issueList.filteredIssues;
+        setIssueDatas((prev) => ({ ...prev, count: { ...prev.count, isOpen: newIsOpenCount } }));
+        setIssueDatas((prev) => ({ ...prev, count: { ...prev.count, idClosed: newIsClosedCount } }));
+        setIssueDatas((prev) => ({ ...prev, list: newIssueList }));
+    }, [issueList]);
 
     return (
         <MainContainer>
