@@ -137,7 +137,7 @@ const SidebarContainer = styled.div`
     flex-basis: 30%;
     min-width: 200px;
     min-height: 500px;
-    border: 2px solid ${(props) => props.theme.borderColor};
+    border: 1px solid ${(props) => props.theme.borderColor};
     border-radius: 20px;
     /* background-color: red; */
 `;

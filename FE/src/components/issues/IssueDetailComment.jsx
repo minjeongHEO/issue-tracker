@@ -66,7 +66,7 @@ export default function IssueDetailComment({
 
     return (
         <>
-            <StyledCommentContainer $isfocused={isFocused}>
+            <StyledCommentContainer $isfocused={isFocused} $isWriter={isWriter}>
                 <CommentNav>
                     <CommentData>
                         <StyledProfile src={writer.imgUrl || DEFAULT_SRC} alt={'userProfile'} size={'medium'} />
@@ -209,7 +209,7 @@ const StyledCommentContainer = styled.div`
     margin-bottom: 15px;
     background-color: ${(props) => props.theme.bgColorBody};
     border-radius: 10px;
-    border: 1px solid;
+    border: ${(props) => (props.$isWriter ? '3px solid' : '1px solid')};
     border-color: ${(props) => (props.$isfocused ? 'var(--primary-color)' : props.theme.borderColor)};
     color: ${(props) => props.theme.fontColor};
 `;

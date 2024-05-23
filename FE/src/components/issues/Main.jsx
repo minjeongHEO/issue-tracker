@@ -62,10 +62,6 @@ export default function Main() {
     const filterResults = useFiltersData();
     const [labelsResult, membersResult, milestonesOpenResult, milestonesClosedResult, issueListResult] = filterResults;
 
-    // const { isLoading, error, data: products } = useFiltersData();
-    // const client = useQueryClient();
-    //     <button onClick={() => client.invalidateQueries({ queryKey: ['label'] })}>update</button>
-
     const clearFilter = () => dispatch({ type: 'SET_CLEAR_FILTER', payload: '' });
 
     const isFilterActive = () => {
