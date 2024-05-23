@@ -91,7 +91,7 @@ export default function IssueDetail() {
                     <ContentsContainer>
                         <StyledComments>
                             <IssueDetailComment
-                                issueId={data.id}
+                                issueId={issueId}
                                 content={data.content}
                                 writer={data.writer}
                                 file={data.file}
@@ -102,7 +102,7 @@ export default function IssueDetail() {
                             {data.comments.map(({ id, content, writer, file, isWriter, createDate }) => (
                                 <IssueDetailComment
                                     key={id}
-                                    issueId={data.id}
+                                    issueId={issueId}
                                     commentId={id}
                                     content={content}
                                     writer={writer}
@@ -123,7 +123,7 @@ export default function IssueDetail() {
                             </MainBtnContainer>
                         </StyledComments>
 
-                        <IssueDetailSidebar milestone={data.milestone} assignees={data.assignees} labels={data.labels} />
+                        <IssueDetailSidebar milestone={data.milestone} assignees={data.assignees} labels={data.labels} issueId={issueId} />
                     </ContentsContainer>
                 </MainContainer>
             )}

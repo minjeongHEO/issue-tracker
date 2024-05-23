@@ -25,7 +25,7 @@ export const fetchIssueDetailData = async (issueId) => {
  * 이슈 열고 닫기
  * @param {*Boolean} toIssueState - 닫기:true, 열기:false
  * @param {*Array} issueIds - 이슈 id들
- * @returns {jsonObject}
+ * @returns {}
  */
 export const fetchIssueStateToggle = async (toIssueState, issueIds) => {
     try {
@@ -35,6 +35,35 @@ export const fetchIssueStateToggle = async (toIssueState, issueIds) => {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({ issueIds }),
+        });
+
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+        return {
+            status: response.status,
+            statusText: response.statusText,
+        };
+    } catch (error) {
+        throw error;
+    }
+};
+/**
+ * 이슈 삭제
+ * @param {*Number} issueId - 이슈 아이디
+ * @returns {}
+ *  - 성공: 200
+    - 아이디 미존재시 : 404
+    - 바인딩 에러시: 400
+    - 서버 내부 오류시: 500
+ 
+ */
+export const fetchDeleteIssue = async (issueId) => {
+    try {
+        const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ISSUE_DEFAULT_API_URI}${issueId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
         });
 
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);

@@ -6,12 +6,23 @@ import { CustomProfile } from '../../assets/CustomProfile';
 import { CustomLabelBadge } from '../../assets/CustomLabelBadge';
 import { IconProgressBar } from '../../assets/icons/IconProgressBar';
 import { IconTrash } from '../../assets/icons/IconTrash';
+import { Popconfirm, message } from 'antd';
+import { useDeleteIssue } from '../../hooks/useIssueDetailData';
+import { Link, useNavigate } from 'react-router-dom';
 
-export default function IssueDetailSidebar({ milestone, assignees, labels }) {
+export default function IssueDetailSidebar({ milestone, assignees, labels, issueId }) {
+    const navigate = useNavigate();
+    const onSuccess = () => {
+        message.success('삭제되었습니다.');
+        navigate('/');
+    };
+    const { mutate: deleteIssue } = useDeleteIssue(issueId, onSuccess);
+
     const openIssueCount = milestone?.openIssueCount ?? 0;
     const closedIssueCount = milestone?.closedIssueCount ?? 0;
 
     const calulatePercentage = (openCount, closedCount) => (closedCount / (openCount + closedCount)).toFixed(2);
+    const deleteConfirm = () => deleteIssue();
 
     return (
         <StyledDiv>
@@ -59,8 +70,12 @@ export default function IssueDetailSidebar({ milestone, assignees, labels }) {
                 </Filter>
             </SidebarContainer>
             <DeleteContentContainer>
-                <IconTrash />
-                <span>이슈삭제</span>
+                <Popconfirm title="이슈를 삭제하시겠습니까?" onConfirm={deleteConfirm} okText="Yes" cancelText="No">
+                    <div>
+                        <IconTrash />
+                        <span>이슈 삭제</span>
+                    </div>
+                </Popconfirm>
             </DeleteContentContainer>
         </StyledDiv>
     );
@@ -89,6 +104,9 @@ const DeleteContentContainer = styled(FlexRow)`
     margin: 20px 0 10px 0;
     justify-content: right;
     color: red;
+    div {
+        cursor: pointer;
+    }
     span {
         margin-left: 5px;
     }

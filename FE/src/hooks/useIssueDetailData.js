@@ -1,6 +1,7 @@
 import { useMutation, useQueries, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
     fetchCreateIssueComment,
+    fetchDeleteIssue,
     fetchIssueDetailData,
     fetchIssueStateToggle,
     fetchModifyIssueComment,
@@ -35,6 +36,32 @@ export const useIssueStateToggle = (issueId) => {
         mutationFn: async ({ toIssueState, issueIds }) => await fetchIssueStateToggle(toIssueState, issueIds),
         onSuccess: (res) => {
             if (res.status === 200) queryClient.invalidateQueries({ queryKey: ['issueDetail', String(issueId)], refetchType: 'active' });
+        },
+        // onError: () => {
+        // },
+    });
+};
+/**
+ * 이슈 상세 - 이슈 삭제
+ * @param {*String} issueId - 이슈상세 아이디
+ * @param {*fn} onSuccessCallBack - 성공 시 로직
+ * @returns 
+ * key는 무조건 String으로 통일
+ *  - 성공: 200
+    - 아이디 미존재시 : 404
+    - 바인딩 에러시: 400
+    - 서버 내부 오류시: 500
+ */
+export const useDeleteIssue = (issueId, onSuccessCallBack) => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async () => await fetchDeleteIssue(issueId),
+        onSuccess: (res) => {
+            if (res.status === 200) {
+                queryClient.invalidateQueries({ queryKey: ['issue_list'], refetchType: 'active' });
+                if (onSuccessCallBack) onSuccessCallBack();
+            }
         },
         // onError: () => {
         // },
