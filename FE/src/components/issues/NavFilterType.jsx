@@ -4,7 +4,15 @@ import { StyledHeaderContents } from '../../styles/theme';
 import DropDownFilter from './DropDownFilter';
 import { useFilterContext } from '../../context/FilterContext';
 
-export default function NavFilterType({ issueCount, dispatchTypeByFilterContents, imageTypeItems, labelTypeItems, milestoneTypeItems, ischecked }) {
+export default function NavFilterType({
+    issueCount,
+    dispatchTypeByFilterContents,
+    imageTypeItems,
+    labelTypeItems,
+    milestoneTypeItems,
+    ischecked,
+    handleMouseEnter,
+}) {
     const { dispatch } = useFilterContext();
 
     const dispatchIssue = ({ target }) => {
@@ -25,22 +33,42 @@ export default function NavFilterType({ issueCount, dispatchTypeByFilterContents
             </div>
             <StyledDiv>
                 <div className="filter">
-                    <span className="filterOption">
+                    <span
+                        className="filterOption"
+                        onMouseEnter={() => {
+                            handleMouseEnter('assignee');
+                        }}
+                    >
                         <DropDownFilter filterTitle={'assignee'} filterItems={imageTypeItems}>
                             담당자
                         </DropDownFilter>
                     </span>
-                    <span className="filterOption">
+                    <span
+                        className="filterOption"
+                        onMouseEnter={() => {
+                            handleMouseEnter('label');
+                        }}
+                    >
                         <DropDownFilter filterTitle={'label'} filterItems={labelTypeItems}>
                             레이블
                         </DropDownFilter>
                     </span>
-                    <span className="filterOption">
+                    <span
+                        className="filterOption"
+                        onMouseEnter={() => {
+                            handleMouseEnter('milestone');
+                        }}
+                    >
                         <DropDownFilter filterTitle={'milestone'} filterItems={milestoneTypeItems}>
                             마일스톤
                         </DropDownFilter>
                     </span>
-                    <span className="filterOption">
+                    <span
+                        className="filterOption"
+                        onMouseEnter={() => {
+                            handleMouseEnter('author');
+                        }}
+                    >
                         <DropDownFilter filterTitle={'author'} filterItems={imageTypeItems}>
                             작성자
                         </DropDownFilter>

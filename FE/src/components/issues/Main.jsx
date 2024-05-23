@@ -5,12 +5,12 @@ import { useNavigate } from 'react-router-dom';
 import IssueList from './IssueList';
 import DropDownFilter from './DropDownFilter';
 import { useFilterContext } from '../../context/FilterContext';
-import mockIssueList from '../../data/issueList.json';
 import NavStateType from './NavStateType';
 import NavFilterType from './NavFilterType';
 import { MainContainer } from '../../styles/theme';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useFiltersData } from '../../hooks/useFiltersData';
+import { useLabelsFilter, useMembersFilter, useMilestonesFilter } from '../../hooks/useFiltersData';
+import { usefilteredIssueData } from '../../hooks/usefilteredIssueData';
 
 const stateModifyFilters = [{ title: '선택한 이슈 열기' }, { title: '선택한 이슈 닫기' }];
 
@@ -49,18 +49,29 @@ const initIssueDatas = {
     },
     list: [],
 };
+const initFetched = {
+    assignee: false,
+    label: false,
+    milestone: false,
+    author: false, //작성자
+};
 export default function Main() {
     const navigate = useNavigate();
     const { state: selectedFilters, dispatch } = useFilterContext();
     const [inputFilter, setInputFilter] = useState('');
     const [isClearFilter, setIsClearFilter] = useState(false);
     const [checkedItems, setCheckedItems] = useState([]);
-
     const [filterItemsByType, setFilterItemsByType] = useState(initFilterItems);
     const [issueDatas, setIssueDatas] = useState(initIssueDatas);
 
-    const filterResults = useFiltersData();
-    const [labelsResult, membersResult, milestonesOpenResult, milestonesClosedResult, issueListResult] = filterResults;
+    //*before
+    // const filterResults = useFiltersData();
+    // const [labelsResult, membersResult, milestonesOpenResult, milestonesClosedResult, issueListResult] = filterResults;
+    //*after
+    const { data: issueList, isLoading: issueListIsLoading } = usefilteredIssueData();
+    const { data: labelsFilter, isLoading: labelsFilterIsLoading } = useLabelsFilter();
+    const { data: milestonesFilter, isLoading: milestonesFilterIsLoading } = useMilestonesFilter();
+    const { data: membersFilter, isLoading: membersFilterIsLoading } = useMembersFilter();
 
     const clearFilter = () => dispatch({ type: 'SET_CLEAR_FILTER', payload: '' });
 
@@ -92,12 +103,36 @@ export default function Main() {
     };
 
     const toggleEntireCheckBox = () => {
-        if (checkedItems.length === mockIssueList.length) setCheckedItems([]);
-        else setCheckedItems(mockIssueList.map(({ id }) => id));
+        if (!issueList) return;
+        if (checkedItems.length === issueList.filteredIssues.length) setCheckedItems([]);
+        else setCheckedItems(issueList.filteredIssues.map(({ id }) => id));
     };
 
     const isSingleChecked = (key) => {
         return checkedItems.includes(key);
+    };
+
+    const [hasFetched, setHasFetched] = useState(initFetched);
+
+    const setterFechedByType = {
+        assignee: () => setHasFetched((prev) => ({ ...prev, assignee: true })),
+        label: () => setHasFetched((prev) => ({ ...prev, label: true })),
+        milestone: () => setHasFetched((prev) => ({ ...prev, milestone: true })),
+        author: () => setHasFetched((prev) => ({ ...prev, author: true })),
+    };
+    const queryClient = useQueryClient();
+    const useQueryByType = {
+        assignee: () => queryClient.invalidateQueries({ queryKey: ['filter', 'members'], refetchType: 'active' }), //담당자
+        label: () => queryClient.invalidateQueries({ queryKey: ['filter', 'labels'], refetchType: 'active' }),
+        milestone: () => queryClient.invalidateQueries({ queryKey: ['filter', 'milestones'], refetchType: 'active' }),
+        author: () => queryClient.invalidateQueries({ queryKey: ['filter', 'members'], refetchType: 'active' }), //작성자
+    };
+
+    const handleMouseEnter = (type) => {
+        // if (!hasFetched[type]) {
+        useQueryByType[type](); // 마우스를 올렸을 때 쿼리 실행
+        // setterFechedByType[type](); //상태 업데이트
+        // }
     };
 
     useEffect(() => {
@@ -106,31 +141,8 @@ export default function Main() {
     }, [selectedFilters]);
 
     useEffect(() => {
-        const issueList = issueListResult.data;
-        if (!issueList) return;
-
-        const newIsOpenCount = issueList.count.openedIssueCount;
-        const newIsClosedCount = issueList.count.closedIssueCount;
-        const newIssueList = issueList.filteredIssues;
-        setIssueDatas((prev) => ({ ...prev, count: { ...prev.count, isOpen: newIsOpenCount } }));
-        setIssueDatas((prev) => ({ ...prev, count: { ...prev.count, idClosed: newIsClosedCount } }));
-        setIssueDatas((prev) => ({ ...prev, list: newIssueList }));
-    }, [issueListResult.data]);
-
-    useEffect(() => {
-        if (filterResults.some((result) => !result.data)) return;
-
-        const milestoneOpenItems = milestonesOpenResult.data.milestoneDetailDtos.map(({ name }) => ({
-            title: name,
-        }));
-        const milestoneClosedItems = milestonesClosedResult.data.milestoneDetailDtos.map(({ name }) => ({
-            title: name,
-        }));
-        const memberItems = membersResult.data.map(({ id, imgUrl }) => ({
-            avatarSrc: imgUrl,
-            userName: id,
-        }));
-        const labelItems = labelsResult.data.labels.map(({ name, bgColor, textColor }) => ({
+        if (!labelsFilter) return;
+        const labelItems = labelsFilter.labels.map(({ name, bgColor, textColor }) => ({
             labelName: name,
             labelColor: bgColor,
             textColor: textColor,
@@ -139,10 +151,43 @@ export default function Main() {
         setFilterItemsByType((prev) => ({
             ...prev,
             labels: labelItems,
-            members: memberItems,
-            milestones: [...milestoneOpenItems, ...milestoneClosedItems],
         }));
-    }, [labelsResult.data, membersResult.data, milestonesOpenResult.data, milestonesClosedResult.data]);
+    }, [labelsFilter]);
+
+    useEffect(() => {
+        if (!milestonesFilter) return;
+        const milestoneItems = milestonesFilter.milestoneDetailDtos.map(({ name }) => ({
+            title: name,
+        }));
+        setFilterItemsByType((prev) => ({
+            ...prev,
+            milestones: milestoneItems,
+        }));
+    }, [milestonesFilter]);
+
+    useEffect(() => {
+        if (!membersFilter) return;
+        const memberItems = membersFilter.map(({ id, imgUrl }) => ({
+            avatarSrc: imgUrl,
+            userName: id,
+        }));
+
+        setFilterItemsByType((prev) => ({
+            ...prev,
+            members: memberItems,
+        }));
+    }, [membersFilter]);
+    // useEffect(() => {
+    //     const issueList = issueListResult.data;
+    //     if (!issueList) return;
+
+    //     const newIsOpenCount = issueList.count.openedIssueCount;
+    //     const newIsClosedCount = issueList.count.closedIssueCount;
+    //     const newIssueList = issueList.filteredIssues;
+    //     setIssueDatas((prev) => ({ ...prev, count: { ...prev.count, isOpen: newIsOpenCount } }));
+    //     setIssueDatas((prev) => ({ ...prev, count: { ...prev.count, idClosed: newIsClosedCount } }));
+    //     setIssueDatas((prev) => ({ ...prev, list: newIssueList }));
+    // }, [issueListResult.data]);
 
     return (
         <MainContainer>
@@ -178,7 +223,11 @@ export default function Main() {
 
             <StyledBox>
                 <StyledBoxHeader>
-                    <Checkbox onClick={() => toggleEntireCheckBox()} checked={checkedItems.length === mockIssueList.length} className="checkbox" />
+                    <Checkbox
+                        onClick={() => toggleEntireCheckBox()}
+                        checked={checkedItems.length === issueList?.filteredIssues?.length}
+                        className="checkbox"
+                    />
                     {checkedItems.length > 0 ? (
                         <NavStateType checkedItemsCount={checkedItems.length} stateModifyFilters={stateModifyFilters} dispatch={dispatch} />
                     ) : (
@@ -190,20 +239,24 @@ export default function Main() {
                             milestoneTypeItems={filterItemsByType.milestones}
                             dispatch={dispatch}
                             ischecked={selectedFilters.issues.isClosed}
+                            handleMouseEnter={handleMouseEnter}
                         />
                     )}
                 </StyledBoxHeader>
 
                 <StyledBoxBody>
-                    {issueDatas.list.map((list) => (
-                        <IssueList
-                            key={list.id}
-                            isSingleChecked={isSingleChecked(list.id)}
-                            setCheckedItems={setCheckedItems}
-                            toggleEntireCheckBox={toggleEntireCheckBox}
-                            listData={list}
-                        />
-                    ))}
+                    {issueListIsLoading && <div>...Loading</div>}
+
+                    {issueList &&
+                        issueList.filteredIssues.map((list) => (
+                            <IssueList
+                                key={list.id}
+                                isSingleChecked={isSingleChecked(list.id)}
+                                setCheckedItems={setCheckedItems}
+                                toggleEntireCheckBox={toggleEntireCheckBox}
+                                listData={list}
+                            />
+                        ))}
                 </StyledBoxBody>
             </StyledBox>
         </MainContainer>
