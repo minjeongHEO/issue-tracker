@@ -8,7 +8,7 @@ import { CustomLabelBadge } from '../../assets/CustomLabelBadge';
 import { CustomProfile } from '../../assets/CustomProfile';
 
 export default function IssueList({ isSingleChecked, setCheckedItems, listData }) {
-    const { id, title, createDate, milestoneName, authorId, assignees, labels } = listData;
+    const { id, title, createDate, milestoneName, author, assignees, labels } = listData;
     const [pastTime, setPastTime] = useState('');
     const navigate = useNavigate();
 
@@ -48,7 +48,7 @@ export default function IssueList({ isSingleChecked, setCheckedItems, listData }
                     <div>
                         <span>#{id}</span>
                         <span>
-                            이 이슈가 {pastTime}, {authorId || ''}님에 의해 작성되었습니다.
+                            이 이슈가 {pastTime}, {author.id || ''}님에 의해 작성되었습니다.
                         </span>
 
                         <span>

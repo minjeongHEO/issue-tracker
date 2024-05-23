@@ -3,6 +3,7 @@ const MEMBERS_API_URI = '/api/members';
 const MILESTONES_API_URI = '/api/milestones?isClosed=';
 const ISSUE_LIST_API_URI = '/api/home/issues';
 
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 /**
  * 레이블 리스트 조회
  * @returns {jsonObject}
@@ -42,7 +43,6 @@ export const fetchMembersData = async () => {
  * @returns {jsonObject}
  */
 export const fetchMilestonesData = async (isClosed) => {
-    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     try {
         await delay(5000);
 
@@ -73,6 +73,7 @@ export const fetchIssueListData = async (isClosedParam, authorIdParam, assigneeI
     const noValues = noValuesParam || '';
 
     try {
+        await delay(2000);
         const response = await fetch(
             `${
                 import.meta.env.VITE_TEAM_SERVER
