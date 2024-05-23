@@ -201,3 +201,32 @@ export const fetchCreateIssueComment = async (writerId, content, issueId, fileId
         throw error;
     }
 };
+
+/**
+ * 이슈 댓글 삭제
+ * @param {*Number} issueId - 이슈 아이디
+ * @returns {}
+ *  - 성공: 200
+    - 아이디 미존재시 : 404
+    - 바인딩 에러시: 400
+    - 서버 내부 오류시: 500
+ */
+export const fetchDeleteComment = async (commentId) => {
+    try {
+        const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ISSUE_COMMENTS_DEFAULT_API_URI}/${commentId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+        return {
+            status: response.status,
+            statusText: response.statusText,
+        };
+    } catch (error) {
+        throw error;
+    }
+};

@@ -108,6 +108,7 @@ export default function IssueDetail() {
                                     writer={writer}
                                     file={file}
                                     isWriter={isWriter}
+                                    isEditable={writer.id === getUserId()}
                                     createDate={createDate}
                                 />
                             ))}

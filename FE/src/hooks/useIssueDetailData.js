@@ -1,6 +1,7 @@
 import { useMutation, useQueries, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
     fetchCreateIssueComment,
+    fetchDeleteComment,
     fetchDeleteIssue,
     fetchIssueDetailData,
     fetchIssueStateToggle,
@@ -138,6 +139,34 @@ export const useCreateIssueComment = (issueId) => {
         mutationFn: async ({ writerId, content, fileId = null }) => await fetchCreateIssueComment(writerId, content, issueId, fileId),
         onSuccess: (res) => {
             if (res.status === 201) queryClient.invalidateQueries({ queryKey: ['issueDetail', String(issueId)], refetchType: 'active' });
+        },
+        // onError: () => {
+        // },
+    });
+};
+
+/**
+ * 이슈 상세 - 이슈 코멘트 삭제
+ * @param {*String} issueId - 이슈상세 아이디
+ * @param {*String} commentId - 이슈코멘트 아이디
+ * @param {*fn} onSuccessCallBack - 성공 시 로직
+ * @returns 
+ * key는 무조건 String으로 통일
+ *  - 성공: 200
+    - 아이디 미존재시 : 404
+    - 바인딩 에러시: 400
+    - 서버 내부 오류시: 500
+ */
+export const useDeleteComment = (issueId, onSuccessCallBack) => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async (commentId) => await fetchDeleteComment(commentId),
+        onSuccess: (res) => {
+            if (res.status === 200) {
+                queryClient.invalidateQueries({ queryKey: ['issueDetail', String(issueId)], refetchType: 'active' });
+                if (onSuccessCallBack) onSuccessCallBack();
+            }
         },
         // onError: () => {
         // },

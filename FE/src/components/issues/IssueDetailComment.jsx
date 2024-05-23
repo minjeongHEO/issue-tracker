@@ -11,11 +11,25 @@ import { IconXsquare } from '../../assets/icons/IconXsquare';
 import CustomMarkdownText from '../../assets/CustomMarkdownText';
 import CustomTextEditor from '../../assets/CustomTextEditor';
 import { DEFAULT_SRC } from '../../utils/imageUtils';
-import { useModifyIssueComment, useModifyIssueContent } from '../../hooks/useIssueDetailData';
+import { useDeleteComment, useModifyIssueComment, useModifyIssueContent } from '../../hooks/useIssueDetailData';
+import { IconTrash } from '../../assets/icons/IconTrash';
+import { Popconfirm, message } from 'antd';
 
-export default function IssueDetailComment({ issueId, commentId, content, writer, file, isWriter, createDate, isComment = true }) {
+export default function IssueDetailComment({
+    issueId,
+    commentId,
+    content,
+    writer,
+    file,
+    isWriter,
+    createDate,
+    isComment = true,
+    isEditable = false,
+}) {
+    const onSuccess = () => message.success('코멘트가 삭제되었습니다.');
     const { mutate: modifyIssueContent } = useModifyIssueContent(String(issueId));
     const { mutate: modifyIssueComment } = useModifyIssueComment(String(issueId));
+    const { mutate: deleteIssueComment } = useDeleteComment(String(issueId), onSuccess);
 
     const [contentArea, setContentArea] = useState(content || '');
     const [pastTime, setPastTime] = useState('');
@@ -25,11 +39,11 @@ export default function IssueDetailComment({ issueId, commentId, content, writer
     const handleFocus = () => setIsFocused(true);
     const handleBlur = () => setIsFocused(false);
     const toggleEditState = () => SetEditState((prev) => !prev);
-
     const handleChange = ({ target }) => {
         const { value } = target;
         setContentArea(value);
     };
+    const deleteComment = () => deleteIssueComment(commentId);
 
     //TODO: fileId
     const submitModifyContent = () => {
@@ -60,15 +74,32 @@ export default function IssueDetailComment({ issueId, commentId, content, writer
                         <span className="">{pastTime}</span>
                     </CommentData>
                     <NavBtnContainer>
-                        <StyledLabel visibility={isWriter ? 'visible' : 'hidden'}>작성자</StyledLabel>
-                        <NavBtn visibility={isWriter ? 'visible' : 'hidden'} onClick={toggleEditState}>
-                            <IconEdit />
-                            편집
-                        </NavBtn>
+                        {isWriter && (
+                            <NavBtn className="writer">
+                                <StyledLabel>작성자</StyledLabel>
+                            </NavBtn>
+                        )}
+
+                        {isEditable && (
+                            <NavBtn onClick={toggleEditState}>
+                                <IconEdit />
+                                편집
+                            </NavBtn>
+                        )}
+
                         <NavBtn>
                             <IconSmile />
                             반응
                         </NavBtn>
+
+                        {isComment && isEditable && (
+                            <Popconfirm title="코멘트를 삭제하시겠습니까?" onConfirm={deleteComment} okText="Yes" cancelText="No">
+                                <NavBtn>
+                                    <IconTrash />
+                                    삭제
+                                </NavBtn>
+                            </Popconfirm>
+                        )}
                     </NavBtnContainer>
                 </CommentNav>
                 <CommentMain>
@@ -128,15 +159,19 @@ const StyledProfile = styled(CustomProfile)`
     margin-left: 10px;
 `;
 const NavBtn = styled(FlexRow)`
-    visibility: ${(props) => props.visibility};
+    /* visibility: ${(props) => props.visibility}; */
+    margin-left: 10px;
     font-size: 12px;
+    cursor: pointer;
     * {
         margin-right: 2px;
     }
-    cursor: pointer;
+    &.writer {
+        cursor: default;
+    }
 `;
 const NavBtnContainer = styled(FlexRow)`
-    justify-content: space-around;
+    justify-content: flex-end;
     /* background-color: red; */
     width: 190px;
     margin-right: 10px;
