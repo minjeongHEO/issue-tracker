@@ -1,11 +1,35 @@
-import { useQueries, useQuery } from '@tanstack/react-query';
-import { fetchIssueDetailData } from '../api/fetchIssueData';
+import { useMutation, useQueries, useQuery, useQueryClient } from '@tanstack/react-query';
+import { fetchIssueDetailData, fetchIssueStateToggle } from '../api/fetchIssueData';
 
+/**
+ * 이슈 상세 - 조회
+ * @param {*String} issueId
+ * @returns
+ */
 export const useIssueDetailData = (issueId) => {
     return useQuery({
-        queryKey: ['issueDetail', issueId],
+        queryKey: ['issueDetail', String(issueId)],
         queryFn: () => fetchIssueDetailData(issueId),
-        staleTime: 1000 * 60 * 5,
+        // staleTime: 1000 * 60 * 5,
         Suspense: true,
+    });
+};
+
+/**
+ * 이슈 상세 - 이슈 상태 변경
+ * @param {*String} issueId - 이슈상세 아이디
+ * @returns
+ * key는 무조건 String으로 통일
+ */
+export const useIssueStateToggle = (issueId) => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async ({ toIssueState, issueIds }) => await fetchIssueStateToggle(toIssueState, issueIds),
+        onSuccess: (res) => {
+            if (res.status === 200) queryClient.invalidateQueries({ queryKey: ['issueDetail', String(issueId)], refetchType: 'active' });
+        },
+        // onError: () => {
+        // },
     });
 };

@@ -7,7 +7,6 @@ import { MainContainer } from '../../styles/theme';
 import { IconAlertCircle } from '../../assets/icons/IconAlertCircle';
 import IssueDetailTitle from './IssueDetailTitle';
 import IssueDetailComment from './IssueDetailComment';
-import mockData from '../../data/issueDetail.json';
 import IssueDetailSidebar from './IssueDetailSidebar';
 import CustomTextEditor from '../../assets/CustomTextEditor';
 import { IconPlus } from '../../assets/icons/IconPlus';
@@ -58,7 +57,13 @@ export default function IssueDetail() {
                 <MainContainer>
                     <TitleContainer className="title">
                         <HeaderShow>
-                            <IssueDetailTitle editState={editState} toggleEditState={toggleEditState} id={data.id} title={data.title} />
+                            <IssueDetailTitle
+                                editState={editState}
+                                toggleEditState={toggleEditState}
+                                id={data.id}
+                                title={data.title}
+                                isClosed={data.isClosed}
+                            />
 
                             <HeaderSummary>
                                 <StyledIssueState>
@@ -67,7 +72,7 @@ export default function IssueDetail() {
                                 </StyledIssueState>
                                 <div>
                                     <span>
-                                        이 이슈가 {pastTime} <b>{data.writer.id}</b>님에 의해서 열렸습니다.
+                                        이 이슈가 {pastTime} <b>{data.writer.id}</b>님에 의해서 {data.isClosed ? '닫혔습니다.' : '열렸습니다.'}
                                     </span>
                                     <span>💭</span>
                                     <span>코멘트 {data.comments.length}개</span>

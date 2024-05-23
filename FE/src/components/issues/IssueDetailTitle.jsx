@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { IconEdit } from '../../assets/icons/IconEdit';
 import { IconArchive } from '../../assets/icons/IconArchive';
-import { Button } from 'antd';
 import styled from 'styled-components';
 import { StyledInput } from '../../styles/theme';
 import { CustomButton } from '../../assets/CustomButton';
+import { useIssueStateToggle } from '../../hooks/useIssueDetailData';
 
-export default function IssueDetailTitle({ editState, toggleEditState, id, title }) {
+export default function IssueDetailTitle({ editState, toggleEditState, id, title, isClosed }) {
+    const { mutate: toggleIssueState } = useIssueStateToggle(String(id)); // mutate 함수를 ToggleIssueState로 이름 변경하여 사용
+
     const [modifyTitle, setModifyTitle] = useState(title);
     const [isTitleDisabled, setIsTitleDisabled] = useState(false);
 
@@ -50,10 +52,27 @@ export default function IssueDetailTitle({ editState, toggleEditState, id, title
                             <IconEdit />
                             <span onClick={toggleEditState}>제목 편집</span>
                         </StyledBtn>
-                        <StyledBtn size={'medium'} type={'outline'} isDisabled={false}>
-                            <IconArchive />
-                            <span>이슈 닫기</span>
-                        </StyledBtn>
+                        {isClosed ? (
+                            <StyledBtn
+                                size={'medium'}
+                                type={'outline'}
+                                isDisabled={false}
+                                onClick={() => toggleIssueState({ toIssueState: false, issueIds: [id] })}
+                            >
+                                <IconArchive />
+                                <span>이슈 열기</span>
+                            </StyledBtn>
+                        ) : (
+                            <StyledBtn
+                                size={'medium'}
+                                type={'outline'}
+                                isDisabled={false}
+                                onClick={() => toggleIssueState({ toIssueState: true, issueIds: [id] })}
+                            >
+                                <IconArchive />
+                                <span>이슈 닫기</span>
+                            </StyledBtn>
+                        )}
                     </HeaderAction>
                 </FlexRow>
             )}
