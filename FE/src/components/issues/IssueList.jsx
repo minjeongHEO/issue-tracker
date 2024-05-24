@@ -6,6 +6,7 @@ import { IconMilestone } from '../../assets/icons/IconMilestone';
 import { calculatePastTime } from '../../utils/dateUtils';
 import { CustomLabelBadge } from '../../assets/CustomLabelBadge';
 import { CustomProfile } from '../../assets/CustomProfile';
+import { IconAlertCircle } from '../../assets/icons/IconAlertCircle';
 
 export default function IssueList({ isSingleChecked, setCheckedItems, listData, isNoList = false }) {
     const { id, title, createDate, milestoneName, author, assignees, labels } = listData;
@@ -42,8 +43,9 @@ export default function IssueList({ isSingleChecked, setCheckedItems, listData, 
                         <Checkbox onClick={toggleCheckBox} checked={isSingleChecked} />
                         <ListBody>
                             <div className="titleContainer">
+                                <StyledAlertIcon />
                                 <span className="title" onClick={() => navigate(`/issues/${id}`)}>
-                                    ! {title}
+                                    {title}
                                 </span>
                                 {labels &&
                                     labels.map(({ name, bgColor, textColor }) => (
@@ -52,16 +54,18 @@ export default function IssueList({ isSingleChecked, setCheckedItems, listData, 
                                         </StyledLabel>
                                     ))}
                             </div>
-                            <div>
+                            <div className="subsContainer">
                                 <span>#{id}</span>
                                 <span>
-                                    이 이슈가 {pastTime}, {author.id || ''}님에 의해 작성되었습니다.
+                                    이 이슈가 {pastTime}, <BoldSpan>{author.id || ''}</BoldSpan>님에 의해 작성되었습니다.
                                 </span>
 
-                                <span>
-                                    {/* <IconMilestone /> */}
+                                <StyledMilestone>
+                                    <StyledMilestoneIcon>
+                                        <IconMilestone />
+                                    </StyledMilestoneIcon>
                                     {milestoneName || ''}
-                                </span>
+                                </StyledMilestone>
                             </div>
                         </ListBody>
                     </ListTitle>
@@ -75,6 +79,19 @@ export default function IssueList({ isSingleChecked, setCheckedItems, listData, 
         </>
     );
 }
+const BoldSpan = styled.span`
+    font-weight: bold;
+`;
+const StyledAlertIcon = styled(IconAlertCircle)`
+    color: var(--primary-color);
+`;
+const StyledMilestone = styled.span`
+    display: flex;
+`;
+const StyledMilestoneIcon = styled.span`
+    align-content: center;
+    margin-right: 10px;
+`;
 
 const ListBody = styled.div`
     display: flex;
@@ -82,11 +99,17 @@ const ListBody = styled.div`
     align-items: flex-start;
     margin-left: 20px;
 
-    .titleContainer {
+    & .subsContainer {
+        display: flex;
+        color: ${(props) => props.theme.fontColor};
+    }
+    & .titleContainer {
+        display: flex;
+        align-items: center;
         margin-bottom: 20px;
     }
 
-    .title {
+    & .title {
         font-weight: bold;
         cursor: pointer;
     }
