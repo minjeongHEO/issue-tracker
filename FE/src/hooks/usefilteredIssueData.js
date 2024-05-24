@@ -9,7 +9,7 @@ const filterTypeIsClosed = (selectedFilters) => {
 
     const issues = selectedFilters.issues || {};
     if (issues.isOpen === null && issues.isClosed === null) return false;
-    else return Object.entries(issues).filter(([key, value]) => (key === 'isOpen' || key === 'isClosed') && value !== null)[0][0] === 'isOpen';
+    else return Object.entries(issues).filter(([key, value]) => (key === 'isOpen' || key === 'isClosed') && value !== null)[0][0] === 'isClosed';
 };
 
 const filterTypeAuthorId = (selectedFilters, userId) => {
@@ -47,14 +47,16 @@ export const usefilteredIssueData = () => {
     const { state: selectedFilters } = useFilterContext();
     const userId = getUserId();
 
-    const isClosedParam = filterTypeIsClosed(selectedFilters) || '';
-    const authorIdParam = filterTypeAuthorId(selectedFilters) || '';
-    const assigneeIdParam = filterTypeAssigneeId(selectedFilters, userId) || '';
-    const noValuesParam = filterTypeNoValues(selectedFilters) || '';
-
+    const isClosedParam = filterTypeIsClosed(selectedFilters);
+    const authorIdParam = filterTypeAuthorId(selectedFilters);
+    const assigneeIdParam = filterTypeAssigneeId(selectedFilters, userId);
+    const labelIdParam = selectedFilters.label || '';
+    const milestoneIdParam = selectedFilters.milestone || '';
+    const noValuesParam = filterTypeNoValues(selectedFilters);
     return useQuery({
         queryKey: ['issue_list'],
-        queryFn: () => fetchIssueListData(isClosedParam, authorIdParam, assigneeIdParam, noValuesParam, userId),
+        queryFn: () => fetchIssueListData(isClosedParam, authorIdParam, assigneeIdParam, labelIdParam, milestoneIdParam, noValuesParam, userId),
+        enabled: !!selectedFilters, // selectedFilters가 유효하면 쿼리 실행
         // staleTime: 1000 * 60 * 5,
         Suspense: true,
     });
