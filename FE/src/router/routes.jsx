@@ -17,8 +17,22 @@ export const AppRoutes = () => {
                 <Route path="/members/join" element={<Join />} />
                 <Route path="/milestones" element={<Milestones />} />
                 <Route path="/labels" element={<Labels />} />
-                <Route path="/issues/new" element={<NewIssue />} />
-                <Route path="/issues/:issueId" element={<IssueDetail />} />
+                <Route
+                    path="/issues/new"
+                    element={
+                        <ProtectedRoute>
+                            <NewIssue />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/issues/:issueId"
+                    element={
+                        <ProtectedRoute>
+                            <IssueDetail />
+                        </ProtectedRoute>
+                    }
+                />
                 <Route
                     path="/"
                     element={
