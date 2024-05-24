@@ -34,3 +34,7 @@ Web 용 react-router-dom을 React 애플리케이션 프로젝트에 설치해�
  : React용 구문 강조 컴포넌트
 
 `$ npm install react-markdown remark-gfm react-syntax-highlighter`
+
+### 스피너
+
+`$ npm install --save react-spinners`
