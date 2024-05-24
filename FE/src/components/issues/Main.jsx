@@ -1,5 +1,5 @@
-import { Button, Input, Checkbox, Select } from 'antd';
-import React, { useEffect, useState } from 'react';
+import { Button, Input, Checkbox, Select, Skeleton } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import IssueList from './IssueList';
@@ -11,6 +11,7 @@ import { MainContainer } from '../../styles/theme';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLabelsFilter, useMembersFilter, useMilestonesFilter } from '../../hooks/useFiltersData';
 import { usefilteredIssueData } from '../../hooks/usefilteredIssueData';
+import ClipLoader from 'react-spinners/ClipLoader';
 
 const stateModifyFilters = [{ title: '선택한 이슈 열기' }, { title: '선택한 이슈 닫기' }];
 
@@ -55,6 +56,8 @@ const initFetched = {
     milestone: false,
     author: false, //작성자
 };
+const resetListData = { id: null, title: null, createDate: null, milestoneName: null, author: null, assignees: null, labels: null };
+
 export default function Main() {
     const navigate = useNavigate();
     const { state: selectedFilters, dispatch } = useFilterContext();
@@ -131,9 +134,16 @@ export default function Main() {
         // }
     };
 
+    const prevFilters = useRef(selectedFilters);
     useEffect(() => {
         setInputFilter(filterSelectedLists(selectedFilters).join(' '));
         setIsClearFilter(isFilterActive());
+        queryClient.invalidateQueries({ queryKey: ['issue_list'], refetchType: 'active' });
+
+        // if (JSON.stringify(prevFilters.current) !== JSON.stringify(selectedFilters)) {
+        //     prevFilters.current = selectedFilters;
+        //     queryClient.invalidateQueries({ queryKey: ['issue_list'], refetchType: 'active' });
+        // }
     }, [selectedFilters]);
 
     useEffect(() => {
@@ -182,7 +192,7 @@ export default function Main() {
 
         const newIssueList = issueList.filteredIssues;
         setIssueDatas((prev) => ({ ...prev, count: { ...prev.count, isOpen: newIsOpenCount } }));
-        setIssueDatas((prev) => ({ ...prev, count: { ...prev.count, idClosed: newIsClosedCount } }));
+        setIssueDatas((prev) => ({ ...prev, count: { ...prev.count, isClosed: newIsClosedCount } }));
         setIssueDatas((prev) => ({ ...prev, list: newIssueList }));
     }, [issueList]);
 
@@ -242,7 +252,7 @@ export default function Main() {
                 </StyledBoxHeader>
 
                 <StyledBoxBody>
-                    {issueListIsLoading && <div>...Loading</div>}
+                    {issueListIsLoading && <ClipLoader color="#007AFF" />}
 
                     {issueList &&
                         issueList.filteredIssues.map((list) => (
@@ -254,6 +264,7 @@ export default function Main() {
                                 listData={list}
                             />
                         ))}
+                    {issueList?.filteredIssues.length === 0 && <IssueList isNoList={true} listData={resetListData} />}
                 </StyledBoxBody>
             </StyledBox>
         </MainContainer>
