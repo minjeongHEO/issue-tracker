@@ -134,16 +134,10 @@ export default function Main() {
         // }
     };
 
-    const prevFilters = useRef(selectedFilters);
     useEffect(() => {
         setInputFilter(filterSelectedLists(selectedFilters).join(' '));
         setIsClearFilter(isFilterActive());
         queryClient.invalidateQueries({ queryKey: ['issue_list'], refetchType: 'active' });
-
-        // if (JSON.stringify(prevFilters.current) !== JSON.stringify(selectedFilters)) {
-        //     prevFilters.current = selectedFilters;
-        //     queryClient.invalidateQueries({ queryKey: ['issue_list'], refetchType: 'active' });
-        // }
     }, [selectedFilters]);
 
     useEffect(() => {
