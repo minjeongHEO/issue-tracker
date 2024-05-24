@@ -6,23 +6,25 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import java.util.Date;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 public class JwtUtil {
     private static final int REFRESH_EXPIRATION_TIME = 86400000; // 1일
     private static final int ACCESS_EXPIRATION_TIME = 3600000; // 1시간
-    private final byte[] refreshSecretKey = "3BwWtXpk2qJBp6ZmagqpmbhImwxkW98fpryd6IbxmaBa0dOcOhM6L15cwlID5Rwu".getBytes();
-    private final byte[] accessSecretKey = "VR708fpKdTAAJAXukOMgW7U5p4RXqCNJDB67C4U77SfDNVQdq7F0GcWKVtixj93x".getBytes();
+    @Value("${spring.jwt.refresh-key}")
+    private String refreshSecretKey;
+    @Value("${spring.jwt.access-key}")
+    private String accessSecretKey;
 
     public String createAccessToken(String memberId) {
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .claim("memberId", memberId)
-                .claim("url", "sadasldjsadlksajdlksajdlsajdlksajdlksadjlaksjdlasdjdoqwdjqoidjqwodijqdoqwj")
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + ACCESS_EXPIRATION_TIME))
-                .signWith(Keys.hmacShaKeyFor(accessSecretKey), SignatureAlgorithm.HS512)
+                .signWith(Keys.hmacShaKeyFor(accessSecretKey.getBytes()), SignatureAlgorithm.HS512)
                 .compact();
     }
 
@@ -32,7 +34,7 @@ public class JwtUtil {
                 .claim("memberId", memberId)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + REFRESH_EXPIRATION_TIME))
-                .signWith(Keys.hmacShaKeyFor(refreshSecretKey), SignatureAlgorithm.HS512)
+                .signWith(Keys.hmacShaKeyFor(refreshSecretKey.getBytes()), SignatureAlgorithm.HS512)
                 .compact();
     }
 
@@ -47,7 +49,7 @@ public class JwtUtil {
 
     public Claims validateAccessToken(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(Keys.hmacShaKeyFor(accessSecretKey))
+                .setSigningKey(Keys.hmacShaKeyFor(accessSecretKey.getBytes()))
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
@@ -55,7 +57,7 @@ public class JwtUtil {
 
     public Claims validateRefreshToken(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(Keys.hmacShaKeyFor(refreshSecretKey))
+                .setSigningKey(Keys.hmacShaKeyFor(refreshSecretKey.getBytes()))
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
