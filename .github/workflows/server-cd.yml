@@ -1,5 +1,6 @@
 name: Deploy Spring Application to Ec2
 
+# 임시로 배포 브랜치 설정
 on: 
   push:
     branches: [ "be/solve" ]
