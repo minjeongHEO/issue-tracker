@@ -7,8 +7,9 @@ import { calculatePastTime } from '../../utils/dateUtils';
 import { CustomLabelBadge } from '../../assets/CustomLabelBadge';
 import { CustomProfile } from '../../assets/CustomProfile';
 
-export default function IssueList({ isSingleChecked, setCheckedItems, listData }) {
+export default function IssueList({ isSingleChecked, setCheckedItems, listData, isNoList = false }) {
     const { id, title, createDate, milestoneName, author, assignees, labels } = listData;
+
     const [pastTime, setPastTime] = useState('');
     const navigate = useNavigate();
 
@@ -30,39 +31,48 @@ export default function IssueList({ isSingleChecked, setCheckedItems, listData }
     }, [createDate]);
 
     return (
-        <ListContainer id={id}>
-            <ListTitle>
-                <Checkbox onClick={toggleCheckBox} checked={isSingleChecked} />
-                <ListBody>
-                    <div className="titleContainer">
-                        <span className="title" onClick={() => navigate(`/issues/${id}`)}>
-                            ! {title}
-                        </span>
-                        {labels &&
-                            labels.map(({ name, bgColor, textColor }) => (
-                                <StyledLabel key={name} backgroundColor={bgColor} color={textColor}>
-                                    {name}
-                                </StyledLabel>
-                            ))}
-                    </div>
-                    <div>
-                        <span>#{id}</span>
-                        <span>
-                            이 이슈가 {pastTime}, {author.id || ''}님에 의해 작성되었습니다.
-                        </span>
+        <>
+            {isNoList ? (
+                <ListContainer>
+                    <div className="noList">등록된 이슈가 없습니다.</div>
+                </ListContainer>
+            ) : (
+                <ListContainer id={id}>
+                    <ListTitle>
+                        <Checkbox onClick={toggleCheckBox} checked={isSingleChecked} />
+                        <ListBody>
+                            <div className="titleContainer">
+                                <span className="title" onClick={() => navigate(`/issues/${id}`)}>
+                                    ! {title}
+                                </span>
+                                {labels &&
+                                    labels.map(({ name, bgColor, textColor }) => (
+                                        <StyledLabel key={name} backgroundColor={bgColor} color={textColor}>
+                                            {name}
+                                        </StyledLabel>
+                                    ))}
+                            </div>
+                            <div>
+                                <span>#{id}</span>
+                                <span>
+                                    이 이슈가 {pastTime}, {author.id || ''}님에 의해 작성되었습니다.
+                                </span>
 
-                        <span>
-                            {/* <IconMilestone /> */}
-                            {milestoneName || ''}
-                        </span>
-                    </div>
-                </ListBody>
-            </ListTitle>
+                                <span>
+                                    {/* <IconMilestone /> */}
+                                    {milestoneName || ''}
+                                </span>
+                            </div>
+                        </ListBody>
+                    </ListTitle>
 
-            <StyledProfile>
-                {assignees && assignees.map(({ id, imgUrl }) => <CustomProfile key={id} src={imgUrl} size={'medium'} alt="assigneeProfile" />)}
-            </StyledProfile>
-        </ListContainer>
+                    <StyledProfile>
+                        {assignees &&
+                            assignees.map(({ id, imgUrl }) => <CustomProfile key={id} src={imgUrl} size={'medium'} alt="assigneeProfile" />)}
+                    </StyledProfile>
+                </ListContainer>
+            )}
+        </>
     );
 }
 
@@ -101,6 +111,13 @@ const ListContainer = styled.div`
 
     border-top: 1px solid;
     border-color: ${(props) => props.theme.borderColor};
+
+    & .noList {
+        width: 100%;
+        height: 100%;
+        align-content: center;
+        margin-top: 20px;
+    }
 `;
 
 const StyledProfile = styled.span`
