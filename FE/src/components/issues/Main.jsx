@@ -128,10 +128,10 @@ export default function Main() {
     };
 
     const handleMouseEnter = (type) => {
-        // if (!hasFetched[type]) {
-        useQueryByType[type](); // 마우스를 올렸을 때 쿼리 실행
-        // setterFechedByType[type](); //상태 업데이트
-        // }
+        if (!hasFetched[type]) {
+            useQueryByType[type](); // 마우스를 올렸을 때 쿼리 실행
+            setterFechedByType[type](); //상태 업데이트
+        }
     };
 
     useEffect(() => {
@@ -246,7 +246,11 @@ export default function Main() {
                 </StyledBoxHeader>
 
                 <StyledBoxBody>
-                    {issueListIsLoading && <ClipLoader color="#007AFF" />}
+                    {issueListIsLoading && (
+                        <StyledLoader>
+                            <ClipLoader color="#007AFF" />
+                        </StyledLoader>
+                    )}
 
                     {issueList &&
                         issueList.filteredIssues.map((list) => (
@@ -264,6 +268,10 @@ export default function Main() {
         </MainContainer>
     );
 }
+const StyledLoader = styled.div`
+    height: 100px;
+    align-content: center;
+`;
 
 const StyledBoxBody = styled.div`
     min-height: 80px;
