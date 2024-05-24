@@ -20,7 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @RequiredArgsConstructor
 public class FileService {
-    public static final int EXPIRATION_IN_MINUTES = 60;
+    public static final int EXPIRATION_IN_MINUTES = 1440; // 1일
     private final S3Manager s3Manager;
     private final FileManager fileManager;
     private final FileRepository fileRepository;
