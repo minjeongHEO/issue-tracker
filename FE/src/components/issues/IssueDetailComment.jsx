@@ -173,7 +173,7 @@ const NavBtn = styled(FlexRow)`
 const NavBtnContainer = styled(FlexRow)`
     justify-content: flex-end;
     /* background-color: red; */
-    width: 190px;
+    width: 230px;
     margin-right: 10px;
 `;
 const MainBtnContainer = styled(FlexRow)`
