@@ -44,7 +44,7 @@ export const fetchMembersData = async () => {
  */
 export const fetchMilestonesData = async (isClosed) => {
     try {
-        await delay(5000);
+        // await delay(5000);
 
         const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${MILESTONES_API_URI}${isClosed}`);
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
