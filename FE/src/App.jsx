@@ -38,7 +38,6 @@ const Root = styled.div`
     flex-direction: column; /* 자식 요소들을 세로 방향으로 정렬 */
     justify-content: center; /* 세로 방향으로 중앙 정렬 */
     align-items: center; /* 가로 방향으로 중앙 정렬 */
-    height: 100vh;
     width: 100vw;
     margin: 0 auto;
     text-align: center;

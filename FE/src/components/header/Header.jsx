@@ -37,7 +37,7 @@ export default function Header() {
 
 const HeaderContainer = styled.header`
     width: 100%;
-    height: 10%;
+    height: 100px;
     display: flex;
     justify-content: space-between;
     align-items: center;

@@ -76,7 +76,6 @@ export const StyledHeaderContents = styled.div`
 `;
 
 export const IndexContainer = styled.div`
-    height: 100vh;
     width: 100vw;
     min-width: 890px;
     min-height: 890px;

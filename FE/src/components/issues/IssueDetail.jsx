@@ -98,6 +98,7 @@ export default function IssueDetail() {
                                 isWriter={true}
                                 createDate={data.createDate}
                                 isComment={false}
+                                isEditable={data.writer.id === getUserId()}
                             />
                             {data.comments.map(({ id, content, writer, file, isWriter, createDate }) => (
                                 <IssueDetailComment
@@ -225,6 +226,4 @@ const ContentsContainer = styled.div`
     justify-content: space-between;
     margin-top: 15px;
     width: 100%;
-    height: 700px;
-    /* background-color: aquamarine; */
 `;
