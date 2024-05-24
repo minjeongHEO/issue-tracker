@@ -51,11 +51,11 @@ export const usefilteredIssueData = () => {
     const authorIdParam = filterTypeAuthorId(selectedFilters);
     const assigneeIdParam = filterTypeAssigneeId(selectedFilters, userId);
     const labelIdParam = selectedFilters.label || '';
-    const milestoneIdParam = selectedFilters.milestone || '';
+    const milestoneNameParam = selectedFilters.milestone || '';
     const noValuesParam = filterTypeNoValues(selectedFilters);
     return useQuery({
         queryKey: ['issue_list'],
-        queryFn: () => fetchIssueListData(isClosedParam, authorIdParam, assigneeIdParam, labelIdParam, milestoneIdParam, noValuesParam, userId),
+        queryFn: () => fetchIssueListData(isClosedParam, authorIdParam, assigneeIdParam, labelIdParam, milestoneNameParam, noValuesParam, userId),
         enabled: !!selectedFilters, // selectedFilters가 유효하면 쿼리 실행
         // staleTime: 1000 * 60 * 5,
         Suspense: true,

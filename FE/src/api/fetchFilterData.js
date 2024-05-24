@@ -66,11 +66,11 @@ export const fetchMilestonesData = async (isClosed) => {
  * @param {*String} userId
  * @returns {jsonObject}
  */
-export const fetchIssueListData = async (isClosedParam, authorIdParam, assigneeIdParam, labelIdParam, milestoneIdParam, noValuesParam) => {
+export const fetchIssueListData = async (isClosedParam, authorIdParam, assigneeIdParam, labelIdParam, milestoneNameParam, noValuesParam) => {
     const isClosed = isClosedParam ?? '';
     const authorId = authorIdParam ?? '';
     const assigneeId = assigneeIdParam ?? '';
-    const labelId = labelIdParam ?? '';
+    const labelName = labelIdParam ?? '';
     const noValues = noValuesParam ?? '';
 
     try {
@@ -78,7 +78,7 @@ export const fetchIssueListData = async (isClosedParam, authorIdParam, assigneeI
         const response = await fetch(
             `${
                 import.meta.env.VITE_TEAM_SERVER
-            }${ISSUE_LIST_API_URI}?isClosed=${isClosed}&authorId=${authorId}&assigneeId=${assigneeId}&labelId=${labelId}&milestoneId=${milestoneIdParam}&noValues=${noValues}`
+            }${ISSUE_LIST_API_URI}?isClosed=${isClosed}&authorId=${authorId}&assigneeId=${assigneeId}&labelName=${labelName}&milestoneName=${milestoneNameParam}&noValues=${noValues}`
         );
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
