@@ -5,10 +5,12 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
 @RequiredArgsConstructor
 @Getter
 @ToString
+@Table
 public class Milestone {
     @Id
     private final Long id;

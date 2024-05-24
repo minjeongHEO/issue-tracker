@@ -23,21 +23,21 @@ class IssueLabelRepositoryTest {
 
     @Test
     void crud() {
-        issueLabelRepository.insert(new IssueLabel(1L, 4L));
-        issueLabelRepository.insert(new IssueLabel(1L, 7L));
+        issueLabelRepository.insert(new IssueLabel(2L, 5L));
+        issueLabelRepository.insert(new IssueLabel(2L, 6L));
 
-        IssueLabel find = issueLabelRepository.findByIssueIdAndLabelId(1L, 4L).get();
+        IssueLabel find = issueLabelRepository.findByIssueIdAndLabelId(2L, 5L).get();
 
-        assertThat(find.getIssueId()).isEqualTo(1L);
-        assertThat(find.getLabelId()).isEqualTo(4L);
+        assertThat(find.getIssueId()).isEqualTo(2L);
+        assertThat(find.getLabelId()).isEqualTo(5L);
 
-        List<Long> allByIssueId = issueLabelRepository.findAllByIssueId(1L);
+        List<Long> allByIssueId = issueLabelRepository.findAllByIssueId(2L);
 
         assertThat(allByIssueId.size()).isEqualTo(2);
-        assertThat(allByIssueId.get(0)).isEqualTo(4L);
-        assertThat(allByIssueId.get(1)).isEqualTo(7L);
+        assertThat(allByIssueId.get(0)).isEqualTo(5L);
+        assertThat(allByIssueId.get(1)).isEqualTo(6L);
 
-        issueLabelRepository.deleteById(1L, 4L);
+        issueLabelRepository.deleteById(2L, 5L);
         assertThat(issueLabelRepository.count()).isEqualTo(1);
     }
 }

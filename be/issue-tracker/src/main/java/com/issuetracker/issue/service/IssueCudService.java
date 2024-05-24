@@ -36,15 +36,15 @@ public class IssueCudService {
     @Transactional
     public IssueCreateResponse createIssue(IssueCreateRequest request) {
         Issue issue = toIssue(request);
-        Long issueId = issueRepository.save(issue).getId();
+        Issue saved = issueRepository.save(issue);
 
         List<Long> labelIds = request.getLabelIds();
-        insertIssueLabels(labelIds, issueId);
+        insertIssueLabels(labelIds, saved.getId());
 
         List<String> assigneeIds = request.getAssigneeIds();
-        insertIssueAssigness(assigneeIds, issueId);
+        insertIssueAssigness(assigneeIds, saved.getId());
 
-        return toIssueCreateResponseDto(issue, labelIds, assigneeIds);
+        return toIssueCreateResponseDto(saved, labelIds, assigneeIds);
     }
 
     /**

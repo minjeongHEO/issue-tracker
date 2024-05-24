@@ -12,10 +12,9 @@ import lombok.RequiredArgsConstructor;
 public class IssueCreateRequest {
     @NotBlank
     private final String title;
-    @NotBlank
     private final String content;
     @NotBlank
-    private final String authorId; // 아직 로그인 유지 기능이 없으므로 사용자에게 입력받음
+    private final String authorId; // 아직 프론트에 토큰 전송 기능이 없으므로 사용자에게 입력받음
     private final Long milestoneId;
     private final Long fileId;
     private final List<Long> labelIds;

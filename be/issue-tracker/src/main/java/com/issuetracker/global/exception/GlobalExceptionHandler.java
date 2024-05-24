@@ -1,5 +1,7 @@
 package com.issuetracker.global.exception;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import java.io.IOException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
@@ -61,6 +63,20 @@ public class GlobalExceptionHandler {
         String errorMessage = "존재하지 않는 id를 입력하셨습니다.";
         log.error(errorMessage, e);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResult("NotFound.id", errorMessage));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResult> handleExpiredJwtException(ExpiredJwtException e) {
+        String errorMessage = "만료된 토큰입니다.";
+        log.error(errorMessage, e);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResult("Expired.token", errorMessage));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResult> handleSignature(SignatureException e) {
+        String errorMessage = "올바르지 않은 형식의 토큰입니다.";
+        log.error(errorMessage, e);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResult("Invalid.token.format", errorMessage));
     }
 }
 

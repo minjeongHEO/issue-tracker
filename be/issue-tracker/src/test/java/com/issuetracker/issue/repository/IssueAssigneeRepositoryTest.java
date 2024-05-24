@@ -22,12 +22,12 @@ class IssueAssigneeRepositoryTest {
 
     @Test
     void crud() {
-        issueAssigneeRepository.insert(new IssueAssignee(1L, "sangchu"));
-        IssueAssignee find = issueAssigneeRepository.findByIssueIdAndMemberId(1L, "sangchu").get();
-        assertThat(find.getIssueId()).isEqualTo(1L);
+        issueAssigneeRepository.insert(new IssueAssignee(2L, "sangchu"));
+        IssueAssignee find = issueAssigneeRepository.findByIssueIdAndMemberId(2L, "sangchu").get();
+        assertThat(find.getIssueId()).isEqualTo(2L);
         assertThat(find.getMemberId()).isEqualTo("sangchu");
 
-        issueAssigneeRepository.deleteById(1L, "sangchu");
+        issueAssigneeRepository.deleteById(2L, "sangchu");
         assertThat(issueAssigneeRepository.count()).isEqualTo(0);
     }
 }
