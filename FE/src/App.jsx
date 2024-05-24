@@ -8,9 +8,10 @@ import FilterProvider from './context/FilterContext.jsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
+const queryClient = new QueryClient();
+
 function App() {
     const { isDarkMode, toggleDarkMode, darkModeTheme } = useContext(DarkModeContext);
-    const queryClient = new QueryClient();
 
     return (
         <ThemeProvider theme={darkModeTheme}>
@@ -18,11 +19,9 @@ function App() {
             <DarkThemeBtn onClick={toggleDarkMode}>{isDarkMode ? '🌞' : '🌚'}</DarkThemeBtn>
             <FilterProvider>
                 <QueryClientProvider client={queryClient}>
-                    <Suspense fallback={<div>Loading...</div>}>
-                        <Root>
-                            <AppRoutes />
-                        </Root>
-                    </Suspense>
+                    <Root>
+                        <AppRoutes />
+                    </Root>
                     <ReactQueryDevtools initialIsOpen={true} />
                 </QueryClientProvider>
             </FilterProvider>
