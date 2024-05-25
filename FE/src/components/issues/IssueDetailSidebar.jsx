@@ -24,10 +24,10 @@ export default function IssueDetailSidebar({ milestone, assignees, labels, issue
     return (
         <StyledDiv>
             <SidebarContainer>
-                <OptionSidebar filterName={'assignees'} filterData={assignees}>
+                <OptionSidebar filterName={'assignee'} filterData={assignees}>
                     담당자
                 </OptionSidebar>
-                <OptionSidebar filterName={'labels'} filterData={labels}>
+                <OptionSidebar filterName={'label'} filterData={labels}>
                     레이블
                 </OptionSidebar>
                 <OptionSidebar filterName={'milestone'} filterData={milestone}>
