@@ -15,7 +15,6 @@ const initActivePopup = {
     milestone: false,
 };
 
-// export default function OptionSidebar({ milestone, assignees, labels }) {
 export default function OptionSidebar({ filterName, filterData, children }) {
     const openIssueCount = filterData?.openIssueCount ?? 0;
     const closedIssueCount = filterData?.closedIssueCount ?? 0;
@@ -23,10 +22,10 @@ export default function OptionSidebar({ filterName, filterData, children }) {
 
     const [isActivePopup, setIsActivePopup] = useState(initActivePopup);
     const [visiblePopupType, setVisiblePopupType] = useState('');
+
     const [isAssigneeFetchPossible, setIsAssigneeFetchPossible] = useState(false);
     const [isLabelFetchPossible, setIsLabelFetchPossible] = useState(false);
     const [isMilestoneFetchPossible, setIsMilestoneFetchPossible] = useState(false);
-
     const { data: assigneesData, isLoading: assiDataIsLoading } = useMembersFilter({
         enabled: isAssigneeFetchPossible,
     });
@@ -75,58 +74,37 @@ export default function OptionSidebar({ filterName, filterData, children }) {
                     <div>{children}</div>
                     <IconPlus />
                 </FilterTitle>
-                {/* {filterData.map(({ id, imgUrl }) => (
-                    <FilterContentContainer key={id}>
-                        <CustomProfile src={imgUrl} alt={'assineeProfile'} />
-                        <span className="userName">{id}</span>
-                    </FilterContentContainer>
-                ))} */}
 
-                {visiblePopupType === filterName && <PopupContainer>팝업내용</PopupContainer>}
-            </Filter>
-            <StyledLine />
-
-            {/* <Filter>
-                <FilterTitle
-                    onClick={() => toggleDropDown('label')}
-                    onMouseEnter={() => {
-                        handleMouseEnter('label');
-                    }}
-                >
-                    <div>레이블</div>
-                    <IconPlus />
-                </FilterTitle>
-                <LabelContentContainer>
-                    {labels.map(({ id, name, description, textColor, bgColor }) => (
-                        <StyledLabel key={id} backgroundColor={bgColor} color={textColor}>
-                            {name}
-                        </StyledLabel>
+                {filterName === 'assignee' &&
+                    filterData.map(({ id, imgUrl }) => (
+                        <FilterContentContainer key={id}>
+                            <CustomProfile src={imgUrl} alt={'assineeProfile'} />
+                            <span className="userName">{id}</span>
+                        </FilterContentContainer>
                     ))}
-                </LabelContentContainer>
-                {visiblePopupType === 'label' && <PopupContainer>ddd</PopupContainer>}
-            </Filter>
-            <StyledLine />
-            <Filter>
-                <FilterTitle
-                    onClick={() => toggleDropDown('milestone')}
-                    onMouseEnter={() => {
-                        handleMouseEnter('milestone');
-                    }}
-                >
-                    <div>마일스톤</div>
-                    <IconPlus />
-                </FilterTitle>
-                {milestone && (
+
+                {filterName === 'label' && (
+                    <LabelContentContainer>
+                        {filterData.map(({ id, name, description, textColor, bgColor }) => (
+                            <StyledLabel key={id} backgroundColor={bgColor} color={textColor}>
+                                {name}
+                            </StyledLabel>
+                        ))}
+                    </LabelContentContainer>
+                )}
+
+                {filterName === 'milestone' && (
                     <>
                         <FilterContentContainer>
                             <IconProgressBar percentage={getProgressPercentage(openIssueCount, closedIssueCount)} />
                         </FilterContentContainer>
-                        <FilterContentContainer>{milestone.name}</FilterContentContainer>
+                        <FilterContentContainer>{filterData.name}</FilterContentContainer>
                     </>
                 )}
 
-                {visiblePopupType === 'milestone' && <PopupContainer>ddd</PopupContainer>}
-            </Filter> */}
+                {visiblePopupType === filterName && <PopupContainer>팝업내용</PopupContainer>}
+            </Filter>
+            <StyledLine />
         </>
     );
 }
