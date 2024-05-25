@@ -11,6 +11,7 @@ import com.issuetracker.member.exception.LoginFailException;
 import com.issuetracker.member.repository.MemberRepository;
 import com.issuetracker.member.util.JwtUtil;
 import com.issuetracker.member.util.MemberMapper;
+import com.issuetracker.member.util.TokenStoreManager;
 import io.jsonwebtoken.Claims;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -25,9 +26,10 @@ public class LoginService {
     private final MemberRepository memberRepository;
     private final FileService fileService;
     private final JwtUtil jwtUtil;
+    private final TokenStoreManager tokenStoreManager;
 
     /**
-     * 사용자가 입력한 id, password와 대조하여 일치하면 멤버를 반환하고 아니면 예외를 발생시킵니다.
+     * 사용자가 입력한 id, password와 대조하여 일치하면 유저정보와 토큰을 반환하고 아니면 예외를 발생시킵니다. 리프레시 토큰을 redis에 저장합니다.
      */
     @Transactional(readOnly = true)
     public LoginResponse login(LoginTryDto loginTryDto) {
@@ -42,23 +44,48 @@ public class LoginService {
 
         String accessToken = jwtUtil.createAccessToken(idValue);
         String refreshToken = jwtUtil.createRefreshToken(idValue);
+
+        tokenStoreManager.saveRefreshToken(idValue, refreshToken, JwtUtil.REFRESH_EXPIRATION_TIME);
         TokenResponse tokenResponse = new TokenResponse(accessToken, refreshToken);
 
         log.info("멤버가 로그인하였습니다. {}", idValue);
         return new LoginResponse(memberProfile, tokenResponse);
     }
 
+    /**
+     * 리프레시 토큰의 유효성 검증 및 저장소에 존재하는지 확인 후 액세스 토큰을 재발급한다. db에 접근하지 않으므로 transactional은 사용하지 않는다.
+     */
     public TokenResponse refreshAccessToken(String authorization) {
         String refreshToken = jwtUtil.extractJwtToken(authorization);
         if (refreshToken == null) {
             throw new UnauthorizedException();
         }
-        Claims claims = jwtUtil.validateRefreshToken(refreshToken);
-        String memberId = jwtUtil.extractMemberId(claims);
-        // 이 사이에 redis에 저장된 id와 리프레시토큰이 일치하는지 확인해야함
+        String memberId = extractMemberId(refreshToken);
+        String storeRefreshToken = tokenStoreManager.getRefreshToken(memberId);
+        validateTokenEquals(refreshToken, storeRefreshToken);
 
         String accessToken = jwtUtil.createAccessToken(memberId);
+
         return new TokenResponse(accessToken, refreshToken);
+    }
+
+    /**
+     * 사용자의 리프레시 토큰을 저장소에서 제거한다.
+     */
+    public void logout(String authorization) {
+        String refreshToken = jwtUtil.extractJwtToken(authorization);
+        if (refreshToken == null) {
+            throw new UnauthorizedException();
+        }
+        String memberId = extractMemberId(refreshToken);
+        String storeRefreshToken = tokenStoreManager.getRefreshToken(memberId);
+
+        if (storeRefreshToken != null) { // 리프레시 토큰이 이미 만료되어 저장소에서 제거되었을 경우 해당 로직을 실행하지 않는다.
+            validateTokenEquals(refreshToken, storeRefreshToken);
+            tokenStoreManager.deleteRefreshToken(memberId);
+        }
+
+        log.info("멤버가 로그아웃 하였습니다. {}", memberId);
     }
 
     private Member findTargetMember(String idValue) {
@@ -80,5 +107,16 @@ public class LoginService {
             return null;
         }
         return fileService.getImgUrlById(targetMember.getFileId());
+    }
+
+    private String extractMemberId(String refreshToken) {
+        Claims claims = jwtUtil.validateRefreshToken(refreshToken);
+        return jwtUtil.extractMemberId(claims);
+    }
+
+    private void validateTokenEquals(String refreshToken, String storeRefreshToken) {
+        if (!refreshToken.equals(storeRefreshToken)) {
+            throw new UnauthorizedException();
+        }
     }
 }

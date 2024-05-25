@@ -1,22 +1,23 @@
 package com.issuetracker.member.util;
 
+import com.issuetracker.global.exception.UnauthorizedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
-@Component
 public class JwtUtil {
-    private static final int REFRESH_EXPIRATION_TIME = 86400000; // 1일
-    private static final int ACCESS_EXPIRATION_TIME = 3600000; // 1시간
+    public static final long REFRESH_EXPIRATION_TIME = 86400000; // 1일
+    public static final long ACCESS_EXPIRATION_TIME = 3600000; // 1시간
     @Value("${spring.jwt.refresh-key}")
     private String refreshSecretKey;
     @Value("${spring.jwt.access-key}")
     private String accessSecretKey;
+
 
     public String createAccessToken(String memberId) {
         return Jwts.builder()
@@ -56,11 +57,15 @@ public class JwtUtil {
     }
 
     public Claims validateRefreshToken(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(Keys.hmacShaKeyFor(refreshSecretKey.getBytes()))
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(Keys.hmacShaKeyFor(refreshSecretKey.getBytes()))
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (MalformedJwtException e) {
+            throw new UnauthorizedException();
+        }
     }
 
     public String extractMemberId(Claims claims) {
