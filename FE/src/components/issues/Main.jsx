@@ -68,9 +68,9 @@ export default function Main() {
     const [issueDatas, setIssueDatas] = useState(initIssueDatas);
 
     const { data: issueList, isLoading: issueListIsLoading } = usefilteredIssueData();
-    const { data: labelsFilter, isLoading: labelsFilterIsLoading } = useLabelsFilter();
-    const { data: milestonesFilter, isLoading: milestonesFilterIsLoading } = useMilestonesFilter();
-    const { data: membersFilter, isLoading: membersFilterIsLoading } = useMembersFilter();
+    const { data: labelsFilter, isLoading: labelsFilterIsLoading } = useLabelsFilter({});
+    const { data: milestonesFilter, isLoading: milestonesFilterIsLoading } = useMilestonesFilter({});
+    const { data: membersFilter, isLoading: membersFilterIsLoading } = useMembersFilter({});
 
     const clearFilter = () => dispatch({ type: 'SET_CLEAR_FILTER', payload: '' });
 
