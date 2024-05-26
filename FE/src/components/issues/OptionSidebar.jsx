@@ -8,6 +8,7 @@ import { CustomLabelBadge } from '../../assets/CustomLabelBadge';
 import { FlexRow } from '../../styles/theme';
 import { useLabelsFilter, useMembersFilter, useMilestonesFilter } from '../../hooks/useFiltersData';
 import { useQueryClient } from '@tanstack/react-query';
+import { Checkbox } from 'antd';
 
 const initActivePopup = {
     assignee: false,
@@ -26,19 +27,22 @@ export default function OptionSidebar({ filterName, filterData, children }) {
     const [isAssigneeFetchPossible, setIsAssigneeFetchPossible] = useState(false);
     const [isLabelFetchPossible, setIsLabelFetchPossible] = useState(false);
     const [isMilestoneFetchPossible, setIsMilestoneFetchPossible] = useState(false);
-    const { data: assigneesData, isLoading: assiDataIsLoading } = useMembersFilter({
+    const { data: assigneesData } = useMembersFilter({
         enabled: isAssigneeFetchPossible,
     });
-    const { data: labelsData, isLoading: labelsDataIsLoading } = useLabelsFilter({
+    const { data: labelsData } = useLabelsFilter({
         enabled: isLabelFetchPossible,
     });
-    const { data: milestonesData, isLoading: milestonesDataIsLoading } = useMilestonesFilter({
+    const { data: milestonesData } = useMilestonesFilter({
         enabled: isMilestoneFetchPossible,
     });
 
-    const setActivePopup = (type, toggleState) => {
-        setIsActivePopup({ ...initActivePopup, [type]: toggleState });
+    const getPopupTitle = {
+        assignee: '담당자 필터',
+        label: '레이블 필터',
+        milestone: '마일스톤 필터',
     };
+    const setActivePopup = (type, toggleState) => setIsActivePopup({ ...initActivePopup, [type]: toggleState });
 
     const toggleDropDown = (type) => {
         const toggleState = !isActivePopup[type];
@@ -55,6 +59,21 @@ export default function OptionSidebar({ filterName, filterData, children }) {
         setIsActivePopup(true);
         toggleEnableByType[type]();
     };
+
+    // 팝업 외부 클릭을 감지
+    const handleClickOutside = (event) => {
+        if (popupRef.current && !popupRef.current.contains(event.target)) {
+            setVisiblePopupType('');
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [popupRef]);
 
     useEffect(() => {
         const activeType = Object.entries(isActivePopup);
@@ -102,7 +121,18 @@ export default function OptionSidebar({ filterName, filterData, children }) {
                     </>
                 )}
 
-                {visiblePopupType === filterName && <PopupContainer>팝업내용</PopupContainer>}
+                {visiblePopupType === filterName && (
+                    <PopupContainer ref={popupRef}>
+                        <ul>
+                            <li className="title">{getPopupTitle[filterName]}</li>
+                            {/* {filterData.map(({ id, imgUrl }) => (
+                                <li key={id}>
+                                    <CustomProfile src={imgUrl} /> {id} <Checkbox />
+                                </li>
+                            ))} */}
+                        </ul>
+                    </PopupContainer>
+                )}
             </Filter>
             <StyledLine />
         </>
@@ -114,11 +144,17 @@ const PopupContainer = styled.div`
     top: 10px;
     right: 0;
     min-width: 200px;
-    min-height: 200px;
+    min-height: 100px;
     border: 2px solid ${(props) => props.theme.borderColor};
     border-radius: 20px;
-    background-color: antiquewhite;
+
+    /* background-color: antiquewhite; */
+    background-color: ${(props) => props.theme.bgColorBody};
     z-index: 5;
+    & .title {
+        border-radius: 20px 20px 0 0;
+        background-color: ${(props) => props.theme.listHeaderColor};
+    }
 `;
 
 const StyledLabel = styled(CustomLabelBadge)`
