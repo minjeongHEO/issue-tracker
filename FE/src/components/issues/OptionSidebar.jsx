@@ -7,8 +7,7 @@ import { getProgressPercentage } from '../../utils/issueUtils';
 import { CustomLabelBadge } from '../../assets/CustomLabelBadge';
 import { FlexRow } from '../../styles/theme';
 import { useLabelsFilter, useMembersFilter, useMilestonesFilter } from '../../hooks/useFiltersData';
-import { useQueryClient } from '@tanstack/react-query';
-import { Checkbox } from 'antd';
+import OptionSidebarContents from './OptionSidebarContents';
 
 const initActivePopup = {
     assignee: false,
@@ -126,22 +125,11 @@ export default function OptionSidebar({ filterName, filterData, children }) {
                     <PopupContainer ref={popupRef}>
                         <ul>
                             <StyledList className="title">{getPopupTitle[filterName]}</StyledList>
-                            <StyledList>
-                                <FlexRow className="itemTitle">
-                                    {filterName === 'assignee' && (
-                                        <CustomProfile
-                                            src={
-                                                'https://github.com/codesquad-masters2024-team02/issue-tracker/assets/96780693/d1c7123b-89c9-485b-b9dd-8cc21a1005e0'
-                                            }
-                                        />
-                                    )}
-                                    {filterName === 'label' && <StyledLabel backgroundColor={'red'} color={'white'} />}
-                                    <span className="titleName">Woody</span>
-                                </FlexRow>
-                                <FlexRow className="itemRadio">
-                                    <Checkbox />
-                                </FlexRow>
-                            </StyledList>
+                            {filterName === 'assignee' && assigneesData && <OptionSidebarContents contents={assigneesData} filterName={filterName} />}
+                            {filterName === 'label' && labelsData && <OptionSidebarContents contents={labelsData.labels} filterName={filterName} />}
+                            {filterName === 'milestone' && milestonesData && (
+                                <OptionSidebarContents contents={milestonesData.milestoneDetailDtos} filterName={filterName} />
+                            )}
                         </ul>
                     </PopupContainer>
                 )}
@@ -169,7 +157,7 @@ const PopupContainer = styled.div`
     top: 20px;
     right: 0;
     min-width: 200px;
-    min-height: 100px;
+    min-height: 65px;
     border: 2px solid ${(props) => props.theme.borderColor};
     border-radius: 20px;
     /* background-color: antiquewhite; */
