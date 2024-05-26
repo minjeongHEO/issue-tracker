@@ -11,7 +11,7 @@ import { useDeleteIssue } from '../../hooks/useIssueDetailData';
 import { Link, useNavigate } from 'react-router-dom';
 import OptionSidebar from './OptionSidebar';
 
-export default function IssueDetailSidebar({ milestone, assignees, labels, issueId }) {
+export default function IssueDetailSidebar({ milestone, assignees, labels, issueId, isEditable = false }) {
     const navigate = useNavigate();
     const onSuccess = () => {
         message.success('삭제되었습니다.');
@@ -34,14 +34,17 @@ export default function IssueDetailSidebar({ milestone, assignees, labels, issue
                     마일스톤
                 </OptionSidebar>
             </SidebarContainer>
-            <DeleteContentContainer>
-                <Popconfirm title="이슈를 삭제하시겠습니까?" onConfirm={deleteConfirm} okText="Yes" cancelText="No">
-                    <div>
-                        <IconTrash />
-                        <span>이슈 삭제</span>
-                    </div>
-                </Popconfirm>
-            </DeleteContentContainer>
+
+            {isEditable && (
+                <DeleteContentContainer>
+                    <Popconfirm title="이슈를 삭제하시겠습니까?" onConfirm={deleteConfirm} okText="Yes" cancelText="No">
+                        <div>
+                            <IconTrash />
+                            <span>이슈 삭제</span>
+                        </div>
+                    </Popconfirm>
+                </DeleteContentContainer>
+            )}
         </StyledDiv>
     );
 }

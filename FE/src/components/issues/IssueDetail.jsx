@@ -125,7 +125,13 @@ export default function IssueDetail() {
                             </MainBtnContainer>
                         </StyledComments>
 
-                        <IssueDetailSidebar milestone={data.milestone} assignees={data.assignees} labels={data.labels} issueId={issueId} />
+                        <IssueDetailSidebar
+                            milestone={data.milestone}
+                            assignees={data.assignees}
+                            labels={data.labels}
+                            issueId={issueId}
+                            isEditable={data.writer.id === getUserId()}
+                        />
                     </ContentsContainer>
                 </MainContainer>
             )}
