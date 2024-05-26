@@ -91,6 +91,7 @@ export default function OptionSidebar({ filterName, filterData, children }) {
                     }}
                 >
                     <div>{children}</div>
+
                     <IconPlus />
                 </FilterTitle>
 
@@ -124,12 +125,23 @@ export default function OptionSidebar({ filterName, filterData, children }) {
                 {visiblePopupType === filterName && (
                     <PopupContainer ref={popupRef}>
                         <ul>
-                            <li className="title">{getPopupTitle[filterName]}</li>
-                            {/* {filterData.map(({ id, imgUrl }) => (
-                                <li key={id}>
-                                    <CustomProfile src={imgUrl} /> {id} <Checkbox />
-                                </li>
-                            ))} */}
+                            <StyledList className="title">{getPopupTitle[filterName]}</StyledList>
+                            <StyledList>
+                                <FlexRow className="itemTitle">
+                                    {filterName === 'assignee' && (
+                                        <CustomProfile
+                                            src={
+                                                'https://github.com/codesquad-masters2024-team02/issue-tracker/assets/96780693/d1c7123b-89c9-485b-b9dd-8cc21a1005e0'
+                                            }
+                                        />
+                                    )}
+                                    {filterName === 'label' && <StyledLabel backgroundColor={'red'} color={'white'} />}
+                                    <span className="titleName">Woody</span>
+                                </FlexRow>
+                                <FlexRow className="itemRadio">
+                                    <Checkbox />
+                                </FlexRow>
+                            </StyledList>
                         </ul>
                     </PopupContainer>
                 )}
@@ -139,17 +151,30 @@ export default function OptionSidebar({ filterName, filterData, children }) {
     );
 }
 
+const StyledList = styled.li`
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 12px;
+    width: 100%;
+
+    & .itemTitle {
+        /* width: 80px; */
+    }
+    & .titleName {
+        margin-left: 10px;
+    }
+`;
 const PopupContainer = styled.div`
     position: absolute;
-    top: 10px;
+    top: 20px;
     right: 0;
     min-width: 200px;
     min-height: 100px;
     border: 2px solid ${(props) => props.theme.borderColor};
     border-radius: 20px;
-
     /* background-color: antiquewhite; */
     background-color: ${(props) => props.theme.bgColorBody};
+    opacity: 90%;
     z-index: 5;
     & .title {
         border-radius: 20px 20px 0 0;
