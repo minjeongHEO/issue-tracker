@@ -5,6 +5,8 @@ import styled from 'styled-components';
 import { DropTitle } from '../../styles/theme.js';
 import DropDownTitle from './DropDownTitle.jsx';
 import { useFilterContext } from '../../context/FilterContext.jsx';
+import { CustomProfile } from '../../assets/CustomProfile.jsx';
+import CustomNoProfile from '../../assets/CustomNoProfile.jsx';
 
 const filterMapping = {
     issue: '이슈 필터',
@@ -115,7 +117,7 @@ export default function DropDownFilter({ filterTitle, filterItems, dispatchTypeB
                           <ItemContainer>
                               <div className="itemTitle">
                                   <DropTitle>
-                                      <AvatarImage src={cur.avatarSrc}></AvatarImage>
+                                      {cur.avatarSrc ? <CustomProfile src={cur.avatarSrc} /> : <CustomNoProfile />}
                                       <UserName>{cur.userName}</UserName>
                                   </DropTitle>
                               </div>
@@ -185,15 +187,6 @@ const StyledColor = styled.div`
     border-radius: 50%;
     width: 20px;
     height: 20px;
-`;
-const AvatarImage = styled.img`
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    border: 1px solid;
-    border-color: ${(props) => props.theme.borderColor};
-    background-color: ${(props) => props.theme.bgColorBody};
-    display: block;
 `;
 
 const StyledDropdown = styled(Dropdown)`

@@ -7,6 +7,7 @@ import { calculatePastTime } from '../../utils/dateUtils';
 import { CustomLabelBadge } from '../../assets/CustomLabelBadge';
 import { CustomProfile } from '../../assets/CustomProfile';
 import { IconAlertCircle } from '../../assets/icons/IconAlertCircle';
+import CustomNoProfile from '../../assets/CustomNoProfile';
 
 export default function IssueList({ isSingleChecked, setCheckedItems, listData, isNoList = false }) {
     const { id, title, createDate, milestoneName, author, assignees, labels } = listData;
@@ -61,10 +62,14 @@ export default function IssueList({ isSingleChecked, setCheckedItems, listData, 
                                 </span>
 
                                 <StyledMilestone>
-                                    <StyledMilestoneIcon>
-                                        <IconMilestone />
-                                    </StyledMilestoneIcon>
-                                    {milestoneName || ''}
+                                    {milestoneName && (
+                                        <>
+                                            <StyledMilestoneIcon>
+                                                <IconMilestone />
+                                            </StyledMilestoneIcon>
+                                            {milestoneName}
+                                        </>
+                                    )}
                                 </StyledMilestone>
                             </div>
                         </ListBody>
@@ -72,7 +77,13 @@ export default function IssueList({ isSingleChecked, setCheckedItems, listData, 
 
                     <StyledProfile>
                         {assignees &&
-                            assignees.map(({ id, imgUrl }) => <CustomProfile key={id} src={imgUrl} size={'medium'} alt="assigneeProfile" />)}
+                            assignees.map(({ id, imgUrl }) =>
+                                imgUrl ? (
+                                    <CustomProfile key={id} src={imgUrl} size={'medium'} alt="assigneeProfile" />
+                                ) : (
+                                    <CustomNoProfile key={id} size={'medium'} />
+                                )
+                            )}
                     </StyledProfile>
                 </ListContainer>
             )}

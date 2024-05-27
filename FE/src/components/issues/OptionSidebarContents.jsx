@@ -5,6 +5,7 @@ import { CustomLabelBadge } from '../../assets/CustomLabelBadge';
 import { FlexRow } from '../../styles/theme';
 import { Checkbox, Radio } from 'antd';
 import { useModifyIssueAssignees, useModifyIssueLabels, useModifyIssueMilestone } from '../../hooks/useIssueDetailData';
+import CustomNoProfile from '../../assets/CustomNoProfile';
 
 export default function OptionSidebarContents({ contents, filterName, filterData, checkedDatas, setCheckedDatas, issueId }) {
     const { mutate: modifyIssueLabels } = useModifyIssueLabels(String(issueId)); //labelIds
@@ -70,7 +71,7 @@ export default function OptionSidebarContents({ contents, filterName, filterData
                     <FlexRow className="itemTitle">
                         {filterName === 'assignee' && (
                             <>
-                                <CustomProfile src={content.imgUrl} />
+                                {content.imgUrl ? <CustomProfile src={content.imgUrl} /> : <CustomNoProfile />}
                                 <span className="titleName">{content.id}</span>
                             </>
                         )}
