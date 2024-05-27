@@ -6,7 +6,7 @@ import { IconProgressBar } from '../../assets/icons/IconProgressBar';
 import { getProgressPercentage } from '../../utils/issueUtils';
 import { CustomLabelBadge } from '../../assets/CustomLabelBadge';
 import { FlexRow } from '../../styles/theme';
-import { useLabelsFilter, useMembersFilter, useMilestonesFilter } from '../../hooks/useFiltersData';
+import { useLabelsFilter, useMembersFilter, useMilestonesFilter, useMilestonesFilterIsClosed } from '../../hooks/useFiltersData';
 import OptionSidebarContents from './OptionSidebarContents';
 
 const initActivePopup = {
@@ -14,15 +14,20 @@ const initActivePopup = {
     label: false,
     milestone: false,
 };
+const initCheckedData = {
+    assignee: [],
+    label: [],
+    milestone: '',
+};
 
-export default function OptionSidebar({ filterName, filterData, children }) {
+export default function OptionSidebar({ filterName, filterData, issueId, children }) {
     const openIssueCount = filterData?.openIssueCount ?? 0;
     const closedIssueCount = filterData?.closedIssueCount ?? 0;
     const popupRef = useRef(null);
 
-    const [isActivePopup, setIsActivePopup] = useState(initActivePopup);
-    const [visiblePopupType, setVisiblePopupType] = useState('');
+    const [checkedDatas, setCheckedDatas] = useState(initCheckedData);
 
+    const [isActivePopup, setIsActivePopup] = useState(initActivePopup);
     const [isAssigneeFetchPossible, setIsAssigneeFetchPossible] = useState(false);
     const [isLabelFetchPossible, setIsLabelFetchPossible] = useState(false);
     const [isMilestoneFetchPossible, setIsMilestoneFetchPossible] = useState(false);
@@ -32,7 +37,10 @@ export default function OptionSidebar({ filterName, filterData, children }) {
     const { data: labelsData } = useLabelsFilter({
         enabled: isLabelFetchPossible,
     });
-    const { data: milestonesData } = useMilestonesFilter({
+    const { data: openMilestonesData } = useMilestonesFilter({
+        enabled: isMilestoneFetchPossible,
+    });
+    const { data: closedMilestonesData } = useMilestonesFilterIsClosed({
         enabled: isMilestoneFetchPossible,
     });
 
@@ -55,30 +63,41 @@ export default function OptionSidebar({ filterName, filterData, children }) {
     };
 
     const handleMouseEnter = (type) => {
-        setIsActivePopup(true);
+        // setIsActivePopup(true);
         toggleEnableByType[type]();
     };
 
-    // 팝업 외부 클릭을 감지
-    const handleClickOutside = (event) => {
-        if (popupRef.current && !popupRef.current.contains(event.target)) {
-            setVisiblePopupType('');
-        }
+    const getActivePopupType = (isActivePopup) => {
+        if (!isActivePopup) return;
+        return Object.entries(isActivePopup).find(([key, value]) => value === true)?.[0];
+    };
+
+    const setCheckDatasByType = (type, checkedDatas) => {
+        setCheckedDatas((prev) => ({ ...prev, [type]: checkedDatas }));
     };
 
     useEffect(() => {
-        document.addEventListener('mousedown', handleClickOutside);
+        if (!filterData) return;
 
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, [popupRef]);
+        if (filterName === 'milestone') setCheckDatasByType('milestone', String(filterData.id));
+        else
+            setCheckDatasByType(
+                filterName,
+                filterData?.map(({ id }) => String(id))
+            );
+    }, [filterData]);
 
     useEffect(() => {
-        const activeType = Object.entries(isActivePopup);
-        if (activeType.every(([_, value]) => value === false)) setVisiblePopupType('');
-        else setVisiblePopupType(activeType.filter(([_, value]) => value === true)[0][0]);
-    }, [isActivePopup]);
+        // 팝업 외부 클릭을 감지
+        const handleClickOutside = ({ target }) => {
+            if (popupRef.current && !popupRef.current.contains(target)) {
+                setIsActivePopup({ ...initActivePopup });
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [popupRef]);
 
     return (
         <>
@@ -117,18 +136,43 @@ export default function OptionSidebar({ filterName, filterData, children }) {
                         <FilterContentContainer>
                             <IconProgressBar percentage={getProgressPercentage(openIssueCount, closedIssueCount)} />
                         </FilterContentContainer>
-                        <FilterContentContainer>{filterData.name}</FilterContentContainer>
+                        <FilterContentContainer>{filterData?.name}</FilterContentContainer>
                     </>
                 )}
 
-                {visiblePopupType === filterName && (
+                {getActivePopupType(isActivePopup) === filterName && (
                     <PopupContainer ref={popupRef}>
                         <ul>
                             <StyledList className="title">{getPopupTitle[filterName]}</StyledList>
-                            {filterName === 'assignee' && assigneesData && <OptionSidebarContents contents={assigneesData} filterName={filterName} />}
-                            {filterName === 'label' && labelsData && <OptionSidebarContents contents={labelsData.labels} filterName={filterName} />}
-                            {filterName === 'milestone' && milestonesData && (
-                                <OptionSidebarContents contents={milestonesData.milestoneDetailDtos} filterName={filterName} />
+                            {filterName === 'assignee' && assigneesData && (
+                                <OptionSidebarContents
+                                    contents={assigneesData}
+                                    filterName={filterName}
+                                    filterData={filterData}
+                                    checkedDatas={checkedDatas?.assignee}
+                                    setCheckedDatas={setCheckedDatas}
+                                    issueId={issueId}
+                                />
+                            )}
+                            {filterName === 'label' && labelsData && (
+                                <OptionSidebarContents
+                                    contents={labelsData.labels}
+                                    filterName={filterName}
+                                    filterData={filterData}
+                                    checkedDatas={checkedDatas?.label}
+                                    setCheckedDatas={setCheckedDatas}
+                                    issueId={issueId}
+                                />
+                            )}
+                            {filterName === 'milestone' && openMilestonesData && closedMilestonesData && (
+                                <OptionSidebarContents
+                                    contents={[...openMilestonesData.milestoneDetailDtos, ...closedMilestonesData.milestoneDetailDtos]}
+                                    filterName={filterName}
+                                    filterData={filterData}
+                                    checkedDatas={checkedDatas?.milestone}
+                                    setCheckedDatas={setCheckedDatas}
+                                    issueId={issueId}
+                                />
                             )}
                         </ul>
                     </PopupContainer>

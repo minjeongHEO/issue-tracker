@@ -24,13 +24,13 @@ export default function IssueDetailSidebar({ milestone, assignees, labels, issue
     return (
         <StyledDiv>
             <SidebarContainer>
-                <OptionSidebar filterName={'assignee'} filterData={assignees}>
+                <OptionSidebar filterName={'assignee'} filterData={assignees} issueId={issueId}>
                     담당자
                 </OptionSidebar>
-                <OptionSidebar filterName={'label'} filterData={labels}>
+                <OptionSidebar filterName={'label'} filterData={labels} issueId={issueId}>
                     레이블
                 </OptionSidebar>
-                <OptionSidebar filterName={'milestone'} filterData={milestone}>
+                <OptionSidebar filterName={'milestone'} filterData={milestone} issueId={issueId}>
                     마일스톤
                 </OptionSidebar>
             </SidebarContainer>
@@ -73,4 +73,5 @@ const SidebarContainer = styled.div`
 
 const StyledDiv = styled.div`
     flex-basis: 30%;
+    background-color: aliceblue;
 `;
