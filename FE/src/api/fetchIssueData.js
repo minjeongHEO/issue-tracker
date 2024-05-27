@@ -1,4 +1,4 @@
-const ISSUE_DEFAULT_API_URI = '/api/issues/';
+const ISSUE_DEFAULT_API_URI = '/api/issues';
 const ISSUE_COMMENTS_DEFAULT_API_URI = '/api/comments';
 
 /**
@@ -11,7 +11,7 @@ export const fetchIssueDetailData = async (issueId) => {
 
     try {
         // await delay(2000);
-        const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ISSUE_DEFAULT_API_URI}${issueId}`);
+        const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ISSUE_DEFAULT_API_URI}/${issueId}`);
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
         if (response.status === 200) {
@@ -29,7 +29,7 @@ export const fetchIssueDetailData = async (issueId) => {
  */
 export const fetchIssueStateToggle = async (toIssueState, issueIds) => {
     try {
-        const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ISSUE_DEFAULT_API_URI}${toIssueState ? 'close' : 'open'}`, {
+        const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ISSUE_DEFAULT_API_URI}/${toIssueState ? 'close' : 'open'}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -59,7 +59,7 @@ export const fetchIssueStateToggle = async (toIssueState, issueIds) => {
  */
 export const fetchDeleteIssue = async (issueId) => {
     try {
-        const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ISSUE_DEFAULT_API_URI}${issueId}`, {
+        const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ISSUE_DEFAULT_API_URI}/${issueId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -89,7 +89,7 @@ export const fetchDeleteIssue = async (issueId) => {
  */
 export const fetchModifyIssueTitle = async (title, issueId) => {
     try {
-        const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ISSUE_DEFAULT_API_URI}${issueId}/title`, {
+        const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ISSUE_DEFAULT_API_URI}/${issueId}/title`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -120,7 +120,7 @@ export const fetchModifyIssueTitle = async (title, issueId) => {
  */
 export const fetchModifyIssueContent = async (content, fileId, issueId) => {
     try {
-        const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ISSUE_DEFAULT_API_URI}${issueId}/body`, {
+        const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ISSUE_DEFAULT_API_URI}/${issueId}/body`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -218,6 +218,99 @@ export const fetchDeleteComment = async (commentId) => {
             headers: {
                 'Content-Type': 'application/json',
             },
+        });
+
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+        return {
+            status: response.status,
+            statusText: response.statusText,
+        };
+    } catch (error) {
+        throw error;
+    }
+};
+
+/**
+ * 이슈 레이블 수정
+ * @param {*Number} issueId - 이슈 아이디
+ * @param {*Array} labelIds - 수정하는 레이블 아이디들
+ * @returns 
+ *  - 성공: 200
+    - 아이디 미존재시 : 404
+    - 바인딩 에러시: 400
+    - 서버 내부 오류시: 500
+ */
+export const fetchModifyIssueLabels = async (issueId, labelIds) => {
+    try {
+        const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ISSUE_DEFAULT_API_URI}/${issueId}/label`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ labelIds }),
+        });
+
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+        return {
+            status: response.status,
+            statusText: response.statusText,
+        };
+    } catch (error) {
+        throw error;
+    }
+};
+
+/**
+ * 이슈 담당자 수정
+ * @param {*Number} issueId - 이슈 아이디
+ * @param {*Array} assigneeIds - 수정하는 담당자 아이디들
+ * @returns 
+ *  - 성공: 200
+    - 아이디 미존재시 : 404
+    - 바인딩 에러시: 400
+    - 서버 내부 오류시: 500
+ */
+export const fetchModifyIssueAssignees = async (issueId, assigneeIds) => {
+    try {
+        const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ISSUE_DEFAULT_API_URI}/${issueId}/assignee`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ assigneeIds }),
+        });
+
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+        return {
+            status: response.status,
+            statusText: response.statusText,
+        };
+    } catch (error) {
+        throw error;
+    }
+};
+
+/**
+ * 이슈 마일스톤 수정
+ * @param {*Number} issueId - 이슈 아이디
+ * @param {*String} milestoneId - 수정하는 마일스톤 아이디
+ * @returns 
+ *  - 성공: 200
+    - 아이디 미존재시 : 404
+    - 바인딩 에러시: 400
+    - 서버 내부 오류시: 500
+ */
+export const fetchModifyIssueMilestone = async (issueId, milestoneId) => {
+    try {
+        const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ISSUE_DEFAULT_API_URI}/${issueId}/milestone`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ milestoneId }),
         });
 
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
