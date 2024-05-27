@@ -26,9 +26,9 @@ const mainIssueFilters = [
 const dispatchTypeByFilterContents = {
     'is:open': 'SET_SELECTED_IS_OPEN_FILTER',
     'is:closed': 'SET_SELECTED_IS_CLOSED_FILTER',
-    'assignee:@me': 'SET_SELECTED_AUTHOR_ME_FILTER',
-    'mentions:@me': 'SET_SELECTED_ASSIGNEE_ME_FILTER',
-    'author:@me': 'SET_SELECTED_MENTIONS_ME_FILTER',
+    'assignee:@me': 'SET_SELECTED_ASSIGNEE_ME_FILTER',
+    'mentions:@me': 'SET_SELECTED_MENTIONS_ME_FILTER',
+    'author:@me': 'SET_SELECTED_AUTHOR_ME_FILTER',
 };
 
 const issueFilters = {
