@@ -26,6 +26,18 @@ export const useMilestonesFilter = ({ enabled = true }) => {
     });
 };
 /**
+ * 닫힌 마일스톤 필터
+ */
+export const useMilestonesFilterIsClosed = ({ enabled = true }) => {
+    return useQuery({
+        queryKey: ['filter', 'milestones', 'isClosed'],
+        queryFn: () => fetchMilestonesData(true),
+        enabled: enabled,
+        staleTime: 1000 * 60 * 5,
+        cacheTime: 1000 * 60 * 10,
+    });
+};
+/**
  * 멤버 필터
  */
 export const useMembersFilter = ({ enabled = true }) => {
