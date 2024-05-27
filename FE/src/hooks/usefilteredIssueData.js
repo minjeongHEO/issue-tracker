@@ -36,10 +36,13 @@ const filterTypeAssigneeId = (selectedFilters, userId) => {
     return '';
 };
 
-//TODO: 선택안한 값들 필터링
 const filterTypeNoValues = (selectedFilters) => {
     if (!selectedFilters || Object.keys(selectedFilters).length === 0) return;
 
+    const nonSelectedObj = Object.entries(selectedFilters).filter(([key, value]) => value === 'nonSelected');
+    if (nonSelectedObj.length) {
+        return nonSelectedObj.map((e) => e[0]).join(';');
+    }
     return '';
 };
 
