@@ -5,8 +5,11 @@ import {
     fetchDeleteIssue,
     fetchIssueDetailData,
     fetchIssueStateToggle,
+    fetchModifyIssueAssignees,
     fetchModifyIssueComment,
     fetchModifyIssueContent,
+    fetchModifyIssueLabels,
+    fetchModifyIssueMilestone,
     fetchModifyIssueTitle,
 } from '../api/fetchIssueData';
 
@@ -153,10 +156,10 @@ export const useCreateIssueComment = (issueId) => {
  * @returns 
  * key는 무조건 String으로 통일
  *  - 성공: 200
-    - 아이디 미존재시 : 404
-    - 바인딩 에러시: 400
-    - 서버 내부 오류시: 500
- */
+- 아이디 미존재시 : 404
+- 바인딩 에러시: 400
+- 서버 내부 오류시: 500
+*/
 export const useDeleteComment = (issueId, onSuccessCallBack) => {
     const queryClient = useQueryClient();
 
@@ -167,6 +170,63 @@ export const useDeleteComment = (issueId, onSuccessCallBack) => {
                 queryClient.invalidateQueries({ queryKey: ['issueDetail', String(issueId)], refetchType: 'active' });
                 if (onSuccessCallBack) onSuccessCallBack();
             }
+        },
+        // onError: () => {
+        // },
+    });
+};
+
+/**
+ * 이슈 상세 - 이슈 레이블 변경
+ * @param {*String} issueId - 이슈상세 아이디
+ * @returns
+ * key는 무조건 String으로 통일
+ */
+export const useModifyIssueLabels = (issueId) => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async ({ labelIds }) => await fetchModifyIssueLabels(issueId, labelIds),
+        onSuccess: (res) => {
+            if (res.status === 200) queryClient.invalidateQueries({ queryKey: ['issueDetail', String(issueId)], refetchType: 'active' });
+        },
+        // onError: () => {
+        // },
+    });
+};
+
+/**
+ * 이슈 상세 - 이슈 담당자 변경
+ * @param {*String} issueId - 이슈상세 아이디
+ * @returns
+ * key는 무조건 String으로 통일
+ */
+export const useModifyIssueAssignees = (issueId) => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async ({ assigneeIds }) => await fetchModifyIssueAssignees(issueId, assigneeIds),
+        onSuccess: (res) => {
+            if (res.status === 200) queryClient.invalidateQueries({ queryKey: ['issueDetail', String(issueId)], refetchType: 'active' });
+        },
+        // onError: () => {
+        // },
+    });
+};
+
+/**
+ * 이슈 상세 - 이슈 마일스톤 변경
+ * @param {*String} issueId - 이슈상세 아이디
+ * @returns
+ * key는 무조건 String으로 통일
+ */
+export const useModifyIssueMilestone = (issueId) => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async ({ milestoneId }) => await fetchModifyIssueMilestone(issueId, Number(milestoneId)),
+        onSuccess: (res) => {
+            if (res.status === 200) queryClient.invalidateQueries({ queryKey: ['issueDetail', String(issueId)], refetchType: 'active' });
         },
         // onError: () => {
         // },
