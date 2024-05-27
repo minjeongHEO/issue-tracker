@@ -1,25 +1,17 @@
-import { Button, Input, Checkbox, Select } from 'antd';
-import React, { useEffect, useState } from 'react';
+import { Button, Input, Checkbox, Select, Skeleton } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import IssueList from './IssueList';
 import DropDownFilter from './DropDownFilter';
 import { useFilterContext } from '../../context/FilterContext';
-import mockIssueList from '../../data/issueList.json';
 import NavStateType from './NavStateType';
 import NavFilterType from './NavFilterType';
 import { MainContainer } from '../../styles/theme';
-
-// TODO: fetch 데이터
-const labelTypeItems = [
-    { labelColor: '#F910AC', labelName: '🖥️ BE' },
-    { labelColor: '#F9D0F0', labelName: '🌐 FE' },
-];
-const imageTypeItems = [
-    { avatarSrc: 'https://avatars.githubusercontent.com/u/96780693?s=40&v=4', userName: 'woody' },
-    { avatarSrc: 'https://avatars.githubusercontent.com/u/103445254?s=40&v=4', userName: 'zzawang' },
-];
-const milestoneTypeItems = [{ title: '⚙️ Etc' }, { title: '💄 Style' }, { title: '🧑🏻 User' }, { title: '🎯 Issue' }];
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useLabelsFilter, useMembersFilter, useMilestonesFilter } from '../../hooks/useFiltersData';
+import { usefilteredIssueData } from '../../hooks/usefilteredIssueData';
+import ClipLoader from 'react-spinners/ClipLoader';
 
 const stateModifyFilters = [{ title: '선택한 이슈 열기' }, { title: '선택한 이슈 닫기' }];
 
@@ -46,6 +38,25 @@ const issueFilters = {
     assigneeMe: 'assignee:@me',
     mentionsMe: 'mentions:@me',
 };
+const initFilterItems = {
+    labels: [],
+    members: [],
+    milestones: [],
+};
+const initIssueDatas = {
+    count: {
+        isOpen: 0,
+        isClosed: 0,
+    },
+    list: [],
+};
+const initFetched = {
+    assignee: false,
+    label: false,
+    milestone: false,
+    author: false, //작성자
+};
+const resetListData = { id: null, title: null, createDate: null, milestoneName: null, author: null, assignees: null, labels: null };
 
 export default function Main() {
     const navigate = useNavigate();
@@ -53,10 +64,15 @@ export default function Main() {
     const [inputFilter, setInputFilter] = useState('');
     const [isClearFilter, setIsClearFilter] = useState(false);
     const [checkedItems, setCheckedItems] = useState([]);
+    const [filterItemsByType, setFilterItemsByType] = useState(initFilterItems);
+    const [issueDatas, setIssueDatas] = useState(initIssueDatas);
 
-    const clearFilter = () => {
-        dispatch({ type: 'SET_CLEAR_FILTER', payload: '' });
-    };
+    const { data: issueList, isLoading: issueListIsLoading } = usefilteredIssueData();
+    const { data: labelsFilter, isLoading: labelsFilterIsLoading } = useLabelsFilter();
+    const { data: milestonesFilter, isLoading: milestonesFilterIsLoading } = useMilestonesFilter();
+    const { data: membersFilter, isLoading: membersFilterIsLoading } = useMembersFilter();
+
+    const clearFilter = () => dispatch({ type: 'SET_CLEAR_FILTER', payload: '' });
 
     const isFilterActive = () => {
         const selectedLists = filterSelectedLists(selectedFilters);
@@ -86,18 +102,93 @@ export default function Main() {
     };
 
     const toggleEntireCheckBox = () => {
-        if (checkedItems.length === mockIssueList.length) setCheckedItems([]);
-        else setCheckedItems(mockIssueList.map(({ id }) => id));
+        if (!issueList) return;
+        if (checkedItems.length === issueList.filteredIssues.length) setCheckedItems([]);
+        else setCheckedItems(issueList.filteredIssues.map(({ id }) => id));
     };
 
     const isSingleChecked = (key) => {
         return checkedItems.includes(key);
     };
 
+    const [hasFetched, setHasFetched] = useState(initFetched);
+
+    const setterFechedByType = {
+        assignee: () => setHasFetched((prev) => ({ ...prev, assignee: true })),
+        label: () => setHasFetched((prev) => ({ ...prev, label: true })),
+        milestone: () => setHasFetched((prev) => ({ ...prev, milestone: true })),
+        author: () => setHasFetched((prev) => ({ ...prev, author: true })),
+    };
+    const queryClient = useQueryClient();
+    const useQueryByType = {
+        assignee: () => queryClient.invalidateQueries({ queryKey: ['filter', 'members'], refetchType: 'active' }), //담당자
+        label: () => queryClient.invalidateQueries({ queryKey: ['filter', 'labels'], refetchType: 'active' }),
+        milestone: () => queryClient.invalidateQueries({ queryKey: ['filter', 'milestones'], refetchType: 'active' }),
+        author: () => queryClient.invalidateQueries({ queryKey: ['filter', 'members'], refetchType: 'active' }), //작성자
+    };
+
+    const handleMouseEnter = (type) => {
+        if (!hasFetched[type]) {
+            useQueryByType[type](); // 마우스를 올렸을 때 쿼리 실행
+            setterFechedByType[type](); //상태 업데이트
+        }
+    };
+
     useEffect(() => {
         setInputFilter(filterSelectedLists(selectedFilters).join(' '));
         setIsClearFilter(isFilterActive());
+        queryClient.invalidateQueries({ queryKey: ['issue_list'], refetchType: 'active' });
     }, [selectedFilters]);
+
+    useEffect(() => {
+        if (!labelsFilter) return;
+        const labelItems = labelsFilter.labels.map(({ name, bgColor, textColor }) => ({
+            labelName: name,
+            labelColor: bgColor,
+            textColor: textColor,
+        }));
+
+        setFilterItemsByType((prev) => ({
+            ...prev,
+            labels: labelItems,
+        }));
+    }, [labelsFilter]);
+
+    useEffect(() => {
+        if (!milestonesFilter) return;
+        const milestoneItems = milestonesFilter.milestoneDetailDtos.map(({ name }) => ({
+            title: name,
+        }));
+        setFilterItemsByType((prev) => ({
+            ...prev,
+            milestones: milestoneItems,
+        }));
+    }, [milestonesFilter]);
+
+    useEffect(() => {
+        if (!membersFilter) return;
+        const memberItems = membersFilter.map(({ id, imgUrl }) => ({
+            avatarSrc: imgUrl,
+            userName: id,
+        }));
+
+        setFilterItemsByType((prev) => ({
+            ...prev,
+            members: memberItems,
+        }));
+    }, [membersFilter]);
+
+    useEffect(() => {
+        if (!issueList) return;
+        const issueListCount = issueList.count;
+        const newIsOpenCount = issueListCount.openedIssueCount;
+        const newIsClosedCount = issueListCount.closedIssueCount;
+
+        const newIssueList = issueList.filteredIssues;
+        setIssueDatas((prev) => ({ ...prev, count: { ...prev.count, isOpen: newIsOpenCount } }));
+        setIssueDatas((prev) => ({ ...prev, count: { ...prev.count, isClosed: newIsClosedCount } }));
+        setIssueDatas((prev) => ({ ...prev, list: newIssueList }));
+    }, [issueList]);
 
     return (
         <MainContainer>
@@ -133,40 +224,54 @@ export default function Main() {
 
             <StyledBox>
                 <StyledBoxHeader>
-                    <Checkbox onClick={() => toggleEntireCheckBox()} checked={checkedItems.length === mockIssueList.length} className="checkbox" />
+                    <Checkbox
+                        onClick={() => toggleEntireCheckBox()}
+                        checked={checkedItems.length === issueList?.filteredIssues?.length}
+                        className="checkbox"
+                    />
                     {checkedItems.length > 0 ? (
-                        <NavStateType
-                            checkedItemsCount={checkedItems.length}
-                            stateModifyFilters={stateModifyFilters}
-                            dispatch={dispatch}
-                        ></NavStateType>
+                        <NavStateType checkedItemsCount={checkedItems.length} stateModifyFilters={stateModifyFilters} dispatch={dispatch} />
                     ) : (
                         <NavFilterType
+                            issueCount={issueDatas.count}
                             dispatchTypeByFilterContents={dispatchTypeByFilterContents}
-                            imageTypeItems={imageTypeItems}
-                            labelTypeItems={labelTypeItems}
-                            milestoneTypeItems={milestoneTypeItems}
+                            imageTypeItems={filterItemsByType.members}
+                            labelTypeItems={filterItemsByType.labels}
+                            milestoneTypeItems={filterItemsByType.milestones}
                             dispatch={dispatch}
                             ischecked={selectedFilters.issues.isClosed}
-                        ></NavFilterType>
+                            handleMouseEnter={handleMouseEnter}
+                        />
                     )}
                 </StyledBoxHeader>
 
                 <StyledBoxBody>
-                    {mockIssueList.map((list) => (
-                        <IssueList
-                            key={list.id}
-                            isSingleChecked={isSingleChecked(list.id)}
-                            setCheckedItems={setCheckedItems}
-                            toggleEntireCheckBox={toggleEntireCheckBox}
-                            listData={list}
-                        />
-                    ))}
+                    {issueListIsLoading && (
+                        <StyledLoader>
+                            <ClipLoader color="#007AFF" />
+                        </StyledLoader>
+                    )}
+
+                    {issueList &&
+                        issueList.filteredIssues.map((list) => (
+                            <IssueList
+                                key={list.id}
+                                isSingleChecked={isSingleChecked(list.id)}
+                                setCheckedItems={setCheckedItems}
+                                toggleEntireCheckBox={toggleEntireCheckBox}
+                                listData={list}
+                            />
+                        ))}
+                    {issueList?.filteredIssues.length === 0 && <IssueList isNoList={true} listData={resetListData} />}
                 </StyledBoxBody>
             </StyledBox>
         </MainContainer>
     );
 }
+const StyledLoader = styled.div`
+    height: 100px;
+    align-content: center;
+`;
 
 const StyledBoxBody = styled.div`
     min-height: 80px;

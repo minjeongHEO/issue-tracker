@@ -1,10 +1,14 @@
-import { useContext, useEffect, useState } from 'react';
+import { Suspense, useContext, useEffect, useState } from 'react';
 import { AppRoutes } from './router/routes';
 import styled, { ThemeProvider } from 'styled-components';
 import { GlobalStyle } from './styles/GlobalStyle.js';
 import { DarkModeContext } from './context/DarkModeContext.jsx';
 import { Button } from 'antd';
 import FilterProvider from './context/FilterContext.jsx';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+
+const queryClient = new QueryClient();
 
 function App() {
     const { isDarkMode, toggleDarkMode, darkModeTheme } = useContext(DarkModeContext);
@@ -14,9 +18,12 @@ function App() {
             <GlobalStyle />
             <DarkThemeBtn onClick={toggleDarkMode}>{isDarkMode ? '🌞' : '🌚'}</DarkThemeBtn>
             <FilterProvider>
-                <Root>
-                    <AppRoutes />
-                </Root>
+                <QueryClientProvider client={queryClient}>
+                    <Root>
+                        <AppRoutes />
+                    </Root>
+                    <ReactQueryDevtools initialIsOpen={true} />
+                </QueryClientProvider>
             </FilterProvider>
         </ThemeProvider>
     );
@@ -30,7 +37,6 @@ const Root = styled.div`
     flex-direction: column; /* 자식 요소들을 세로 방향으로 정렬 */
     justify-content: center; /* 세로 방향으로 중앙 정렬 */
     align-items: center; /* 가로 방향으로 중앙 정렬 */
-    height: 100vh;
     width: 100vw;
     margin: 0 auto;
     text-align: center;

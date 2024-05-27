@@ -1,7 +1,6 @@
 import React from 'react';
 import Header from './header/Header';
-import Main from './main/Main';
-import styled from 'styled-components';
+import Main from './issues/Main';
 import { IndexContainer } from '../styles/theme';
 
 export default function Index() {

@@ -6,8 +6,8 @@ import NotFound from '../components/NotFound';
 import Milestones from '../components/milestones/Milestones';
 import Labels from '../components/labels/Labels';
 import ProtectedRoute from './ProtectedRoute';
-import NewIssue from '../components/issue/NewIssue';
-import IssueDetail from '../components/issue/IssueDetail';
+import NewIssue from '../components/issues/NewIssue';
+import IssueDetail from '../components/issues/IssueDetail';
 
 export const AppRoutes = () => {
     return (
@@ -17,8 +17,22 @@ export const AppRoutes = () => {
                 <Route path="/members/join" element={<Join />} />
                 <Route path="/milestones" element={<Milestones />} />
                 <Route path="/labels" element={<Labels />} />
-                <Route path="/issues/new" element={<NewIssue />} />
-                <Route path="/issues/:id" element={<IssueDetail />} />
+                <Route
+                    path="/issues/new"
+                    element={
+                        <ProtectedRoute>
+                            <NewIssue />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/issues/:issueId"
+                    element={
+                        <ProtectedRoute>
+                            <IssueDetail />
+                        </ProtectedRoute>
+                    }
+                />
                 <Route
                     path="/"
                     element={

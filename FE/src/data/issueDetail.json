@@ -1,0 +1,89 @@
+{
+    "id": 19,
+    "title": "테스트4",
+    "content": "내용4",
+    "createDate": "2024-05-14T05:50:21",
+    "writer": {
+        "id": "sangchu",
+        "imgUrl": "https://sangchu-bucket.s3.ap-northeast-2.amazonaws.com/issue-tracker/img/f8bb88b5-a26a-4cef-9b7e-f03c673c26f3.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20240518T065521Z&X-Amz-SignedHeaders=host&X-Amz-Expires=3599&X-Amz-Credential=AKIA3FLDZBG6ULTPBJZT%2F20240518%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Signature=f74f422b261f916cf9584282aadbbec7aea601fc079326025dd66a31f357e754"
+    },
+    "milestone": {
+        "id": 17,
+        "name": "테스트으으",
+        "openIssueCount": 0,
+        "closedIssueCount": 1
+    },
+    "file": {
+        "id": 18,
+        "uploadName": "ZeldaBOTW-01 (1).jpg",
+        "url": "https://sangchu-bucket.s3.ap-northeast-2.amazonaws.com/issue-tracker/img/aabd99c2-8187-4f7c-889f-d17c17333f26.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20240518T065521Z&X-Amz-SignedHeaders=host&X-Amz-Expires=3600&X-Amz-Credential=AKIA3FLDZBG6ULTPBJZT%2F20240518%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Signature=344772175b9ed0a5ed9d52db95b225548d5f64afbd42e11c54a35444867897af"
+    },
+    "labels": [
+        {
+            "id": 57,
+            "name": "짜왕바보2",
+            "description": null,
+            "bgColor": "#ff0000"
+        },
+        {
+            "id": 95,
+            "name": "상추바보",
+            "description": "상추는 채소여서 바보입니다",
+            "bgColor": "#000000"
+        }
+    ],
+    "assignees": [
+        {
+            "id": "woody123",
+            "imgUrl": "https://sangchu-bucket.s3.ap-northeast-2.amazonaws.com/issue-tracker/img/1b8cd27f-0eb5-4af6-b9c1-b0c79327a6a4.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20240518T065521Z&X-Amz-SignedHeaders=host&X-Amz-Expires=3600&X-Amz-Credential=AKIA3FLDZBG6ULTPBJZT%2F20240518%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Signature=cf10e18353f3a3bf7f43b8c2bc0285517eadd2e9c9565d2a55a3348ddc106b44"
+        },
+        {
+            "id": "zzawang",
+            "imgUrl": "https://sangchu-bucket.s3.ap-northeast-2.amazonaws.com/issue-tracker/img/cec7238c-7814-446f-8607-3e4761af29c1.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20240518T065521Z&X-Amz-SignedHeaders=host&X-Amz-Expires=3600&X-Amz-Credential=AKIA3FLDZBG6ULTPBJZT%2F20240518%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Signature=3caa24bd92053335c35b89dd2abdcfeb8aefaf9f186355dc8217134665db3d56"
+        }
+    ],
+    "comments": [
+        {
+            "id": 1,
+            "content": "# Hello World\n\nThis is a **Markdown** text.",
+            "createDate": "2024-05-16T08:53:50",
+            "writer": {
+                "id": "sangchu",
+                "imgUrl": "https://sangchu-bucket.s3.ap-northeast-2.amazonaws.com/issue-tracker/img/f8bb88b5-a26a-4cef-9b7e-f03c673c26f3.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20240518T065521Z&X-Amz-SignedHeaders=host&X-Amz-Expires=3600&X-Amz-Credential=AKIA3FLDZBG6ULTPBJZT%2F20240518%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Signature=1c7d5afb6d182803b1e518dea2ea283b3ed9fed86ffb339564271a92a48407d9"
+            },
+            "file": null,
+            "isWriter": true
+        },
+        {
+            "id": 2,
+            "content": "두번째 댓글",
+            "createDate": "2024-05-16T08:54:46",
+            "writer": {
+                "id": "zzawang",
+                "imgUrl": "https://sangchu-bucket.s3.ap-northeast-2.amazonaws.com/issue-tracker/img/cec7238c-7814-446f-8607-3e4761af29c1.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20240518T065521Z&X-Amz-SignedHeaders=host&X-Amz-Expires=3600&X-Amz-Credential=AKIA3FLDZBG6ULTPBJZT%2F20240518%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Signature=3caa24bd92053335c35b89dd2abdcfeb8aefaf9f186355dc8217134665db3d56"
+            },
+            "file": {
+                "id": 18,
+                "uploadName": "ZeldaBOTW-01 (1).jpg",
+                "url": "https://sangchu-bucket.s3.ap-northeast-2.amazonaws.com/issue-tracker/img/aabd99c2-8187-4f7c-889f-d17c17333f26.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20240518T065521Z&X-Amz-SignedHeaders=host&X-Amz-Expires=3600&X-Amz-Credential=AKIA3FLDZBG6ULTPBJZT%2F20240518%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Signature=344772175b9ed0a5ed9d52db95b225548d5f64afbd42e11c54a35444867897af"
+            },
+            "isWriter": false
+        },
+        {
+            "id": 4,
+            "content": "세번째 댓글",
+            "createDate": "2024-05-16T08:55:33",
+            "writer": {
+                "id": "woody123",
+                "imgUrl": "https://sangchu-bucket.s3.ap-northeast-2.amazonaws.com/issue-tracker/img/1b8cd27f-0eb5-4af6-b9c1-b0c79327a6a4.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20240518T065521Z&X-Amz-SignedHeaders=host&X-Amz-Expires=3600&X-Amz-Credential=AKIA3FLDZBG6ULTPBJZT%2F20240518%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Signature=cf10e18353f3a3bf7f43b8c2bc0285517eadd2e9c9565d2a55a3348ddc106b44"
+            },
+            "file": {
+                "id": 23,
+                "uploadName": "우디.png",
+                "url": "https://sangchu-bucket.s3.ap-northeast-2.amazonaws.com/issue-tracker/img/1b8cd27f-0eb5-4af6-b9c1-b0c79327a6a4.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20240518T065521Z&X-Amz-SignedHeaders=host&X-Amz-Expires=3600&X-Amz-Credential=AKIA3FLDZBG6ULTPBJZT%2F20240518%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Signature=cf10e18353f3a3bf7f43b8c2bc0285517eadd2e9c9565d2a55a3348ddc106b44"
+            },
+            "isWriter": false
+        }
+    ],
+    "isClosed": true
+}

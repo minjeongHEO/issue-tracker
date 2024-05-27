@@ -3,24 +3,30 @@ import { DownOutlined } from '@ant-design/icons';
 import { Dropdown, Menu, message, Radio, Space } from 'antd';
 import styled from 'styled-components';
 import { DropTitle } from '../../styles/theme.js';
-import DropDownTitle from './DropDownTitle';
+import DropDownTitle from './DropDownTitle.jsx';
 import { useFilterContext } from '../../context/FilterContext.jsx';
+
+const filterMapping = {
+    issue: '이슈 필터',
+    state: '상태 변경',
+};
 
 export default function DropDownFilter({ filterTitle, filterItems, dispatchTypeByFilterContents, children }) {
     const [selectedKey, setSelectedKey] = useState(null);
     const { state: selectedFilters, dispatch } = useFilterContext();
 
+    const filterReset = (filterOject, keys) => {
+        return Object.entries(filterOject)
+            .filter(([key, value]) => !keys.includes(key))
+            .every(([key, value]) => value === null);
+    };
+
     const isResetFilters = (selectedFilters) => {
         if (!selectedFilters || Object.keys(selectedFilters).length === 0) return;
 
         const issues = selectedFilters.issues || {};
-        const isResetIssueFilters = Object.entries(issues)
-            .filter(([key, value]) => key !== 'isOpen' || key !== 'isClosed')
-            .every(([key, value]) => value === null);
-
-        const isResetRestFilters = Object.entries(selectedFilters)
-            .filter(([key, value]) => key !== 'issues')
-            .every(([key, value]) => value === null);
+        const isResetIssueFilters = filterReset(issues, ['isOpen', 'isClosed']);
+        const isResetRestFilters = filterReset(selectedFilters, ['issues']);
 
         return isResetIssueFilters && isResetRestFilters;
     };
@@ -47,11 +53,7 @@ export default function DropDownFilter({ filterTitle, filterItems, dispatchTypeB
         }
     };
 
-    const dropBoxTitle = () => {
-        if (filterTitle === 'issue') return '이슈 필터';
-        if (filterTitle === 'state') return '상태 변경';
-        return `${children} 필터`;
-    };
+    const dropBoxTitle = () => filterMapping[filterTitle] || `${children} 필터`;
 
     const titleItem = {
         label: (
@@ -74,11 +76,11 @@ export default function DropDownFilter({ filterTitle, filterItems, dispatchTypeB
                     </DropDownTitle>
                 </div>
                 <div className="ItemRadio">
-                    <Radio checked={selectedKey === 'no'} onChange={() => setSelectedKey('no')}></Radio>
+                    <Radio checked={selectedKey === 'nonSelected'} onChange={() => setSelectedKey('nonSelected')}></Radio>
                 </div>
             </ItemContainer>
         ),
-        key: 'no',
+        key: 'nonSelected',
     };
 
     const defaultTypeItems = () => {
@@ -137,7 +139,7 @@ export default function DropDownFilter({ filterTitle, filterItems, dispatchTypeB
                           <ItemContainer>
                               <div className="itemTitle">
                                   <DropTitle>
-                                      <StyledColor style={{ backgroundColor: cur.labelColor }}></StyledColor>
+                                      <StyledColor style={{ backgroundColor: cur.labelColor, color: cur.textColor }}></StyledColor>
                                       <UserName>{cur.labelName}</UserName>
                                   </DropTitle>
                               </div>
@@ -165,7 +167,7 @@ export default function DropDownFilter({ filterTitle, filterItems, dispatchTypeB
     const items = itemByType[filterTitle];
 
     return (
-        <StyledDropdown menu={{ items, onClick: handleMenuClick }} trigger={['click']}>
+        <StyledDropdown menu={{ items, onClick: handleMenuClick }} getPopupContainer={(triggerNode) => triggerNode.parentNode} trigger={['click']}>
             <a onClick={(e) => e.preventDefault()}>
                 <Space>
                     {children}
@@ -187,6 +189,11 @@ const StyledColor = styled.div`
 const AvatarImage = styled.img`
     border-radius: 50%;
     width: 20px;
+    height: 20px;
+    border: 1px solid;
+    border-color: ${(props) => props.theme.borderColor};
+    background-color: ${(props) => props.theme.bgColorBody};
+    display: block;
 `;
 
 const StyledDropdown = styled(Dropdown)`

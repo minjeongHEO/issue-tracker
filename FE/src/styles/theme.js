@@ -44,6 +44,7 @@ export const StyledInput = styled.input`
 const lightTheme = {
     bgColorBody: '#FFF',
     borderColor: '#EFF0F6',
+    disabledColor: '#EFF0F6',
     fontColor: '#363537',
     dropshadowColor: '#14142B, 4%, Blur 8',
     listHeaderColor: '#F7F7FC',
@@ -52,6 +53,7 @@ const lightTheme = {
 const darkTheme = {
     bgColorBody: '#363537',
     borderColor: '#4E4B66',
+    disabledColor: '#4E4B66',
     fontColor: '#FAFAFA',
     dropshadowColor: '#14142B, 80%, Blur 16',
     listHeaderColor: '#6E7191',
@@ -74,7 +76,6 @@ export const StyledHeaderContents = styled.div`
 `;
 
 export const IndexContainer = styled.div`
-    height: 100vh;
     width: 100vw;
     min-width: 890px;
     min-height: 890px;
@@ -85,6 +86,18 @@ export const MainContainer = styled.main`
     min-width: 890px;
     padding-left: 85px;
     padding-right: 85px;
+`;
+
+export const FlexRow = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+`;
+export const FlexCol = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 `;
 ////////////////////
 
@@ -212,6 +225,11 @@ const radius = {
     large: '16px',
 };
 
+const imgSize = {
+    medium: '32px',
+    small: '25px',
+};
+
 const buttonStates = css`
     text-align: center;
     transition: opacity 0.3s;
@@ -236,12 +254,12 @@ const buttonSizes = {
     medium: `
     border-radius: ${radius.medium};
     font-size: 16px;
-    padding: 12px 0;
+    padding: 12px 10px;
     ${typography.medium[16]}
   `,
     large: `
     border-radius: ${radius.medium};
-    padding: 12px 0;
+    padding: 17px 10px;
     
     ${typography.medium[20]}
   `,
@@ -269,8 +287,10 @@ export const theme = {
     lightTheme,
     darkTheme,
     color,
+    colorValue,
     typography,
     radius,
+    imgSize,
     buttonSizes,
     buttonStyles,
     buttonStates,
