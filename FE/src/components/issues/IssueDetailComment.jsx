@@ -55,11 +55,9 @@ export default function IssueDetailComment({
     useEffect(() => {
         setPastTime(calculatePastTime(createDate));
 
-        const intervalPerTime = () => {
-            setInterval(() => {
-                setPastTime(calculatePastTime(createDate));
-            }, 1000 * 60);
-        };
+        const intervalPerTime = setInterval(() => {
+            setPastTime(calculatePastTime(createDate));
+        }, 1000 * 60);
 
         return () => clearInterval(intervalPerTime);
     }, [createDate]);
