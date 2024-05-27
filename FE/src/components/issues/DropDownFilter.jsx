@@ -44,13 +44,16 @@ export default function DropDownFilter({ filterTitle, filterItems, dispatchTypeB
         assignee: 'SET_SELECTED_ASSIGNEE_FILTER',
     };
 
+    const getIssueFilterTitle = (key) => filterItems.find(({ value }) => value === key).title;
+
     const handleMenuClick = ({ key }) => {
         setSelectedKey(key);
-        message.info(`${key === 'null' ? `${children} 초기화` : key} 필터 선택`);
 
         if (filterTitle === 'issue') {
+            message.info(`${getIssueFilterTitle(key)} 필터 선택`);
             dispatch({ type: dispatchTypeByFilterContents[key], payload: key });
         } else {
+            message.info(`${key === 'null' ? `${children} 초기화` : key} 필터 선택`);
             dispatch({ type: dispatchTypeByFilter[filterTitle], payload: key });
         }
     };
