@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export function IconProgressBar({ className, percentage = 0 }) {
     return (
         <ProgressBarBox>
-            <ProgressBar width={percentage * 100} />
+            <ProgressBar $width={percentage * 100} />
         </ProgressBarBox>
     );
 }
@@ -18,7 +18,7 @@ const ProgressBarBox = styled.div`
 `;
 
 const ProgressBar = styled.div`
-    width: ${({ width }) => width}%;
+    width: ${({ $width }) => $width}%;
     height: 100%;
     background-color: #007aff;
 `;
