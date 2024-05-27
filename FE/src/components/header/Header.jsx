@@ -3,18 +3,11 @@ import styled from 'styled-components';
 import { DarkModeContext } from '../../context/DarkModeContext';
 import DarkLogotypeMedium from '../../assets/DarkLogotypeMedium.svg';
 import LightLogotypeMedium from '../../assets/LightLogotypeMedium.svg';
+import { getUserId, getUserImg } from '../../utils/userUtils';
+import { CustomProfile } from '../../assets/CustomProfile';
 
 export default function Header() {
     const { isDarkMode } = useContext(DarkModeContext);
-    const [userId, setUserId] = useState('');
-    const getUserId = () => {
-        const userId = localStorage.getItem('storeUserData') ? JSON.parse(localStorage.getItem('storeUserData')).id : '';
-        setUserId(userId);
-    };
-
-    useEffect(() => {
-        getUserId();
-    }, []);
 
     return (
         <HeaderContainer>
@@ -24,12 +17,8 @@ export default function Header() {
                 </a>
             </StyledLogo>
             <StyledProfile>
-                <span>{userId} 님</span>
-                <img
-                    src="https://github.com/codesquad-masters2024-team02/issue-tracker/assets/96780693/d1c7123b-89c9-485b-b9dd-8cc21a1005e0"
-                    className="profile"
-                    alt="profile"
-                />
+                <span>{getUserId()} 님</span>
+                <CustomProfile src={getUserImg()} className={'profile'} alt={'profile'} size={'medium'} />
             </StyledProfile>
         </HeaderContainer>
     );
