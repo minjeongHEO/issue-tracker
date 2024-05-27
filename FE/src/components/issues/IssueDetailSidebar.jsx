@@ -1,14 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import { IconPlus } from '../../assets/icons/IconPlus';
 import { FlexRow } from '../../styles/theme';
-import { CustomProfile } from '../../assets/CustomProfile';
-import { CustomLabelBadge } from '../../assets/CustomLabelBadge';
-import { IconProgressBar } from '../../assets/icons/IconProgressBar';
-import { IconTrash } from '../../assets/icons/IconTrash';
 import { Popconfirm, message } from 'antd';
 import { useDeleteIssue } from '../../hooks/useIssueDetailData';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import OptionSidebar from './OptionSidebar';
 
 export default function IssueDetailSidebar({ milestone, assignees, labels, issueId, isEditable = false }) {
@@ -73,5 +68,4 @@ const SidebarContainer = styled.div`
 
 const StyledDiv = styled.div`
     flex-basis: 30%;
-    background-color: aliceblue;
 `;

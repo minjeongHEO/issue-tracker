@@ -8,6 +8,7 @@ import { CustomLabelBadge } from '../../assets/CustomLabelBadge';
 import { FlexRow } from '../../styles/theme';
 import { useLabelsFilter, useMembersFilter, useMilestonesFilter, useMilestonesFilterIsClosed } from '../../hooks/useFiltersData';
 import OptionSidebarContents from './OptionSidebarContents';
+import CustomNoProfile from '../../assets/CustomNoProfile';
 
 const initActivePopup = {
     assignee: false,
@@ -116,7 +117,7 @@ export default function OptionSidebar({ filterName, filterData, issueId, childre
                 {filterName === 'assignee' &&
                     filterData.map(({ id, imgUrl }) => (
                         <FilterContentContainer key={id}>
-                            <CustomProfile src={imgUrl} alt={'assineeProfile'} />
+                            {imgUrl ? <CustomProfile src={imgUrl} /> : <CustomNoProfile />}
                             <span className="userName">{id}</span>
                         </FilterContentContainer>
                     ))}
@@ -200,7 +201,7 @@ const PopupContainer = styled.div`
     position: absolute;
     top: 20px;
     right: 0;
-    min-width: 200px;
+    min-width: 240px;
     min-height: 65px;
     border: 2px solid ${(props) => props.theme.borderColor};
     border-radius: 20px;
