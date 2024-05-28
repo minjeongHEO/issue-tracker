@@ -1,10 +1,25 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { IconPaperClip } from '../assets/icons/IconPaperClip';
 import { FlexRow } from '../styles/theme';
 import themes from '../styles/theme';
 
-export default function CustomTextEditor({ className, $value, $onChange, $onFocus, $onBlur, $fileOnClick = () => {} }) {
+export default function CustomTextEditor({
+    className,
+    $value,
+    $onChange,
+    $onFocus,
+    $onBlur,
+    $fileOnClick = () => {},
+    $fileOnChange = () => {},
+    $isFileUploaded = false,
+}) {
+    const fileInputRef = useRef(null);
+
+    const handleFileClick = () => {
+        if (fileInputRef.current && !$isFileUploaded) fileInputRef.current.click();
+    };
+
     return (
         <>
             <StyledTextArea value={$value} onChange={$onChange} onFocus={$onFocus} onBlur={$onBlur} />
@@ -12,11 +27,33 @@ export default function CustomTextEditor({ className, $value, $onChange, $onFocu
             <StyledLine />
             <StyledFileBtn onClick={$fileOnClick}>
                 <IconPaperClip />
-                <div>파일 첨부하기</div>
+                <input
+                    ref={fileInputRef}
+                    type="file"
+                    name="file"
+                    accept="image/*,audio/*,video/mp4,video/x-m4v"
+                    onChange={$fileOnChange}
+                    style={{ display: 'none' }}
+                />
+                <AppendButton type="button" onClick={handleFileClick} disabled={$isFileUploaded}>
+                    파일 첨부하기
+                </AppendButton>
             </StyledFileBtn>
         </>
     );
 }
+
+const AppendButton = styled.button`
+    border: none;
+    cursor: pointer;
+    background: none;
+    color: ${(props) => props.theme.fontColor};
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+`;
 
 const StyledTextArea = styled.textarea`
     border: none;
@@ -53,9 +90,8 @@ const StyledFileBtn = styled(FlexRow)`
     font-size: 12px;
     justify-content: flex-start;
     /* align-items: flex-start; */
-    width: 100px;
+    /* width: 100px; */
     height: 30px;
-    cursor: pointer;
     * {
         margin-right: 2px;
     }

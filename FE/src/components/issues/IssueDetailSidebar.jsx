@@ -5,6 +5,7 @@ import { Popconfirm, message } from 'antd';
 import { useDeleteIssue } from '../../hooks/useIssueDetailData';
 import { useNavigate } from 'react-router-dom';
 import OptionSidebar from './OptionSidebar';
+import { IconTrash } from '../../assets/icons/IconTrash';
 
 export default function IssueDetailSidebar({ milestone, assignees, labels, issueId, isEditable = false }) {
     const navigate = useNavigate();
