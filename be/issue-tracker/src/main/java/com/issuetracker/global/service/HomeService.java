@@ -6,7 +6,6 @@ import com.issuetracker.issue.dto.IssueFilterResult;
 import com.issuetracker.issue.dto.IssueQueryDto;
 import com.issuetracker.issue.service.IssueFilterService;
 import com.issuetracker.label.service.LabelService;
-import com.issuetracker.member.service.MemberService;
 import com.issuetracker.milestone.service.MilestoneService;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
@@ -21,18 +20,15 @@ public class HomeService {
     private final IssueFilterService issueFilterService;
     private final LabelService labelService;
     private final MilestoneService milestoneService;
-    private final MemberService memberService;
 
     /**
-     * 홈 화면의 상위 컴포넌트를 반환한다.
+     * 라벨의 개수와 마일스톤의 개수를 나타내는 홈 화면의 상위 컴포넌트를 반환한다.
      */
     @Transactional(readOnly = true)
     public HomeComponentResponse getComponents() {
         return HomeComponentResponse.builder()
-                .assignees(memberService.getMembers())
-                .labels(labelService.getLabelListDto())
-                .milestones(milestoneService.showMilestoneList(false))
-                .authors(memberService.getMembers())
+                .labelCount(labelService.countLabels())
+                .milestoneCount(milestoneService.countMilestones())
                 .build();
     }
 

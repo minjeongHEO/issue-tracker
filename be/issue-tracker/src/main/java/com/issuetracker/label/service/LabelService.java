@@ -1,6 +1,7 @@
 package com.issuetracker.label.service;
 
 import com.issuetracker.label.dto.LabelBgColorDto;
+import com.issuetracker.label.dto.LabelCountDto;
 import com.issuetracker.label.dto.LabelCoverDto;
 import com.issuetracker.label.dto.LabelDto;
 import com.issuetracker.label.dto.LabelListDto;
@@ -23,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class LabelService {
     private final LabelRepository labelRepository;
     private final HexColorGenerator hexColorGenerator;
-    
+
     /**
      * 라벨의 개수와 함께 라벨의 전체 리스트를 반환한다.
      */
@@ -101,6 +102,15 @@ public class LabelService {
      */
     public LabelBgColorDto refreshLabelBackgroundColor() {
         return new LabelBgColorDto(hexColorGenerator.generateRandomHexColor());
+    }
+
+    /**
+     * 라벨의 총 개수를 반환한다.
+     */
+    @Transactional(readOnly = true)
+    public LabelCountDto countLabels() {
+        long count = labelRepository.countAll();
+        return new LabelCountDto(count);
     }
 
     private void validateLabelExists(Long id) {

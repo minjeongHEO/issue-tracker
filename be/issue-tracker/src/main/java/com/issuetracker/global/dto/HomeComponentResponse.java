@@ -1,9 +1,7 @@
 package com.issuetracker.global.dto;
 
-import com.issuetracker.label.dto.LabelListDto;
-import com.issuetracker.member.dto.SimpleMemberDto;
-import com.issuetracker.milestone.dto.MilestoneListDto;
-import java.util.List;
+import com.issuetracker.label.dto.LabelCountDto;
+import com.issuetracker.milestone.dto.MilestoneCountDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -12,8 +10,6 @@ import lombok.ToString;
 @ToString
 @Builder
 public class HomeComponentResponse {
-    private final List<SimpleMemberDto> assignees;
-    private final LabelListDto labels;
-    private final MilestoneListDto milestones;
-    private final List<SimpleMemberDto> authors;
+    private final LabelCountDto labelCount;
+    private final MilestoneCountDto milestoneCount;
 }

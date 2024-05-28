@@ -1,5 +1,6 @@
 package com.issuetracker.global.controller;
 
+import com.issuetracker.global.dto.HomeComponentResponse;
 import com.issuetracker.global.dto.HomeIssueResponse;
 import com.issuetracker.global.service.HomeService;
 import com.issuetracker.issue.dto.IssueQueryDto;
@@ -15,6 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class HomeController {
     private final HomeService homeService;
+
+    @GetMapping("/components")
+    public ResponseEntity<HomeComponentResponse> getComponents() {
+        HomeComponentResponse homeComponentResponse = homeService.getComponents();
+        return ResponseEntity.ok().body(homeComponentResponse);
+    }
 
     @GetMapping("/issues")
     public ResponseEntity<HomeIssueResponse> getFilteredIssues(@ModelAttribute IssueQueryDto issueQueryDto) {
