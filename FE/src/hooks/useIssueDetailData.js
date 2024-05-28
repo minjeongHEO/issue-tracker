@@ -46,6 +46,22 @@ export const useIssueStateToggle = (issueId) => {
     });
 };
 /**
+ * 이슈 리스트 - 이슈 상태 변경
+ */
+export const useIssueListStateToggle = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async ({ toIssueState, issueIds }) => await fetchIssueStateToggle(toIssueState, issueIds),
+        onSuccess: (res) => {
+            if (res.status === 200) queryClient.invalidateQueries({ queryKey: ['issue_list'], refetchType: 'active' });
+        },
+        // onError: () => {
+        // },
+    });
+};
+
+/**
  * 이슈 상세 - 이슈 삭제
  * @param {*String} issueId - 이슈상세 아이디
  * @param {*fn} onSuccessCallBack - 성공 시 로직
