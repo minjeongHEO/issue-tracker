@@ -2,7 +2,7 @@ package com.issuetracker.member.controller;
 
 import com.issuetracker.member.dto.MemberCreateDto;
 import com.issuetracker.member.dto.SimpleMemberDto;
-import com.issuetracker.member.model.Member;
+import com.issuetracker.member.entity.Member;
 import com.issuetracker.member.service.MemberService;
 import jakarta.validation.Valid;
 import java.net.URI;

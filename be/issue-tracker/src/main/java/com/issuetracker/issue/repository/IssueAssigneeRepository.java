@@ -1,7 +1,7 @@
 package com.issuetracker.issue.repository;
 
 import com.issuetracker.global.repository.WithInsert;
-import com.issuetracker.issue.domain.IssueAssignee;
+import com.issuetracker.issue.entity.IssueAssignee;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jdbc.repository.query.Modifying;
@@ -20,4 +20,8 @@ public interface IssueAssigneeRepository extends CrudRepository<IssueAssignee, L
     @Modifying
     @Query("DELETE FROM issue_assignee WHERE issue_id = :issueId AND member_id = :memberId")
     void deleteById(Long issueId, String memberId);
+
+    @Modifying
+    @Query("DELETE FROM issue_assignee WHERE issue_id = :issueId")
+    void deleteByIssueId(Long issueId);
 }

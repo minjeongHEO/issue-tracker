@@ -1,11 +1,8 @@
 package com.issuetracker.global.controller;
 
-import com.issuetracker.global.dto.HomeResponseDto;
-import com.issuetracker.issue.dto.IssueFilterResponseDto;
+import com.issuetracker.global.dto.HomeIssueResponse;
+import com.issuetracker.global.service.HomeService;
 import com.issuetracker.issue.dto.IssueQueryDto;
-import com.issuetracker.issue.service.IssueFilterService;
-import com.issuetracker.issue.service.IssueQueryService;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,13 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/home")
 @RequiredArgsConstructor
 public class HomeController {
-    private final IssueQueryService issueQueryService;
-    private final IssueFilterService issueFilterService;
+    private final HomeService homeService;
 
     @GetMapping("/issues")
-    public ResponseEntity<HomeResponseDto> getFilteredIssues(@ModelAttribute IssueQueryDto issueQueryDto) {
-        List<IssueFilterResponseDto> issueFilterResponses = issueFilterService.getFilteredIssues(issueQueryDto);
-        HomeResponseDto homeResponseDto = new HomeResponseDto(issueQueryService.countIssues(), issueFilterResponses);
-        return ResponseEntity.ok().body(homeResponseDto);
+    public ResponseEntity<HomeIssueResponse> getFilteredIssues(@ModelAttribute IssueQueryDto issueQueryDto) {
+        HomeIssueResponse homeIssueResponse = homeService.getFilteredIssues(issueQueryDto);
+        return ResponseEntity.ok().body(homeIssueResponse);
     }
 }

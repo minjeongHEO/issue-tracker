@@ -4,9 +4,10 @@ import com.issuetracker.file.dto.UploadedFileDto;
 import com.issuetracker.file.service.FileService;
 import com.issuetracker.member.dto.MemberCreateDto;
 import com.issuetracker.member.dto.SimpleMemberDto;
+import com.issuetracker.member.entity.Member;
 import com.issuetracker.member.exception.MemberNotFoundException;
-import com.issuetracker.member.model.Member;
 import com.issuetracker.member.repository.MemberRepository;
+import com.issuetracker.member.util.MemberMapper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -27,45 +29,50 @@ public class MemberService {
      */
     @Transactional
     public Member create(MemberCreateDto memberCreateDto) {
-        Member member = toMember(memberCreateDto);
+        Member member = MemberMapper.toMember(memberCreateDto);
         Member created = memberRepository.insert(member);
 
         log.info("새로운 유저가 생성되었습니다. {}", created);
         return created;
     }
 
-    @Transactional
+    /**
+     * 회원가입 되어있는 모든 멤버의 간략한 정보를 반환한다.
+     */
+    @Transactional(readOnly = true)
     public List<SimpleMemberDto> getMembers() {
         List<Member> members = (List<Member>) memberRepository.findAll();
         List<SimpleMemberDto> simpleMembers = toSimpleMemberDtos(members);
         return Collections.unmodifiableList(simpleMembers);
     }
 
-    @Transactional
-    public SimpleMemberDto getSimpleMemberDtoById(String id) {
+    /**
+     * 탈퇴한 사용자인 경우 기본 정보를 반환한다. 존재하는 사용자인 경우 id와 일치하는 멤버를 찾아 간략한 정보를 반환한다.
+     */
+    @Transactional(readOnly = true)
+    public SimpleMemberDto getSimpleMemberById(String id) {
+        if (isUserDeactivated(id)) {
+            return MemberMapper.toDeactivatedMember();
+        }
+
         Member member = getMemberOrThrow(id);
         String imgUrl = getImgUrl(member);
-        return new SimpleMemberDto(id, imgUrl);
+        return MemberMapper.toSimpleMemberDto(member, imgUrl);
     }
 
-    public List<Member> findMembersById(List<String> issueAssigneeIds) {
-        return (List<Member>) memberRepository.findAllById(issueAssigneeIds);
+    private boolean isUserDeactivated(String id) {
+        return !StringUtils.hasText(id);
     }
 
     private Member getMemberOrThrow(String id) {
         return memberRepository.findById(id).orElseThrow(MemberNotFoundException::new);
     }
 
-    private Member toMember(MemberCreateDto memberCreateDto) {
-        return new Member(memberCreateDto.getId(), memberCreateDto.getPassword(),
-                memberCreateDto.getNickname(), memberCreateDto.getEmail(), null);
-    }
-
     private List<SimpleMemberDto> toSimpleMemberDtos(List<Member> members) {
         List<SimpleMemberDto> simpleMemberDtos = new ArrayList<>();
         for (Member member : members) {
             String imgUrl = getImgUrl(member);
-            simpleMemberDtos.add(new SimpleMemberDto(member.getId(), imgUrl));
+            simpleMemberDtos.add(MemberMapper.toSimpleMemberDto(member, imgUrl));
         }
         return simpleMemberDtos;
     }

@@ -1,11 +1,12 @@
 package com.issuetracker.file.service;
 
 import com.issuetracker.file.Repository.FileRepository;
-import com.issuetracker.file.domain.File;
 import com.issuetracker.file.dto.UploadedFileDto;
+import com.issuetracker.file.entity.File;
 import com.issuetracker.file.exception.FileNotFoundException;
 import com.issuetracker.file.exception.NotAllowedFileFormatException;
 import com.issuetracker.file.util.FileManager;
+import com.issuetracker.file.util.FileMapper;
 import com.issuetracker.file.util.S3Manager;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @RequiredArgsConstructor
 public class FileService {
-    public static final int EXPIRATION_IN_MINUTES = 60;
+    public static final int EXPIRATION_IN_MINUTES = 1440; // 1일
     private final S3Manager s3Manager;
     private final FileManager fileManager;
     private final FileRepository fileRepository;
@@ -31,18 +32,18 @@ public class FileService {
         String uploadName = multipartFile.getOriginalFilename();
         String storeName = fileManager.toStoreName(uploadName);
 
-        File file = fileRepository.save(new File(uploadName, storeName));
+        File file = fileRepository.save(new File(null, uploadName, storeName));
         s3Manager.uploadToS3(multipartFile, storeName);
         log.info("새로운 파일이 저장되었습니다. {}", file);
-
-        return toUploadedFileDto(file, s3Manager.getResourceUrl(file.getStoreName(), EXPIRATION_IN_MINUTES));
+        String url = s3Manager.getResourceUrl(file.getStoreName(), EXPIRATION_IN_MINUTES);
+        return FileMapper.toUploadedFileDto(file, url);
     }
 
     @Transactional(readOnly = true)
     public UploadedFileDto showFile(Long id) {
         File file = getFileOrThrow(id);
         String url = s3Manager.getResourceUrl(file.getStoreName(), EXPIRATION_IN_MINUTES);
-        return toUploadedFileDto(file, url);
+        return FileMapper.toUploadedFileDto(file, url);
     }
 
     @Transactional
@@ -67,9 +68,5 @@ public class FileService {
         if (!fileManager.isImage(multipartFile) && !fileManager.isVideo(multipartFile)) {
             throw new NotAllowedFileFormatException();
         }
-    }
-
-    private UploadedFileDto toUploadedFileDto(File file, String url) {
-        return new UploadedFileDto(file.getId(), file.getUploadName(), url);
     }
 }

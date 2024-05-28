@@ -1,22 +1,20 @@
 package com.issuetracker.issue.service;
 
-import com.issuetracker.comment.domain.Comment;
 import com.issuetracker.comment.dto.CommentDetailDto;
 import com.issuetracker.comment.service.CommentService;
 import com.issuetracker.file.dto.UploadedFileDto;
 import com.issuetracker.file.service.FileService;
-import com.issuetracker.issue.domain.Issue;
 import com.issuetracker.issue.dto.IssueDetailDto;
-import com.issuetracker.issue.exception.IssueNotFoundException;
-import com.issuetracker.label.domain.Label;
+import com.issuetracker.issue.entity.Issue;
+import com.issuetracker.issue.util.IssueMapper;
+import com.issuetracker.label.entity.Label;
 import com.issuetracker.label.service.LabelService;
 import com.issuetracker.member.dto.SimpleMemberDto;
-import com.issuetracker.member.model.Member;
 import com.issuetracker.member.service.MemberService;
 import com.issuetracker.milestone.dto.SimpleMilestoneDto;
 import com.issuetracker.milestone.service.MilestoneService;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,6 +31,9 @@ public class IssueDetailService {
     private final CommentService commentService;
     private final MemberService memberService;
 
+    /**
+     * 사용자가 요청한 id와 일치하는 이슈 상세 정보를 반환한다. 일치하는 id가 없으면 예외를 발생시킨다.
+     */
     @Transactional
     public IssueDetailDto showIssue(Long id) {
         Issue issue = getIssue(id);
@@ -41,36 +42,13 @@ public class IssueDetailService {
         UploadedFileDto file = getFileByIssue(issue);
         List<Label> labels = getIssueLabels(id);
         List<SimpleMemberDto> assignees = getIssueAssignees(id);
-        List<CommentDetailDto> comments = getCommentDetails(id);
+        List<CommentDetailDto> comments = commentService.getCommentDetails(id);
 
-        return toIssueDetailDto(issue, writer, milestone, file, labels, assignees, comments);
+        return IssueMapper.toIssueDetailDto(issue, writer, milestone, file, labels, assignees, comments);
     }
 
     private SimpleMemberDto getWriter(String memberId) {
-        return memberService.getSimpleMemberDtoById(memberId);
-    }
-
-    private List<CommentDetailDto> getCommentDetails(Long id) {
-        List<CommentDetailDto> commentDetails = new ArrayList<>();
-        List<Comment> comments = commentService.findCommentsById(id);
-        addCommentDetail(comments, commentDetails);
-        return commentDetails;
-    }
-
-    private void addCommentDetail(List<Comment> comments, List<CommentDetailDto> commentDetails) {
-        for (Comment comment : comments) {
-            SimpleMemberDto writer = memberService.getSimpleMemberDtoById(comment.getMemberId());
-            UploadedFileDto file = getFileByComment(comment);
-            CommentDetailDto commentDetail = CommentDetailDto.builder()
-                    .id(comment.getId())
-                    .content(comment.getContent())
-                    .writer(writer)
-                    .isWriter(comment.isWriter())
-                    .file(file)
-                    .createDate(comment.getCreateDate())
-                    .build();
-            commentDetails.add(commentDetail);
-        }
+        return memberService.getSimpleMemberById(memberId);
     }
 
     private SimpleMilestoneDto getMilestone(Issue issue) {
@@ -78,19 +56,11 @@ public class IssueDetailService {
         if (milestoneId == null) {
             return null;
         }
-        return milestoneService.showSimpleMilestone(issue.getMilestoneId());
+        return milestoneService.showMilestoneCover(issue.getMilestoneId());
     }
 
     private UploadedFileDto getFileByIssue(Issue issue) {
         Long fileId = issue.getFileId();
-        if (fileId == null) {
-            return null;
-        }
-        return fileService.showFile(fileId);
-    }
-
-    private UploadedFileDto getFileByComment(Comment comment) {
-        Long fileId = comment.getFileId();
         if (fileId == null) {
             return null;
         }
@@ -104,32 +74,12 @@ public class IssueDetailService {
 
     private List<SimpleMemberDto> getIssueAssignees(Long id) {
         List<String> issueAssigneeIds = issueQueryService.findAssigneeIdsByIssueId(id);
-        List<Member> members = memberService.findMembersById(issueAssigneeIds);
-        return members.stream()
-                .map(member -> new SimpleMemberDto(member.getId(), fileService.getImgUrlById(member.getFileId())))
-                .toList();
+        return issueAssigneeIds.stream()
+                .map(memberService::getSimpleMemberById)
+                .collect(Collectors.toList());
     }
 
     private Issue getIssue(Long id) {
         return issueQueryService.getIssueOrThrow(id);
-    }
-
-    private IssueDetailDto toIssueDetailDto(Issue issue, SimpleMemberDto writer, SimpleMilestoneDto milestone,
-                                            UploadedFileDto file,
-                                            List<Label> labels, List<SimpleMemberDto> assignees,
-                                            List<CommentDetailDto> comments) {
-        return IssueDetailDto.builder()
-                .id(issue.getId())
-                .title(issue.getTitle())
-                .content(issue.getContent())
-                .writer(writer)
-                .createDate(issue.getCreateDate())
-                .isClosed(issue.isClosed())
-                .milestone(milestone)
-                .file(file)
-                .labels(labels)
-                .assignees(assignees)
-                .comments(comments)
-                .build();
     }
 }

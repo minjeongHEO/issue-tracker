@@ -1,7 +1,7 @@
 package com.issuetracker.issue.repository;
 
 import com.issuetracker.global.repository.WithInsert;
-import com.issuetracker.issue.domain.IssueLabel;
+import com.issuetracker.issue.entity.IssueLabel;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jdbc.repository.query.Modifying;
@@ -17,4 +17,8 @@ public interface IssueLabelRepository extends CrudRepository<IssueLabel, Long>, 
     @Modifying
     @Query("DELETE FROM issue_label WHERE issue_id = :issueId AND label_id = :labelId")
     void deleteById(Long issueId, Long labelId);
+
+    @Modifying
+    @Query("DELETE FROM issue_label WHERE issue_id = :issueId")
+    void deleteByIssueId(Long issueId);
 }

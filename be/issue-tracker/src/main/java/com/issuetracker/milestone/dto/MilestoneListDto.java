@@ -1,14 +1,12 @@
 package com.issuetracker.milestone.dto;
 
-import java.util.Collections;
 import java.util.List;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
+@Getter
 public class MilestoneListDto {
+    private final Long count;
     private final List<MilestoneDetailDto> milestoneDetailDtos;
-
-    public List<MilestoneDetailDto> getMilestoneDetailDtos() {
-        return Collections.unmodifiableList(milestoneDetailDtos);
-    }
 }

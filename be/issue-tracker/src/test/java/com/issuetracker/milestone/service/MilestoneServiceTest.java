@@ -1,7 +1,6 @@
 package com.issuetracker.milestone.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
@@ -9,14 +8,14 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.issuetracker.issue.repository.IssueRepository;
+import com.issuetracker.issue.service.IssueQueryService;
 import com.issuetracker.milestone.Repository.MilestoneRepository;
-import com.issuetracker.milestone.domain.Milestone;
 import com.issuetracker.milestone.dto.MilestoneCountDto;
 import com.issuetracker.milestone.dto.MilestoneCreateDto;
-import com.issuetracker.milestone.exception.MilestoneNotFoundException;
+import com.issuetracker.milestone.entity.Milestone;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,7 +27,7 @@ class MilestoneServiceTest {
     @Mock
     MilestoneRepository milestoneRepository;
     @Mock
-    IssueRepository issueRepository;
+    IssueQueryService issueQueryService;
 
     @InjectMocks
     MilestoneService milestoneService;
@@ -42,7 +41,7 @@ class MilestoneServiceTest {
     @DisplayName("마일스톤을 성공적으로 생성하면 생성된 객체를 반환한다.")
     void create() {
         MilestoneCreateDto milestoneCreateDto = new MilestoneCreateDto("1번", "", null);
-        Milestone milestone = new Milestone("1번", "", null, false);
+        Milestone milestone = new Milestone(null, "1번", "", null, false);
         when(milestoneRepository.save(any(Milestone.class))).thenReturn(milestone);
 
         Milestone created = milestoneService.createMilestone(milestoneCreateDto);
@@ -58,12 +57,11 @@ class MilestoneServiceTest {
         // Given
         Long milestoneId = 1L;
         MilestoneCreateDto milestoneCreateDto = new MilestoneCreateDto("New Title", "New Description", null);
-        Milestone milestone = new Milestone(milestoneCreateDto.getName(), milestoneCreateDto.getDescription(), null,
+        Milestone milestone = new Milestone(milestoneId, milestoneCreateDto.getName(),
+                milestoneCreateDto.getDescription(), null,
                 false);
-        milestone.setId(milestoneId);
 
-        when(milestoneRepository.save(any(Milestone.class))).thenReturn(milestone);
-
+        when(milestoneRepository.findById(any(Long.class))).thenReturn(Optional.of(milestone));
         // When
         Milestone modified = milestoneService.modifyMilestone(milestoneCreateDto, milestoneId);
 
@@ -119,7 +117,6 @@ class MilestoneServiceTest {
 
         // 검증
         verify(milestoneRepository).closeById(id);
-        verify(milestoneRepository).existsById(id);
     }
 
     @Test
@@ -135,28 +132,16 @@ class MilestoneServiceTest {
 
         // 검증
         verify(milestoneRepository).openById(id);
-        verify(milestoneRepository).existsById(id);
-    }
-
-    @Test
-    void deleteMilestoneThrowsExceptionWhenNotFound() {
-        // 준비
-        Long id = 1L;
-        when(milestoneRepository.existsById(id)).thenReturn(false);
-
-        // 실행 & 검증
-        assertThatExceptionOfType(MilestoneNotFoundException.class)
-                .isThrownBy(() -> milestoneService.deleteMilestone(id));
     }
 
     @Test
     @DisplayName("모든 마일스톤 및 마일스톤에 종속된 이슈의 개수를 알 수 있다. ")
     void showMilestoneList() {
         // 준비
-        Milestone milestone = new Milestone("마일스톤", "설명", LocalDateTime.now(), false);
+        Milestone milestone = new Milestone(null, "마일스톤", "설명", LocalDateTime.now(), false);
         when(milestoneRepository.findAllByIsClosed(false)).thenReturn(List.of(milestone));
-        when(issueRepository.countByMilestoneIdAndIsClosed(isNull(), eq(true))).thenReturn(5L);
-        when(issueRepository.countByMilestoneIdAndIsClosed(isNull(), eq(false))).thenReturn(3L);
+        when(issueQueryService.countIssuesByMilestoneIdAndStatus(isNull(), eq(true))).thenReturn(5L);
+        when(issueQueryService.countIssuesByMilestoneIdAndStatus(isNull(), eq(false))).thenReturn(3L);
 
         // 실행
         var listDto = milestoneService.showMilestoneList(false);
@@ -167,7 +152,7 @@ class MilestoneServiceTest {
         assertThat(listDto.getMilestoneDetailDtos().get(0).getOpenIssueCount()).isEqualTo(3L);
 
         // Mockito 검증
-        verify(issueRepository).countByMilestoneIdAndIsClosed(isNull(), eq(false));
-        verify(issueRepository).countByMilestoneIdAndIsClosed(isNull(), eq(true));
+        verify(issueQueryService).countIssuesByMilestoneIdAndStatus(isNull(), eq(false));
+        verify(issueQueryService).countIssuesByMilestoneIdAndStatus(isNull(), eq(true));
     }
 }
