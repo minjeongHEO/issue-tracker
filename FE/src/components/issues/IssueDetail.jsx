@@ -14,6 +14,10 @@ import { CustomButton } from '../../assets/CustomButton';
 import { useCreateIssueComment, useIssueDetailData } from '../../hooks/useIssueDetailData';
 import { calculatePastTime } from '../../utils/dateUtils';
 import { getUserId } from '../../utils/userUtils';
+import { fetchUploadFile } from '../../api/fetchIssueData';
+import { message } from 'antd';
+
+const initFileDatas = [{ id: '', url: '', uploadName: '' }]; //*[{id:String, url:String, uploadName:String}]
 
 export default function IssueDetail() {
     const { issueId } = useParams();
@@ -28,14 +32,44 @@ export default function IssueDetail() {
     const toggleEditState = () => setEditState((prev) => !prev);
     const handleFocus = () => setIsNewCommentFocused(true);
     const handleBlur = () => setIsNewCommentFocused(false);
+
+    const [fileMeta, setFileMeta] = useState(initFileDatas); //*[{id:String, url:String}] //현재는 파일"1개만" 등록가능
+
     const handleChange = ({ target }) => {
         const { value } = target;
         setNewCommentArea(value);
     };
+
+    const handleFileChange = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            const responseData = await fetchUploadFile(formData);
+
+            if (responseData && responseData.url && responseData.uploadName && responseData.id) {
+                setNewCommentArea((prev) => `${prev}\n![${responseData.uploadName}](${responseData.url})`);
+                setFileMeta((prev) => [...prev, { id: String(responseData.id), url: responseData.url, uploadName: responseData.uploadName }]);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     //TODO: fileId
     const submitNewComment = () => {
-        createIssueComment({ writerId: getUserId(), content: newCommentArea });
+        // const deleteFiles = fileMeta.filter((file) => !newCommentArea.includes(file.url));
+        // const deleteFileIds = deleteFiles.map((file) => file.id);
+        // const remainFiles = fileMeta.filter((file) => newCommentArea.includes(file.url));
+        // const remainFileIds = remainFiles.map((file) => file.id);
+
+        const remainFileIds = fileMeta.map((file) => file.id).filter((e) => e !== '');
+        createIssueComment({ writerId: getUserId(), content: newCommentArea, fileId: remainFileIds[0] });
         setNewCommentArea('');
+        setFileMeta(initFileDatas);
     };
 
     useEffect(() => {
@@ -115,7 +149,16 @@ export default function IssueDetail() {
                             ))}
 
                             <Content $isfocused={isNewCommentFocused}>
-                                <CustomTextEditor $value={newCommentArea} $onChange={handleChange} $onFocus={handleFocus} $onBlur={handleBlur} />
+                                <form name="file" encType="multipart/form-data">
+                                    <CustomTextEditor
+                                        $value={newCommentArea}
+                                        $onChange={handleChange}
+                                        $fileOnChange={handleFileChange}
+                                        $onFocus={handleFocus}
+                                        $onBlur={handleBlur}
+                                        setFileMeta={setFileMeta}
+                                    />
+                                </form>
                             </Content>
                             <MainBtnContainer>
                                 <CustomButton size={'medium'} isDisabled={isNewCommetDisabled} onClick={submitNewComment}>

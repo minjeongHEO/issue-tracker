@@ -73,4 +73,7 @@ export const StyledRestoreCSS = styled.div`
         padding: 0.5em;
         border: 1px solid #ccc;
     }
+    img {
+        width: 100%;
+    }
 `;

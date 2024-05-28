@@ -1,5 +1,6 @@
 const ISSUE_DEFAULT_API_URI = '/api/issues';
 const ISSUE_COMMENTS_DEFAULT_API_URI = '/api/comments';
+const ISSUE_DEFAULT_FILE_URI = '/api/files';
 
 /**
  * 이슈 상세 조회
@@ -319,6 +320,33 @@ export const fetchModifyIssueMilestone = async (issueId, milestoneId) => {
             status: response.status,
             statusText: response.statusText,
         };
+    } catch (error) {
+        throw error;
+    }
+};
+
+/**
+ * 이슈 파일 등록
+ * @param {*} formData - formData
+ * @returns 
+ *  - 성공: 200
+    - 파일 형식 미지원시: 415
+    - 바인딩 에러시: 400
+    - 서버 내부 오류시: 500
+ */
+//TODO: 파일 형식 미지원 시 에러 처리
+export const fetchUploadFile = async (formData) => {
+    try {
+        const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ISSUE_DEFAULT_FILE_URI}`, {
+            method: 'POST',
+            body: formData,
+        });
+
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+        if (response.status === 200 || response.status === 201) {
+            return await response.json();
+        }
     } catch (error) {
         throw error;
     }
