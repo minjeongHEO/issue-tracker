@@ -62,6 +62,7 @@ jobs:
             cd /home/ubuntu
           script: |
             sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:latest
             # 기존에 실행 중인 컨테이너 중지 및 삭제
             if [ $(sudo docker ps -q -f name=spring-server) ]; then
               sudo docker stop spring-server
