@@ -37,7 +37,7 @@ export default function OptionSidebarContents({ contents, filterName, filterData
 
     const isModifyed = (previousData, currentData) => {
         if (filterName === 'milestone') {
-            return String(previousData.id) !== currentData;
+            return String(previousData?.id) !== currentData;
         } else {
             const previousIds = new Set(filterData.map(({ id }) => id));
             const currnetIds = new Set(currentData);
