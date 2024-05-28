@@ -2,7 +2,7 @@ import React from 'react';
 import { StyledHeaderContents } from '../../styles/theme';
 import DropDownFilter from './DropDownFilter';
 
-export default function NavStateType({ checkedItemsCount, stateModifyFilters, dispatch }) {
+export default function NavStateType({ checkedItems, setCheckedItems, checkedItemsCount, stateModifyFilters, dispatch }) {
     return (
         <StyledHeaderContents>
             <div className="issue state">
@@ -10,7 +10,13 @@ export default function NavStateType({ checkedItemsCount, stateModifyFilters, di
             </div>
             <div className="filter state">
                 <span className="filterOption">
-                    <DropDownFilter filterTitle={'state'} filterItems={stateModifyFilters} dispatch={dispatch}>
+                    <DropDownFilter
+                        checkedItems={checkedItems}
+                        setCheckedItems={setCheckedItems}
+                        filterTitle={'state'}
+                        filterItems={stateModifyFilters}
+                        dispatch={dispatch}
+                    >
                         상태 수정
                     </DropDownFilter>
                 </span>

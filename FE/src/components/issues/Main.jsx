@@ -13,7 +13,7 @@ import { useLabelsFilter, useMembersFilter, useMilestonesFilter } from '../../ho
 import { usefilteredIssueData } from '../../hooks/usefilteredIssueData';
 import ClipLoader from 'react-spinners/ClipLoader';
 
-const stateModifyFilters = [{ title: '선택한 이슈 열기' }, { title: '선택한 이슈 닫기' }];
+const stateModifyFilters = [{ title: '선택한 이슈' }];
 
 const mainIssueFilters = [
     { title: '열린 이슈', value: 'is:open' },
@@ -201,6 +201,8 @@ export default function Main() {
                                 filterItems={mainIssueFilters}
                                 dispatch={dispatch}
                                 dispatchTypeByFilterContents={dispatchTypeByFilterContents}
+                                checkedItems={checkedItems}
+                                setCheckedItems={setCheckedItems}
                             >
                                 필터
                             </DropDownFilter>
@@ -230,7 +232,13 @@ export default function Main() {
                         className="checkbox"
                     />
                     {checkedItems.length > 0 ? (
-                        <NavStateType checkedItemsCount={checkedItems.length} stateModifyFilters={stateModifyFilters} dispatch={dispatch} />
+                        <NavStateType
+                            checkedItemsCount={checkedItems.length}
+                            stateModifyFilters={stateModifyFilters}
+                            dispatch={dispatch}
+                            checkedItems={checkedItems}
+                            setCheckedItems={setCheckedItems}
+                        />
                     ) : (
                         <NavFilterType
                             issueCount={issueDatas.count}
