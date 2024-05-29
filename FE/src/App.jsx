@@ -22,7 +22,7 @@ function App() {
                     <Root>
                         <AppRoutes />
                     </Root>
-                    <ReactQueryDevtools initialIsOpen={true} />
+                    {import.meta.env.VITE_APP_ENV === 'development' && <ReactQueryDevtools initialIsOpen={true} />}
                 </QueryClientProvider>
             </FilterProvider>
         </ThemeProvider>
