@@ -22,12 +22,21 @@ jobs:
         with:
           distribution: 'corretto'
           java-version: '17'
-          
-      - name: Make application.properties
+
+      - name: Make KeyStore
+        env:
+          KEYSTORE_P12: ${{ secrets.KEYSTORE_P12 }}
         run: |
           cd ./be/issue-tracker/src/main
           mkdir resources
           cd resources
+          mkdir ssl
+          cd ssl
+          echo "$KEYSTORE_P12" | base64 -d > keystore.p12
+          
+      - name: Make application.properties
+        run: |
+          cd ./be/issue-tracker/src/main/resources
           touch application.properties
           echo "${{ secrets.PROPERTIES }}" > ./application.properties
         shell: bash
