@@ -32,7 +32,9 @@ jobs:
           cd resources
           mkdir ssl
           cd ssl
-          echo "$KEYSTORE_P12" | base64 -d > keystore.p12
+          touch keystore.p12
+          echo "${{ secrets.KEYSTORE_P12 }}" | base64 -d > ./keystore.p12
+        shell: bash
           
       - name: Make application.properties
         run: |
