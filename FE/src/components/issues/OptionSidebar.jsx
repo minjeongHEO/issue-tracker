@@ -15,18 +15,11 @@ const initActivePopup = {
     label: false,
     milestone: false,
 };
-const initCheckedData = {
-    assignee: [],
-    label: [],
-    milestone: '',
-};
 
-export default function OptionSidebar({ filterName, filterData, issueId, children, isNew = false }) {
+export default function OptionSidebar({ filterName, filterData, issueId, children, isNew = false, checkedDatas, setCheckedDatas }) {
     const openIssueCount = filterData?.openIssueCount ?? 0;
     const closedIssueCount = filterData?.closedIssueCount ?? 0;
     const popupRef = useRef(null);
-
-    const [checkedDatas, setCheckedDatas] = useState(initCheckedData);
 
     const [isActivePopup, setIsActivePopup] = useState(initActivePopup);
     const [isAssigneeFetchPossible, setIsAssigneeFetchPossible] = useState(false);
@@ -64,7 +57,6 @@ export default function OptionSidebar({ filterName, filterData, issueId, childre
     };
 
     const handleMouseEnter = (type) => {
-        // setIsActivePopup(true);
         toggleEnableByType[type]();
     };
 
