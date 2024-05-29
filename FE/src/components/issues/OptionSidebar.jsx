@@ -21,7 +21,7 @@ const initCheckedData = {
     milestone: '',
 };
 
-export default function OptionSidebar({ filterName, filterData, issueId, children }) {
+export default function OptionSidebar({ filterName, filterData, issueId, children, isNew = false }) {
     const openIssueCount = filterData?.openIssueCount ?? 0;
     const closedIssueCount = filterData?.closedIssueCount ?? 0;
     const popupRef = useRef(null);
@@ -77,6 +77,11 @@ export default function OptionSidebar({ filterName, filterData, issueId, childre
         setCheckedDatas((prev) => ({ ...prev, [type]: checkedDatas }));
     };
 
+    const getCorrectAssignee = (checkedId) => assigneesData.filter(({ id }) => id === checkedId)?.[0];
+    const getCorrectLabel = (checkedId) => labelsData.labels.filter(({ id }) => String(id) === checkedId)?.[0];
+    const getCorrectMilestone = (checkedId) =>
+        [...openMilestonesData.milestoneDetailDtos, ...closedMilestonesData.milestoneDetailDtos].filter(({ id }) => String(id) === checkedId)?.[0];
+
     useEffect(() => {
         if (!filterData) return;
 
@@ -89,7 +94,6 @@ export default function OptionSidebar({ filterName, filterData, issueId, childre
     }, [filterData]);
 
     useEffect(() => {
-        // 팝업 외부 클릭을 감지
         const handleClickOutside = ({ target }) => {
             if (popupRef.current && !popupRef.current.contains(target)) {
                 setIsActivePopup({ ...initActivePopup });
@@ -115,16 +119,40 @@ export default function OptionSidebar({ filterName, filterData, issueId, childre
                 </FilterTitle>
 
                 {filterName === 'assignee' &&
-                    filterData.map(({ id, imgUrl }) => (
+                    isNew &&
+                    checkedDatas.assignee.map((id) => {
+                        const correctAssignee = getCorrectAssignee(id);
+                        return (
+                            <FilterContentContainer key={id}>
+                                {correctAssignee?.imgUrl ? <CustomProfile src={correctAssignee?.imgUrl} /> : <CustomNoProfile />}
+                                <span className="userName">{correctAssignee?.id}</span>
+                            </FilterContentContainer>
+                        );
+                    })}
+                {filterName === 'assignee' &&
+                    !isNew &&
+                    filterData?.map(({ id, imgUrl }) => (
                         <FilterContentContainer key={id}>
                             {imgUrl ? <CustomProfile src={imgUrl} /> : <CustomNoProfile />}
                             <span className="userName">{id}</span>
                         </FilterContentContainer>
                     ))}
 
-                {filterName === 'label' && (
+                {filterName === 'label' && isNew && (
                     <LabelContentContainer>
-                        {filterData.map(({ id, name, description, textColor, bgColor }) => (
+                        {checkedDatas.label.map((id) => {
+                            const correctLabel = getCorrectLabel(id);
+                            return (
+                                <StyledLabel key={id} backgroundColor={correctLabel.bgColor} color={correctLabel.textColor}>
+                                    {correctLabel.name}
+                                </StyledLabel>
+                            );
+                        })}
+                    </LabelContentContainer>
+                )}
+                {filterName === 'label' && !isNew && (
+                    <LabelContentContainer>
+                        {filterData?.map(({ id, name, description, textColor, bgColor }) => (
                             <StyledLabel key={id} backgroundColor={bgColor} color={textColor}>
                                 {name}
                             </StyledLabel>
@@ -132,7 +160,15 @@ export default function OptionSidebar({ filterName, filterData, issueId, childre
                     </LabelContentContainer>
                 )}
 
-                {filterName === 'milestone' && (
+                {filterName === 'milestone' && isNew && openMilestonesData && closedMilestonesData && (
+                    <>
+                        <FilterContentContainer>
+                            <IconProgressBar percentage={getProgressPercentage(openIssueCount, closedIssueCount)} />
+                        </FilterContentContainer>
+                        <FilterContentContainer>{getCorrectMilestone(checkedDatas.milestone)?.name}</FilterContentContainer>
+                    </>
+                )}
+                {filterName === 'milestone' && !isNew && (
                     <>
                         <FilterContentContainer>
                             <IconProgressBar percentage={getProgressPercentage(openIssueCount, closedIssueCount)} />
@@ -153,6 +189,7 @@ export default function OptionSidebar({ filterName, filterData, issueId, childre
                                     checkedDatas={checkedDatas?.assignee}
                                     setCheckedDatas={setCheckedDatas}
                                     issueId={issueId}
+                                    isNew={true}
                                 />
                             )}
                             {filterName === 'label' && labelsData && (
@@ -163,6 +200,7 @@ export default function OptionSidebar({ filterName, filterData, issueId, childre
                                     checkedDatas={checkedDatas?.label}
                                     setCheckedDatas={setCheckedDatas}
                                     issueId={issueId}
+                                    isNew={true}
                                 />
                             )}
                             {filterName === 'milestone' && openMilestonesData && closedMilestonesData && (
@@ -173,6 +211,7 @@ export default function OptionSidebar({ filterName, filterData, issueId, childre
                                     checkedDatas={checkedDatas?.milestone}
                                     setCheckedDatas={setCheckedDatas}
                                     issueId={issueId}
+                                    isNew={true}
                                 />
                             )}
                         </ul>
