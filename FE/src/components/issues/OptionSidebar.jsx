@@ -181,7 +181,7 @@ export default function OptionSidebar({ filterName, filterData, issueId, childre
                                     checkedDatas={checkedDatas?.assignee}
                                     setCheckedDatas={setCheckedDatas}
                                     issueId={issueId}
-                                    isNew={true}
+                                    isNew={isNew}
                                 />
                             )}
                             {filterName === 'label' && labelsData && (
@@ -192,7 +192,7 @@ export default function OptionSidebar({ filterName, filterData, issueId, childre
                                     checkedDatas={checkedDatas?.label}
                                     setCheckedDatas={setCheckedDatas}
                                     issueId={issueId}
-                                    isNew={true}
+                                    isNew={isNew}
                                 />
                             )}
                             {filterName === 'milestone' && openMilestonesData && closedMilestonesData && (
@@ -203,7 +203,7 @@ export default function OptionSidebar({ filterName, filterData, issueId, childre
                                     checkedDatas={checkedDatas?.milestone}
                                     setCheckedDatas={setCheckedDatas}
                                     issueId={issueId}
-                                    isNew={true}
+                                    isNew={isNew}
                                 />
                             )}
                         </ul>
