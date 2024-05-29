@@ -6,6 +6,9 @@ import CustomTextEditor from '../../assets/CustomTextEditor';
 import { CustomButton } from '../../assets/CustomButton';
 import { IconPlus } from '../../assets/icons/IconPlus';
 import IssueDetailSidebar from './IssueDetailSidebar';
+import { CustomProfile } from '../../assets/CustomProfile';
+import { getUserId, getUserImg } from '../../utils/userUtils';
+import OptionSidebar from './OptionSidebar';
 
 export default function NewIssue() {
     //TODO: Ref로 작업
@@ -26,42 +29,56 @@ export default function NewIssue() {
 
     //TODO: fileId
     const submitNewComment = () => {
-        // createIssueComment({ writerId: getUserId(), content: newCommentArea });
+        createIssueComment({ writerId: getUserId(), content: newCommentArea });
         setNewCommentArea('');
     };
 
     return (
         <StyledDetailContainer>
             <Header />
+
             <StyledMainContainer>
                 <TitleContainer className="title">
                     <HeaderShow>
-                        <h1>🚧새로운 이슈 작성🚧</h1>
+                        <h1>새로운 이슈 작성</h1>
                     </HeaderShow>
                 </TitleContainer>
 
-                <ContentsContainer>
+                <ContentsContainer className="contents">
+                    <StyledProfile>
+                        <CustomProfile src={getUserImg()} size={'medium'}></CustomProfile>
+                    </StyledProfile>
+
                     <StyledComments>
-                        <form>
-                            <StyledTitle>
-                                <PlaceholdText className="placeholdText">제목</PlaceholdText>
-                                <ModifyInput type="text" value={newTitle} onChange={handleTitleChange} />
-                            </StyledTitle>
-                        </form>
+                        <StyledTitle>
+                            <PlaceholdText className="placeholdText">제목</PlaceholdText>
+                            <ModifyInput type="text" value={newTitle} onChange={handleTitleChange} />
+                        </StyledTitle>
 
                         <Content $isfocused={isNewCommentFocused}>
-                            <CustomTextEditor $value={newCommentArea} $onChange={handleCommentChange} $onFocus={handleFocus} $onBlur={handleBlur} />
+                            <CustomTextEditor
+                                $value={newCommentArea}
+                                $onChange={handleCommentChange}
+                                $onFocus={handleFocus}
+                                $onBlur={handleBlur}
+                                $height={'500'}
+                            />
                         </Content>
-                        <MainBtnContainer>
-                            <CustomButton size={'medium'} isDisabled={isNewCommetDisabled} onClick={submitNewComment}>
-                                <IconPlus />
-                                코멘트 작성
-                            </CustomButton>
-                        </MainBtnContainer>
                     </StyledComments>
 
-                    {/* <IssueDetailSidebar milestone={data.milestone} assignees={data.assignees} labels={data.labels} issueId={issueId} /> */}
+                    <SidebarContainer>
+                        <OptionSidebar filterName={'assignee'} filterData={undefined} isNew={true}>
+                            담당자
+                        </OptionSidebar>
+                        <OptionSidebar filterName={'label'} filterData={undefined} isNew={true}>
+                            레이블
+                        </OptionSidebar>
+                        <OptionSidebar filterName={'milestone'} filterData={undefined} isNew={true}>
+                            마일스톤
+                        </OptionSidebar>
+                    </SidebarContainer>
                 </ContentsContainer>
+
                 <MainBtnContainer>
                     <CustomButton size={'medium'} isDisabled={isNewCommetDisabled} onClick={submitNewComment}>
                         완료
@@ -71,13 +88,24 @@ export default function NewIssue() {
         </StyledDetailContainer>
     );
 }
+const SidebarContainer = styled.div`
+    flex-basis: 25%;
+    min-width: 200px;
+    min-height: 500px;
+    border: 1px solid ${(props) => props.theme.borderColor};
+    border-radius: 20px;
+    /* background-color: red; */
+`;
+
 const StyledTitle = styled(FlexRow)`
     position: relative;
+    margin-bottom: 10px;
+    width: 100%;
 `;
 const MainBtnContainer = styled(FlexRow)`
     justify-content: end;
     width: 100%;
-    margin-bottom: 20px;
+    margin: 20px 0;
 `;
 const Content = styled.div`
     /* display: flex;
@@ -108,10 +136,15 @@ const PlaceholdText = styled.span`
     font-size: 13px;
 `;
 
+const StyledProfile = styled(FlexCol)`
+    margin-right: 2cap;
+`;
+
 const StyledComments = styled(FlexCol)`
     /* background-color: azure; */
-    flex-basis: 70%;
-    margin-right: 30px;
+    flex-basis: 65%;
+    /* margin-right: 30px; */
+    margin-right: 20px;
     min-width: 700px;
     min-height: 200px;
     /* display: flex;
@@ -125,7 +158,7 @@ const ContentsContainer = styled.div`
     justify-content: space-between;
     margin-top: 15px;
     width: 100%;
-    height: 700px; //???
+    /* height: 700px; //??? 
     /* background-color: aquamarine; */
 `;
 const StyledMainContainer = styled(MainContainer)`
@@ -141,10 +174,22 @@ const HeaderShow = styled.div`
     }
 `;
 const StyledDetailContainer = styled(IndexContainer)`
-    .title {
+    & .title {
         position: relative;
     }
-    .title::after {
+    & .title::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 1px;
+        left: 0;
+        bottom: 0;
+        background-color: ${(props) => props.theme.borderColor};
+    }
+    & .contents {
+        position: relative;
+    }
+    & .contents::after {
         content: '';
         position: absolute;
         width: 100%;
