@@ -351,3 +351,38 @@ export const fetchUploadFile = async (formData) => {
         throw error;
     }
 };
+
+/**
+ * 새로운 이슈 생성
+ * @param {*String} title - 제목
+ * @param {*String} content - 내용
+ * @param {*String} authorId - 작성자 
+ * @param {*String} milestoneId - 마일스톤 아이디
+ * @param {*String} fileId - 파일아이디(없을 시 null)
+ * @param {*Array} labelIds - 레이블 아이디(없을 시 [])
+ * @param {*Array} assigneeIds - 담당자 아이디(없을 시 [])
+ * @returns {*jsonObject}
+*   - 성공: 200
+    - 바인딩 에러시: 400
+    - 서버 내부 오류시: 500
+ */
+export const fetchCreateNewIssue = async (title, content, authorId, milestoneId, fileIdParam, labelIds, assigneeIds) => {
+    const fileId = fileIdParam || null;
+    try {
+        const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ISSUE_DEFAULT_API_URI}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ title, content, authorId, milestoneId, fileId, labelIds, assigneeIds }),
+        });
+
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+        if (response.status === 200 || response.status === 201) {
+            return await response.json();
+        }
+    } catch (error) {
+        throw error;
+    }
+};

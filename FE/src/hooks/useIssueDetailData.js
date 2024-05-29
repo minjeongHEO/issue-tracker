@@ -1,6 +1,7 @@
 import { useMutation, useQueries, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
     fetchCreateIssueComment,
+    fetchCreateNewIssue,
     fetchDeleteComment,
     fetchDeleteIssue,
     fetchIssueDetailData,
@@ -243,6 +244,24 @@ export const useModifyIssueMilestone = (issueId) => {
         mutationFn: async ({ milestoneId }) => await fetchModifyIssueMilestone(issueId, Number(milestoneId)),
         onSuccess: (res) => {
             if (res.status === 200) queryClient.invalidateQueries({ queryKey: ['issueDetail', String(issueId)], refetchType: 'active' });
+        },
+        // onError: () => {
+        // },
+    });
+};
+
+/**
+ * 새로운 이슈  -  생성
+ * @param {*fn} onSuccessCallBack - 성공 시 로직
+ * @returns
+ * key는 무조건 String으로 통일
+ */
+export const useCreateNewIssue = (onSuccessCallBack) => {
+    return useMutation({
+        mutationFn: async ({ title, content, authorId, milestoneId, fileId = null, labelIds, assigneeIds }) =>
+            await fetchCreateNewIssue(title, content, authorId, milestoneId, fileId, labelIds, assigneeIds),
+        onSuccess: (res) => {
+            if (onSuccessCallBack) onSuccessCallBack(res.id);
         },
         // onError: () => {
         // },
