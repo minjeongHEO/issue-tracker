@@ -127,7 +127,7 @@ export default function DropDownFilter({ filterTitle, filterItems, dispatchTypeB
         key: 'nonSelected',
     };
 
-    const defaultTypeItems = () => {
+    const defaultTypeItems = (checkType) => {
         return filterItems
             ? filterItems.reduce((acc, cur) => {
                   acc.push({
@@ -135,7 +135,7 @@ export default function DropDownFilter({ filterTitle, filterItems, dispatchTypeB
                           <ItemContainer>
                               <div className="itemTitle">
                                   <DropTitle>
-                                      {cur.title} {filterTitle === 'state' && isClosedState(selectedFilters) ? '열기' : '닫기'}
+                                      {checkType ? (isClosedState(selectedFilters) ? `${cur.title} 열기` : `${cur.title} 닫기`) : cur.title}
                                   </DropTitle>
                               </div>
                               <div className="ItemRadio">
@@ -202,12 +202,12 @@ export default function DropDownFilter({ filterTitle, filterItems, dispatchTypeB
     };
 
     const itemByType = {
-        issue: [titleItem, ...defaultTypeItems()],
+        issue: [titleItem, ...defaultTypeItems(false)],
         assignee: [titleItem, clearTypeItem, ...imageTypeItems()],
         label: [titleItem, clearTypeItem, ...labelTypeItems()],
-        milestone: [titleItem, clearTypeItem, ...defaultTypeItems()],
+        milestone: [titleItem, clearTypeItem, ...defaultTypeItems(false)],
         author: [titleItem, ...imageTypeItems()],
-        state: [titleItem, , ...defaultTypeItems()],
+        state: [titleItem, , ...defaultTypeItems(true)],
     };
 
     const items = itemByType[filterTitle];
