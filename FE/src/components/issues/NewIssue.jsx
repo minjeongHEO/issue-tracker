@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlexCol, FlexRow, IndexContainer, MainContainer, StyledInput } from '../../styles/theme';
 import Header from '../header/Header';
 import styled from 'styled-components';
@@ -9,13 +9,34 @@ import IssueDetailSidebar from './IssueDetailSidebar';
 import { CustomProfile } from '../../assets/CustomProfile';
 import { getUserId, getUserImg } from '../../utils/userUtils';
 import OptionSidebar from './OptionSidebar';
+import { fetchUploadFile } from '../../api/fetchIssueData';
+import { useNavigate } from 'react-router-dom';
+import { useCreateNewIssue } from '../../hooks/useIssueDetailData';
+import { message } from 'antd';
+
+const initFileDatas = [{ id: '', url: '', uploadName: '' }]; //*[{id:String, url:String, uploadName:String}]
+const initCheckedData = {
+    assignee: [],
+    label: [],
+    milestone: '',
+};
 
 export default function NewIssue() {
+    const navigate = useNavigate();
+
+    const onSuccess = (issueId) => {
+        message.success('생성되었습니다.');
+        navigate(`/issues/${issueId}`);
+    };
+    const { mutate: createNewIssue } = useCreateNewIssue(onSuccess);
+    const [checkedDatas, setCheckedDatas] = useState(initCheckedData);
+
     //TODO: Ref로 작업
     const [newTitle, setNewTitle] = useState('');
     const [newCommentArea, setNewCommentArea] = useState('');
     const [isNewCommentFocused, setIsNewCommentFocused] = useState(false);
     const [isNewCommetDisabled, setIsNewCommetDisabled] = useState(true);
+    const [fileMeta, setFileMeta] = useState(initFileDatas); //*[{id:String, url:String}] //현재는 파일"1개만" 등록가능
     const handleCommentChange = ({ target }) => {
         const { value } = target;
         setNewCommentArea(value);
@@ -27,11 +48,42 @@ export default function NewIssue() {
     const handleFocus = () => setIsNewCommentFocused(true);
     const handleBlur = () => setIsNewCommentFocused(false);
 
-    //TODO: fileId
-    const submitNewComment = () => {
-        createIssueComment({ writerId: getUserId(), content: newCommentArea });
-        setNewCommentArea('');
+    const handleFileChange = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            const responseData = await fetchUploadFile(formData);
+
+            if (responseData && responseData.url && responseData.uploadName && responseData.id) {
+                setNewCommentArea((prev) => `${prev}\n![${responseData.uploadName}](${responseData.url})`);
+                setFileMeta((prev) => [...prev, { id: String(responseData.id), url: responseData.url, uploadName: responseData.uploadName }]);
+            }
+        } catch (error) {
+            console.error(error);
+        }
     };
+    //TODO: fileId
+    const submitNewIssue = () => {
+        const remainFileIds = fileMeta.map((file) => file.id).filter((e) => e !== '');
+        createNewIssue({
+            title: newTitle,
+            content: newCommentArea,
+            authorId: getUserId(),
+            milestoneId: checkedDatas.milestone,
+            fileId: remainFileIds?.[0],
+            labelIds: checkedDatas.label,
+            assigneeIds: checkedDatas.assignee,
+        });
+    };
+
+    useEffect(() => {
+        if (newTitle.length > 0 && newCommentArea.length > 0) setIsNewCommetDisabled(false);
+        else setIsNewCommetDisabled(true);
+    }, [newCommentArea]);
 
     return (
         <StyledDetailContainer>
@@ -56,31 +108,52 @@ export default function NewIssue() {
                         </StyledTitle>
 
                         <Content $isfocused={isNewCommentFocused}>
-                            <CustomTextEditor
-                                $value={newCommentArea}
-                                $onChange={handleCommentChange}
-                                $onFocus={handleFocus}
-                                $onBlur={handleBlur}
-                                $height={'500'}
-                            />
+                            <form name="file" encType="multipart/form-data">
+                                <CustomTextEditor
+                                    $value={newCommentArea}
+                                    $onChange={handleCommentChange}
+                                    $fileOnChange={handleFileChange}
+                                    $onFocus={handleFocus}
+                                    $onBlur={handleBlur}
+                                    $height={'500'}
+                                />
+                            </form>
                         </Content>
                     </StyledComments>
 
                     <SidebarContainer>
-                        <OptionSidebar filterName={'assignee'} filterData={undefined} isNew={true}>
+                        <OptionSidebar
+                            filterName={'assignee'}
+                            filterData={undefined}
+                            isNew={true}
+                            checkedDatas={checkedDatas}
+                            setCheckedDatas={setCheckedDatas}
+                        >
                             담당자
                         </OptionSidebar>
-                        <OptionSidebar filterName={'label'} filterData={undefined} isNew={true}>
+                        <OptionSidebar
+                            filterName={'label'}
+                            filterData={undefined}
+                            isNew={true}
+                            checkedDatas={checkedDatas}
+                            setCheckedDatas={setCheckedDatas}
+                        >
                             레이블
                         </OptionSidebar>
-                        <OptionSidebar filterName={'milestone'} filterData={undefined} isNew={true}>
+                        <OptionSidebar
+                            filterName={'milestone'}
+                            filterData={undefined}
+                            isNew={true}
+                            checkedDatas={checkedDatas}
+                            setCheckedDatas={setCheckedDatas}
+                        >
                             마일스톤
                         </OptionSidebar>
                     </SidebarContainer>
                 </ContentsContainer>
 
                 <MainBtnContainer>
-                    <CustomButton size={'medium'} isDisabled={isNewCommetDisabled} onClick={submitNewComment}>
+                    <CustomButton size={'medium'} isDisabled={isNewCommetDisabled} onClick={submitNewIssue}>
                         완료
                     </CustomButton>
                 </MainBtnContainer>
