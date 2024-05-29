@@ -3,9 +3,9 @@ name: Deploy Spring Application to Ec2
 # 임시로 배포 브랜치 be/solve로 설정
 on: 
   push:
-    branches: [ "be/solve" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "be/solve" ]
+    branches: [ "main" ]
 
 # 워크플로우가 저장소의 콘텐츠를 읽을 수 있는 권한을 갖도록 설정
 permissions: 
