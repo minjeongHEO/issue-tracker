@@ -67,6 +67,7 @@ export default function IssueDetail() {
         // const remainFileIds = remainFiles.map((file) => file.id);
 
         const remainFileIds = fileMeta.map((file) => file.id).filter((e) => e !== '');
+
         createIssueComment({ writerId: getUserId(), content: newCommentArea, fileId: remainFileIds?.[0] });
         setNewCommentArea('');
         setFileMeta(initFileDatas);

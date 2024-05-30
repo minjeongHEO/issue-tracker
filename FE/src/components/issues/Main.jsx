@@ -80,6 +80,7 @@ export default function Main() {
     const { data: milestonesFilter, isLoading: milestonesFilterIsLoading } = useMilestonesFilter({ enabled: hasFetched.milestone });
     const { data: membersFilter, isLoading: membersFilterIsLoading } = useMembersFilter({ enabled: hasFetched.assignee });
 
+
     const clearFilter = () => dispatch({ type: 'SET_CLEAR_FILTER', payload: '' });
 
     const isFilterActive = () => {

@@ -13,6 +13,7 @@ const initCheckedData = {
     milestone: '',
 };
 
+
 export default function IssueDetailSidebar({ milestone, assignees, labels, issueId, isEditable = false }) {
     const navigate = useNavigate();
     const onSuccess = () => {
