@@ -35,7 +35,7 @@ public class IssueQueryServiceTest {
 
         IssueCountDto issueCountDto = issueQueryService.countIssues();
 
-        assertThat(issueCountDto.getOpenedIssueCount()).isEqualTo(openedIssueCount);
-        assertThat(issueCountDto.getClosedIssueCount()).isEqualTo(closedIssueCount);
+        assertThat(issueCountDto.getOpenedCount()).isEqualTo(openedIssueCount);
+        assertThat(issueCountDto.getClosedCount()).isEqualTo(closedIssueCount);
     }
 }
