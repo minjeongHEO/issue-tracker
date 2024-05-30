@@ -16,8 +16,6 @@ const initActivePopup = {
     milestone: false,
 };
 
-
-export default function OptionSidebar({ filterName, filterData, issueId, children, isNew = false, checkedDatas, setCheckedDatas }) {
 const initCheckedData = {
     assignee: [],
     label: [],
