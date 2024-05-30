@@ -1,0 +1,62 @@
+name: Deploy Spring Application to Ec2
+
+on:
+  push:
+    branches: [ "pr-test" ]
+  pull_request:
+    branches: [ "pr-test" ]
+
+# 워크플로우가 저장소의 콘텐츠를 읽을 수 있는 권한을 갖도록 설정
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          
+      - name: Cache node modules
+        uses: actions/cache@v4
+        with:
+          path: ./FE/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+            ${{ runner.OS }}-
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./FE
+
+      - name: Build
+        run: npm run build
+        working-directory: ./FE
+        env:
+          VITE_TEAM_SERVER: ${{ secrets.VITE_TEAM_SERVER }}
+          VITE_TEAM_CLIENT: ${{ secrets.VITE_TEAM_CLIENT }}
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.S3_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.S3_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.S3_REGION }}
+
+      - name: SHOW AWS CLI VERSION
+        env:
+          AWS_EC2_METADATA_DISABLED: true
+        run: |
+          aws s3 sync \
+            build s3://issue-tracker-02 \
+            --delete
+        working-directory: ./FE
+
+      - name: Invalidate CloudFront Cache
+        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} --paths "/*"
