@@ -8,6 +8,6 @@ import lombok.ToString;
 @ToString
 @RequiredArgsConstructor
 public class IssueCountDto {
-    private final long openedIssueCount;
-    private final long closedIssueCount;
+    private final long openedCount;
+    private final long closedCount;
 }
