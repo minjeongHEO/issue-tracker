@@ -2,11 +2,12 @@ package com.issuetracker.global.service;
 
 import com.issuetracker.global.dto.HomeComponentResponse;
 import com.issuetracker.global.dto.HomeIssueResponse;
+import com.issuetracker.issue.dto.IssueFilterResult;
 import com.issuetracker.issue.dto.IssueQueryDto;
 import com.issuetracker.issue.service.IssueFilterService;
-import com.issuetracker.issue.service.IssueQueryService;
 import com.issuetracker.label.service.LabelService;
 import com.issuetracker.milestone.service.MilestoneService;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Slf4j
 public class HomeService {
-    private final IssueQueryService issueQueryService;
     private final IssueFilterService issueFilterService;
     private final LabelService labelService;
     private final MilestoneService milestoneService;
@@ -37,9 +37,10 @@ public class HomeService {
      */
     @Transactional(readOnly = true)
     public HomeIssueResponse getFilteredIssues(IssueQueryDto issueQueryDto) {
+        Set<IssueFilterResult> filteredIssues = issueFilterService.filterIssues(issueQueryDto);
         return HomeIssueResponse.builder()
-                .count(issueQueryService.countIssues())
-                .filteredIssues(issueFilterService.getFilteredIssues(issueQueryDto))
+                .count(issueFilterService.countFilteredIssues(filteredIssues))
+                .filteredIssues(issueFilterService.getIssueFilterResponse(issueQueryDto.getIsClosed(), filteredIssues))
                 .build();
     }
 }

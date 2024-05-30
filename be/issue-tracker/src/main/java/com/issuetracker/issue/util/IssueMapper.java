@@ -4,6 +4,7 @@ import com.issuetracker.comment.dto.CommentDetailDto;
 import com.issuetracker.file.dto.UploadedFileDto;
 import com.issuetracker.issue.dto.IssueDetailDto;
 import com.issuetracker.issue.dto.IssueFilterResponse;
+import com.issuetracker.issue.dto.IssueFilterResult;
 import com.issuetracker.issue.entity.Issue;
 import com.issuetracker.label.dto.LabelCoverDto;
 import com.issuetracker.label.entity.Label;
@@ -12,19 +13,19 @@ import com.issuetracker.milestone.dto.SimpleMilestoneDto;
 import java.util.List;
 
 public class IssueMapper {
-    public static IssueFilterResponse toIssueFilterResponse(IssueFilterResponse filterResponse,
+    public static IssueFilterResponse toIssueFilterResponse(IssueFilterResult filterResult,
                                                             SimpleMemberDto author,
                                                             List<SimpleMemberDto> assignees,
                                                             List<LabelCoverDto> labels) {
-        Long filterId = filterResponse.getId();
+        Long filterId = filterResult.getId();
         return IssueFilterResponse.builder()
                 .id(filterId)
-                .title(filterResponse.getTitle())
+                .title(filterResult.getTitle())
                 .author(author)
-                .createDate(filterResponse.getCreateDate())
+                .createDate(filterResult.getCreateDate())
                 .assignees(assignees)
                 .labels(labels)
-                .milestoneName(filterResponse.getMilestoneName())
+                .milestoneName(filterResult.getMilestoneName())
                 .build();
     }
 

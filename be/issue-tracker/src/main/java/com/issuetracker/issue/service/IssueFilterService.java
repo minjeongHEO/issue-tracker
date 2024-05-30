@@ -1,7 +1,9 @@
 package com.issuetracker.issue.service;
 
 import com.issuetracker.global.util.IssueFilterQueryGenerator;
+import com.issuetracker.issue.dto.IssueCountDto;
 import com.issuetracker.issue.dto.IssueFilterResponse;
+import com.issuetracker.issue.dto.IssueFilterResult;
 import com.issuetracker.issue.dto.IssueQueryDto;
 import com.issuetracker.issue.repository.IssueCustomRepository;
 import com.issuetracker.issue.util.IssueMapper;
@@ -30,24 +32,10 @@ public class IssueFilterService {
     private final IssueCustomRepository issueCustomRepository;
 
     /**
-     * 사용자가 설정한 필터조건에 따라 필터링된 이슈 리스트를 반환한다.
+     * 사용자가 설정한 조건에 따라 필터링한다.
      */
     @Transactional(readOnly = true)
-    public List<IssueFilterResponse> getFilteredIssues(IssueQueryDto issueQueryDto) {
-        // assignee와 label리스트 결과를 제외한 IssueFilterResponse
-        Set<IssueFilterResponse> unfinishedFilterResponses = findIssueWithFilter(issueQueryDto);
-        return unfinishedFilterResponses.stream()
-                .map(filterResponse -> {
-                    Long filterId = filterResponse.getId();
-                    SimpleMemberDto author = getAuthor(filterId);
-                    List<SimpleMemberDto> assignees = getAssignees(filterId);
-                    List<LabelCoverDto> labels = getLabels(filterId);
-                    return IssueMapper.toIssueFilterResponse(filterResponse, author, assignees, labels);
-                })
-                .collect(Collectors.toList());
-    }
-
-    private Set<IssueFilterResponse> findIssueWithFilter(IssueQueryDto issueQueryDto) {
+    public Set<IssueFilterResult> filterIssues(IssueQueryDto issueQueryDto) {
         Long labelId = labelService.findIdByName(issueQueryDto.getLabelName());
         Long milestoneId = milestoneService.findIdByName(issueQueryDto.getMilestoneName());
 
@@ -57,8 +45,36 @@ public class IssueFilterService {
         return issueCustomRepository.findIssueWithFilter(filter, issueQueryDto);
     }
 
-    private SimpleMemberDto getAuthor(Long filterId) {
-        String authorId = issueQueryService.findAuthorIdByIssueId(filterId);
+    /**
+     * 필터링 된 이슈의 열린 개수와 닫힌 개수를 구한다.
+     */
+    public IssueCountDto countFilteredIssues(Set<IssueFilterResult> filteredIssues) {
+        long openedCount = filteredIssues.stream().filter(issue -> issue.getIsClosed().equals(false)).toList().size();
+        long closedCount = filteredIssues.stream().filter(issue -> issue.getIsClosed().equals(true)).toList().size();
+        return new IssueCountDto(openedCount, closedCount);
+    }
+
+    /**
+     * 필터링된 이슈에 열림/닫힘 조건을 적용하여 assignee와 label 리스트를 구한다.
+     */
+    @Transactional(readOnly = true)
+    public List<IssueFilterResponse> getIssueFilterResponse(Boolean isClosed, Set<IssueFilterResult> filteredIssues) {
+        List<IssueFilterResult> filteredIssuesWithClosedCondition = applyClosedCondition(isClosed, filteredIssues);
+        return filteredIssuesWithClosedCondition.stream()
+                .map(result -> {
+                    SimpleMemberDto author = getAuthor(result.getAuthorId());
+                    List<SimpleMemberDto> assignees = getAssignees(result.getId());
+                    List<LabelCoverDto> labels = getLabels(result.getId());
+                    return IssueMapper.toIssueFilterResponse(result, author, assignees, labels);
+                })
+                .collect(Collectors.toList());
+    }
+
+    private List<IssueFilterResult> applyClosedCondition(Boolean isClosed, Set<IssueFilterResult> filteredIssues) {
+        return filteredIssues.stream().filter(filterResult -> filterResult.getIsClosed().equals(isClosed)).toList();
+    }
+
+    private SimpleMemberDto getAuthor(String authorId) {
         return memberService.getSimpleMemberById(authorId);
     }
 
