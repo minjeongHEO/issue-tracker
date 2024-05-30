@@ -38,3 +38,7 @@ Web 용 react-router-dom을 React 애플리케이션 프로젝트에 설치해�
 ### 스피너
 
 `$ npm install --save react-spinners`
+
+### 색상 유효성 체크
+
+`$ npm i validate-color --save`
