@@ -8,7 +8,7 @@ import { Radio, message } from 'antd';
 import validateColor from 'validate-color';
 import { useCreateNewLabel } from '../../hooks/useLabelData';
 
-export default function NewLabel() {
+export default function NewLabel({ togglePlusLabelState }) {
     const clearInputForm = () => {
         setNewBgColor('#');
         setNewBgColorValue('#');
@@ -156,7 +156,7 @@ export default function NewLabel() {
             </AddContents>
 
             <NavBtnContainer>
-                <CustomButton type={'outline'} size={'large'} isDisabled={false}>
+                <CustomButton type={'outline'} size={'large'} isDisabled={false} onClick={togglePlusLabelState}>
                     <CloseOutlined />
                     취소
                 </CustomButton>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Header from '../header/Header';
 import { FlexCol, FlexRow, IndexContainer, MainContainer, StyledInput } from '../../styles/theme';
 import styled from 'styled-components';
@@ -16,6 +16,9 @@ export default function LabelMain() {
     const clickMileStone = () => naivgate('/milestones');
     const clickLabel = () => naivgate('/labels');
     const { data: labelData, isLoading: labelDataIsLoading } = useLabelDetailData();
+    const [isPlusLabelState, setIsPlusLabelState] = useState(false);
+
+    const togglePlusLabelState = () => setIsPlusLabelState((prev) => !prev);
 
     return (
         <IndexContainer>
@@ -32,13 +35,13 @@ export default function LabelMain() {
                             마일스톤()
                         </StyledMilestoneBtn>
                     </NavBtnContainer>
-                    <CustomButton type={'container'} size={'large'} isDisabled={false}>
+                    <CustomButton type={'container'} size={'large'} isDisabled={isPlusLabelState} onClick={togglePlusLabelState}>
                         <PlusOutlined />
                         레이블 추가
                     </CustomButton>
                 </NavContainer>
 
-                <NewLabel />
+                {isPlusLabelState && <NewLabel togglePlusLabelState={togglePlusLabelState} />}
 
                 <ContentsContainer>
                     <StyledBoxHeader>{labelData?.count || 0}개의 레이블</StyledBoxHeader>
