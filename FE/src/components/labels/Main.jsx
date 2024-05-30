@@ -52,6 +52,7 @@ export default function labels() {
                             labelData.labels.map(({ id, name, description, textColor, bgColor }) => (
                                 <LabelList key={id} name={name} description={description} textColor={textColor} bgColor={bgColor} />
                             ))}
+                        {labelData?.labels.length === 0 && <LabelList isNoList={true} />}
                     </StyledBoxBody>
                 </ContentsContainer>
             </MainContainer>
