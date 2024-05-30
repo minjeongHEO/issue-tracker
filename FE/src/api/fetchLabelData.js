@@ -58,6 +58,34 @@ export const fetchModifyLabel = async (name, descriptionParam, textColor, bgColo
         throw error;
     }
 };
+
+/**
+ * 레이블 삭제
+ * @param {*String} labelId 
+ * @returns 
+- 성공: 200
+- 존재하지 않는 라벨 아이디: 404
+ */
+export const fetchDeleteLabel = async (labelId) => {
+    try {
+        const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${LABEL_DEFAULT_API_URI}/${labelId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+        return {
+            status: response.status,
+            statusText: response.statusText,
+        };
+    } catch (error) {
+        throw error;
+    }
+};
+
 /**
  * 새로운 레이블 생성
  * @param {*String} name 

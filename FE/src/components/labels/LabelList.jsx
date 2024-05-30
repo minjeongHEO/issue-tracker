@@ -5,10 +5,20 @@ import { EditOutlined } from '@ant-design/icons';
 import { IconTrash } from '../../assets/icons/IconTrash';
 import { FlexRow } from '../../styles/theme';
 import LabelEditor from './LabelEditor';
+import { Popconfirm, message } from 'antd';
+import { useDeleteLabel } from '../../hooks/useLabelData';
 
 export default function LabelList({ id, name, description, textColor, bgColor, isNoList = false }) {
     const [isLabelEditState, setLabelEditState] = useState(false);
     const toggleEditLabelState = () => setLabelEditState((prev) => !prev);
+
+    const onErrorCallback = () => message.error(`삭제 실패! 다시 시도해주세요.`);
+    const onSuccessCallback = () => message.success(`삭제 완료!`);
+    const { mutate: deleteLabel } = useDeleteLabel({
+        onSuccessCallback,
+        onErrorCallback,
+    });
+    const handleDeleteLabel = (labelId) => deleteLabel({ labelId });
 
     return (
         <>
@@ -42,10 +52,13 @@ export default function LabelList({ id, name, description, textColor, bgColor, i
                             <EditOutlined />
                             편집
                         </StyledBtn>
-                        <StyledBtn>
-                            <IconTrash />
-                            삭제
-                        </StyledBtn>
+
+                        <Popconfirm title="레이블을 삭제하시겠습니까?" onConfirm={() => handleDeleteLabel(id)} okText="Yes" cancelText="No">
+                            <StyledBtn>
+                                <IconTrash />
+                                삭제
+                            </StyledBtn>
+                        </Popconfirm>
                     </StyledBtnContainer>
                 </ListContainer>
             )}

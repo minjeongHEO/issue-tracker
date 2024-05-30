@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { fetchCreateNewLabel, fetchLabelDetailData, fetchModifyLabel } from '../api/fetchLabelData';
+import { fetchCreateNewLabel, fetchDeleteLabel, fetchLabelDetailData, fetchModifyLabel } from '../api/fetchLabelData';
 
 /**
  * 레이블 - 조회
@@ -20,12 +20,11 @@ export const useLabelDetailData = () => {
  * @returns
  * key는 무조건 String으로 통일
  */
-export const useCreateNewLabel = ({ onSuccessCallback, enabled }) => {
+export const useCreateNewLabel = ({ onSuccessCallback }) => {
     const queryClient = useQueryClient();
 
     return useMutation({
         mutationFn: async ({ name, description, textColor, bgColor }) => await fetchCreateNewLabel(name, description, textColor, bgColor),
-        enabled: enabled,
         onSuccess: (res) => {
             if (onSuccessCallback) onSuccessCallback();
             queryClient.invalidateQueries({ queryKey: ['labelDetail'], refetchType: 'active' });
@@ -38,18 +37,40 @@ export const useCreateNewLabel = ({ onSuccessCallback, enabled }) => {
 /**
  * 레이블 - 수정
  * @param {*fn} onSuccessCallback - 성공 시 로직
+ * @param {*fn} onErrorCallback - 실패 시 로직
  * @returns
  * key는 무조건 String으로 통일
  */
-export const useModifyLabel = ({ onSuccessCallback, onErrorCallback, enabled }) => {
+export const useModifyLabel = ({ onSuccessCallback, onErrorCallback }) => {
     const queryClient = useQueryClient();
 
     return useMutation({
         mutationFn: async ({ name, description, textColor, bgColor, labelId }) =>
             await fetchModifyLabel(name, description, textColor, bgColor, labelId),
-        enabled: enabled,
         onSuccess: (res) => {
             if (onSuccessCallback) onSuccessCallback();
+            queryClient.invalidateQueries({ queryKey: ['labelDetail'], refetchType: 'active' });
+        },
+        onError: (e) => {
+            onErrorCallback();
+        },
+    });
+};
+
+/**
+ * 레이블 - 삭제
+ * @param {*fn} onSuccessCallback - 성공 시 로직
+ * @param {*fn} onErrorCallback - 실패 시 로직
+ * @returns
+ * key는 무조건 String으로 통일
+ */
+export const useDeleteLabel = ({ onSuccessCallback, onErrorCallback }) => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: async ({ labelId }) => await fetchDeleteLabel(labelId),
+        onSuccess: (res) => {
+            if ((res.status === 200 || res.status === 201) && onSuccessCallback) onSuccessCallback();
             queryClient.invalidateQueries({ queryKey: ['labelDetail'], refetchType: 'active' });
         },
         onError: (e) => {
