@@ -7,6 +7,7 @@ import { CustomButton } from '../../assets/CustomButton';
 import { Radio, message } from 'antd';
 import validateColor from 'validate-color';
 import { useCreateNewLabel, useModifyLabel } from '../../hooks/useLabelData';
+import { IconEdit } from '../../assets/icons/IconEdit';
 
 export default function LabelEditor({ isNew = true, togglePlusLabelState, toggleEditLabelState, id, bgColor, textColor, name, description }) {
     const clearInputForm = () => {
@@ -28,12 +29,10 @@ export default function LabelEditor({ isNew = true, togglePlusLabelState, toggle
     };
     const { mutate: createLabel } = useCreateNewLabel({
         onSuccessCallback,
-        enabled: !isNew,
     });
     const { mutate: modifyLabel } = useModifyLabel({
         onSuccessCallback,
         onErrorCallback,
-        enabled: !isNew,
     });
 
     const [isPopupVisible, setIsPopupVisible] = useState(false);
@@ -226,8 +225,17 @@ export default function LabelEditor({ isNew = true, togglePlusLabelState, toggle
                     isDisabled={isNew ? isNewLabelDisabled : isEditLabelDisabled}
                     onClick={isNew ? submitLabel : submitEditLabel}
                 >
-                    <PlusOutlined />
-                    완료
+                    {isNew ? (
+                        <>
+                            <PlusOutlined />
+                            '완료'
+                        </>
+                    ) : (
+                        <>
+                            <IconEdit />
+                            '편집 완료'
+                        </>
+                    )}
                 </CustomButton>
             </NavBtnContainer>
         </AddContainer>
