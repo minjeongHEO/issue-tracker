@@ -1,3 +1,5 @@
+import { getAccessToken } from '../utils/userUtils';
+
 const ISSUE_DEFAULT_API_URI = '/api/issues';
 const ISSUE_COMMENTS_DEFAULT_API_URI = '/api/comments';
 const ISSUE_DEFAULT_FILE_URI = '/api/files';
@@ -12,7 +14,11 @@ export const fetchIssueDetailData = async (issueId) => {
 
     try {
         // await delay(2000);
-        const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ISSUE_DEFAULT_API_URI}/${issueId}`);
+        const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ISSUE_DEFAULT_API_URI}/${issueId}`, {
+            headers: {
+                Authorization: `Bearer ${getAccessToken()}`,
+            },
+        });
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
         if (response.status === 200) {
@@ -34,6 +40,7 @@ export const fetchIssueStateToggle = async (toIssueState, issueIds) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${getAccessToken()}`,
             },
             body: JSON.stringify({ issueIds }),
         });
@@ -64,6 +71,7 @@ export const fetchDeleteIssue = async (issueId) => {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${getAccessToken()}`,
             },
         });
 
@@ -94,6 +102,7 @@ export const fetchModifyIssueTitle = async (title, issueId) => {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${getAccessToken()}`,
             },
             body: JSON.stringify({ title }),
         });
@@ -125,6 +134,7 @@ export const fetchModifyIssueContent = async (content, fileId, issueId) => {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${getAccessToken()}`,
             },
             body: JSON.stringify({ content, fileId }),
         });
@@ -156,6 +166,7 @@ export const fetchModifyIssueComment = async (content, fileId, commentId) => {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${getAccessToken()}`,
             },
             body: JSON.stringify({ content, fileId }),
         });
@@ -188,6 +199,7 @@ export const fetchCreateIssueComment = async (writerId, content, issueId, fileId
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${getAccessToken()}`,
             },
             body: JSON.stringify({ writerId, content, issueId, fileId }),
         });
@@ -218,6 +230,7 @@ export const fetchDeleteComment = async (commentId) => {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${getAccessToken()}`,
             },
         });
 
@@ -248,6 +261,7 @@ export const fetchModifyIssueLabels = async (issueId, labelIds) => {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${getAccessToken()}`,
             },
             body: JSON.stringify({ labelIds }),
         });
@@ -279,6 +293,7 @@ export const fetchModifyIssueAssignees = async (issueId, assigneeIds) => {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${getAccessToken()}`,
             },
             body: JSON.stringify({ assigneeIds }),
         });
@@ -310,6 +325,7 @@ export const fetchModifyIssueMilestone = async (issueId, milestoneId) => {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${getAccessToken()}`,
             },
             body: JSON.stringify({ milestoneId }),
         });
@@ -339,6 +355,9 @@ export const fetchUploadFile = async (formData) => {
     try {
         const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ISSUE_DEFAULT_FILE_URI}`, {
             method: 'POST',
+            headers: {
+                Authorization: `Bearer ${getAccessToken()}`,
+            },
             body: formData,
         });
 
@@ -373,6 +392,7 @@ export const fetchCreateNewIssue = async (title, content, authorId, milestoneId,
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${getAccessToken()}`,
             },
             body: JSON.stringify({ title, content, authorId, milestoneId, fileId, labelIds, assigneeIds }),
         });

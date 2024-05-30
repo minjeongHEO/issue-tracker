@@ -1,3 +1,5 @@
+import { getAccessToken } from '../utils/userUtils';
+
 const LABEL_DEFAULT_API_URI = '/api/labels';
 const HOME_DEFAULT_API_URI = '/api/home/components';
 
@@ -12,7 +14,11 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 export const fetchLabelMilestoneCountData = async () => {
     try {
         // await delay(2000);
-        const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${HOME_DEFAULT_API_URI}`);
+        const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${HOME_DEFAULT_API_URI}`, {
+            headers: {
+                Authorization: `Bearer ${getAccessToken()}`,
+            },
+        });
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
         if (response.status === 200 || response.status === 201) {
