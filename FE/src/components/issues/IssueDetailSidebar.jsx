@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { FlexRow } from '../../styles/theme';
 import { Popconfirm, message } from 'antd';
@@ -7,6 +7,13 @@ import { useNavigate } from 'react-router-dom';
 import OptionSidebar from './OptionSidebar';
 import { IconTrash } from '../../assets/icons/IconTrash';
 
+const initCheckedData = {
+    assignee: [],
+    label: [],
+    milestone: '',
+};
+
+
 export default function IssueDetailSidebar({ milestone, assignees, labels, issueId, isEditable = false }) {
     const navigate = useNavigate();
     const onSuccess = () => {
@@ -14,19 +21,38 @@ export default function IssueDetailSidebar({ milestone, assignees, labels, issue
         navigate('/');
     };
     const { mutate: deleteIssue } = useDeleteIssue(issueId, onSuccess);
+    const [checkedDatas, setCheckedDatas] = useState(initCheckedData);
 
     const deleteConfirm = () => deleteIssue();
 
     return (
         <StyledDiv>
             <SidebarContainer>
-                <OptionSidebar filterName={'assignee'} filterData={assignees} issueId={issueId}>
+                <OptionSidebar
+                    filterName={'assignee'}
+                    filterData={assignees}
+                    issueId={issueId}
+                    checkedDatas={checkedDatas}
+                    setCheckedDatas={setCheckedDatas}
+                >
                     담당자
                 </OptionSidebar>
-                <OptionSidebar filterName={'label'} filterData={labels} issueId={issueId}>
+                <OptionSidebar
+                    filterName={'label'}
+                    filterData={labels}
+                    issueId={issueId}
+                    checkedDatas={checkedDatas}
+                    setCheckedDatas={setCheckedDatas}
+                >
                     레이블
                 </OptionSidebar>
-                <OptionSidebar filterName={'milestone'} filterData={milestone} issueId={issueId}>
+                <OptionSidebar
+                    filterName={'milestone'}
+                    filterData={milestone}
+                    issueId={issueId}
+                    checkedDatas={checkedDatas}
+                    setCheckedDatas={setCheckedDatas}
+                >
                     마일스톤
                 </OptionSidebar>
             </SidebarContainer>

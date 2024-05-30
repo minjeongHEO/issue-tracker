@@ -7,7 +7,9 @@ import { Checkbox, Radio } from 'antd';
 import { useModifyIssueAssignees, useModifyIssueLabels, useModifyIssueMilestone } from '../../hooks/useIssueDetailData';
 import CustomNoProfile from '../../assets/CustomNoProfile';
 
-export default function OptionSidebarContents({ contents, filterName, filterData, checkedDatas, setCheckedDatas, issueId }) {
+
+export default function OptionSidebarContents({ contents, filterName, filterData, checkedDatas, setCheckedDatas, issueId, isNew }) {
+
     const { mutate: modifyIssueLabels } = useModifyIssueLabels(String(issueId)); //labelIds
     const { mutate: modifyIssueAssignees } = useModifyIssueAssignees(String(issueId)); //assigneeIds
     const { mutate: modifyIssueMilestone } = useModifyIssueMilestone(String(issueId)); //milestoneId
@@ -60,7 +62,9 @@ export default function OptionSidebarContents({ contents, filterName, filterData
 
     useEffect(() => {
         return () => {
-            if (isModifyed(filterData, checkedDatas)) modifyActionByType[filterName]();
+
+            if (!isNew && isModifyed(filterData, checkedDatas)) modifyActionByType[filterName]();
+
         };
     }, [checkedDatas]);
 

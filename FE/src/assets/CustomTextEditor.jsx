@@ -13,6 +13,7 @@ export default function CustomTextEditor({
     $fileOnClick = () => {},
     $fileOnChange = () => {},
     $isFileUploaded = false,
+    $height = '100',
 }) {
     const fileInputRef = useRef(null);
 
@@ -22,7 +23,7 @@ export default function CustomTextEditor({
 
     return (
         <>
-            <StyledTextArea value={$value} onChange={$onChange} onFocus={$onFocus} onBlur={$onBlur} />
+            <StyledTextArea value={$value} onChange={$onChange} onFocus={$onFocus} onBlur={$onBlur} $height={$height} />
             <StyledNotifiy>띄어쓰기 포함 {$value?.length ?? 0}자</StyledNotifiy>
             <StyledLine />
             <StyledFileBtn onClick={$fileOnClick}>
@@ -60,7 +61,7 @@ const StyledTextArea = styled.textarea`
     position: relative;
     resize: none;
     width: 100%;
-    min-height: 100px;
+    min-height: ${(props) => props.$height}px;
     padding: 15px;
     background-color: transparent;
     color: ${(props) => props.theme.fontColor};

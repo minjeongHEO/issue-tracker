@@ -67,7 +67,8 @@ export default function IssueDetail() {
         // const remainFileIds = remainFiles.map((file) => file.id);
 
         const remainFileIds = fileMeta.map((file) => file.id).filter((e) => e !== '');
-        createIssueComment({ writerId: getUserId(), content: newCommentArea, fileId: remainFileIds[0] });
+
+        createIssueComment({ writerId: getUserId(), content: newCommentArea, fileId: remainFileIds?.[0] });
         setNewCommentArea('');
         setFileMeta(initFileDatas);
     };
@@ -156,7 +157,6 @@ export default function IssueDetail() {
                                         $fileOnChange={handleFileChange}
                                         $onFocus={handleFocus}
                                         $onBlur={handleBlur}
-                                        setFileMeta={setFileMeta}
                                     />
                                 </form>
                             </Content>

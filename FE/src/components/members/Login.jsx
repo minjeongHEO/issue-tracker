@@ -5,7 +5,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import DarkLogotypeLarge from '../../assets/DarkLogotypeLarge.svg';
 import LightLogotypeLarge from '../../assets/LightLogotypeLarge.svg';
 import { DarkModeContext } from '../../context/DarkModeContext';
-import { fetchLogin } from '../../api/fetchMembers';
+import { fetchGithubLogin, fetchLogin } from '../../api/fetchMembers';
+import { CustomButton } from '../../assets/CustomButton';
 
 export default function Login() {
     const { isDarkMode } = useContext(DarkModeContext);
@@ -59,6 +60,21 @@ export default function Login() {
         }
     };
 
+    const handleGithubLogin = async () => {
+        // const loginResult = await fetchGithubLogin();
+        // localStorage.setItem('storeUserData', JSON.stringify(loginResult.data));
+        // console.log(loginResult);
+
+        const CLIENT_ID = 'Ov23liTzJL66RbPZt3fg';
+        // const REDIRECT_URI = `${import.meta.env.VITE_TEAM_SERVER}/api/oauth/github/callback`;
+        const REDIRECT_URI = `${import.meta.env.VITE_TEAM_CLIENT}/members/callback`;
+
+        const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}`;
+
+        // window.location.assign(githubAuthUrl);
+        window.location.href = githubAuthUrl;
+    };
+
     useEffect(() => {
         setIdInput('');
         setPwInput('');
@@ -75,9 +91,10 @@ export default function Login() {
             <Logo>
                 <img src={isDarkMode ? DarkLogotypeLarge : LightLogotypeLarge} className="logo" alt="logo" />
             </Logo>
-            <StyledButton $bgcolor="#fff" $textcolor="#007AFF" style={{ marginBottom: '20px' }} disabled>
+
+            <GithubButton onClick={handleGithubLogin} type={'container'} size={'large'} isDisabled={false}>
                 GitHub 계정으로 로그인
-            </StyledButton>
+            </GithubButton>
             <StyledSpan style={{ marginBottom: '20px' }}>or</StyledSpan>
 
             <form onSubmit={handleIdLogin}>
@@ -105,7 +122,12 @@ export default function Login() {
     );
 }
 
-//TODO: className props 지정하고, StyledButton 상속 받아서 margin 커스텀하기
+const GithubButton = styled(CustomButton)`
+    margin-bottom: 20px;
+    width: 320px;
+    height: 56px;
+    padding: 10px 20px;
+`;
 
 const linkStyle = {
     textDecorationLine: 'none',
