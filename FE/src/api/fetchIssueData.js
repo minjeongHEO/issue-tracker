@@ -17,6 +17,7 @@ export const fetchIssueDetailData = async (issueId) => {
         const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ISSUE_DEFAULT_API_URI}/${issueId}`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
+                credentials: 'include',
             },
         });
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -42,6 +43,7 @@ export const fetchIssueStateToggle = async (toIssueState, issueIds) => {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${accessToken}`,
+                'credentials': 'include',
             },
             body: JSON.stringify({ issueIds }),
         });
@@ -74,6 +76,7 @@ export const fetchDeleteIssue = async (issueId) => {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${accessToken}`,
+                'credentials': 'include',
             },
         });
 
@@ -106,6 +109,7 @@ export const fetchModifyIssueTitle = async (title, issueId) => {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${accessToken}`,
+                'credentials': 'include',
             },
             body: JSON.stringify({ title }),
         });
@@ -139,6 +143,7 @@ export const fetchModifyIssueContent = async (content, fileId, issueId) => {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${accessToken}`,
+                'credentials': 'include',
             },
             body: JSON.stringify({ content, fileId }),
         });
@@ -172,6 +177,7 @@ export const fetchModifyIssueComment = async (content, fileId, commentId) => {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${accessToken}`,
+                'credentials': 'include',
             },
             body: JSON.stringify({ content, fileId }),
         });
@@ -206,6 +212,7 @@ export const fetchCreateIssueComment = async (writerId, content, issueId, fileId
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${accessToken}`,
+                'credentials': 'include',
             },
             body: JSON.stringify({ writerId, content, issueId, fileId }),
         });
@@ -238,6 +245,7 @@ export const fetchDeleteComment = async (commentId) => {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${accessToken}`,
+                'credentials': 'include',
             },
         });
 
@@ -270,6 +278,7 @@ export const fetchModifyIssueLabels = async (issueId, labelIds) => {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${accessToken}`,
+                'credentials': 'include',
             },
             body: JSON.stringify({ labelIds }),
         });
@@ -303,6 +312,7 @@ export const fetchModifyIssueAssignees = async (issueId, assigneeIds) => {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${accessToken}`,
+                'credentials': 'include',
             },
             body: JSON.stringify({ assigneeIds }),
         });
@@ -336,6 +346,7 @@ export const fetchModifyIssueMilestone = async (issueId, milestoneId) => {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${accessToken}`,
+                'credentials': 'include',
             },
             body: JSON.stringify({ milestoneId }),
         });
@@ -368,6 +379,7 @@ export const fetchUploadFile = async (formData) => {
             method: 'POST',
             headers: {
                 Authorization: `Bearer ${accessToken}`,
+                credentials: 'include',
             },
             body: formData,
         });
@@ -405,6 +417,7 @@ export const fetchCreateNewIssue = async (title, content, authorId, milestoneId,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${accessToken}`,
+                'credentials': 'include',
             },
             body: JSON.stringify({ title, content, authorId, milestoneId, fileId, labelIds, assigneeIds }),
         });

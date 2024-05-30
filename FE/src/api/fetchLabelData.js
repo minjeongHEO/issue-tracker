@@ -18,6 +18,7 @@ export const fetchLabelMilestoneCountData = async () => {
         const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${HOME_DEFAULT_API_URI}`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
+                credentials: 'include',
             },
         });
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -41,6 +42,7 @@ export const fetchLabelDetailData = async () => {
         const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${LABEL_DEFAULT_API_URI}`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
+                credentials: 'include',
             },
         });
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -75,6 +77,7 @@ export const fetchModifyLabel = async (name, descriptionParam, textColor, bgColo
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${accessToken}`,
+                'credentials': 'include',
             },
             body: JSON.stringify({ name, description, textColor, bgColor }),
         });
@@ -109,6 +112,7 @@ export const fetchDeleteLabel = async (labelId) => {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${accessToken}`,
+                'credentials': 'include',
             },
         });
 
@@ -144,6 +148,7 @@ export const fetchCreateNewLabel = async (name, descriptionParam, textColor, bgC
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${accessToken}`,
+                'credentials': 'include',
             },
             body: JSON.stringify({ name, description, textColor, bgColor }),
         });
