@@ -66,11 +66,12 @@ export default function Main() {
     const [checkedItems, setCheckedItems] = useState([]);
     const [filterItemsByType, setFilterItemsByType] = useState(initFilterItems);
     const [issueDatas, setIssueDatas] = useState(initIssueDatas);
+    const [hasFetched, setHasFetched] = useState(initFetched);
 
     const { data: issueList, isLoading: issueListIsLoading } = usefilteredIssueData();
-    const { data: labelsFilter, isLoading: labelsFilterIsLoading } = useLabelsFilter({});
-    const { data: milestonesFilter, isLoading: milestonesFilterIsLoading } = useMilestonesFilter({});
-    const { data: membersFilter, isLoading: membersFilterIsLoading } = useMembersFilter({});
+    const { data: labelsFilter, isLoading: labelsFilterIsLoading } = useLabelsFilter({ enabled: hasFetched.label });
+    const { data: milestonesFilter, isLoading: milestonesFilterIsLoading } = useMilestonesFilter({ enabled: hasFetched.milestone });
+    const { data: membersFilter, isLoading: membersFilterIsLoading } = useMembersFilter({ enabled: hasFetched.assignee });
 
     const clearFilter = () => dispatch({ type: 'SET_CLEAR_FILTER', payload: '' });
 
@@ -110,8 +111,6 @@ export default function Main() {
     const isSingleChecked = (key) => {
         return checkedItems.includes(key);
     };
-
-    const [hasFetched, setHasFetched] = useState(initFetched);
 
     const setterFechedByType = {
         assignee: () => setHasFetched((prev) => ({ ...prev, assignee: true })),
