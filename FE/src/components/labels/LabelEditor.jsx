@@ -6,7 +6,7 @@ import { FlexCol, FlexRow, StyledInput } from '../../styles/theme';
 import { CustomButton } from '../../assets/CustomButton';
 import { Radio, message } from 'antd';
 import validateColor from 'validate-color';
-import { useCreateNewLabel } from '../../hooks/useLabelData';
+import { useCreateNewLabel, useModifyLabel } from '../../hooks/useLabelData';
 
 export default function LabelEditor({ isNew = true, togglePlusLabelState, toggleEditLabelState, id, bgColor, textColor, name, description }) {
     const clearInputForm = () => {
@@ -18,11 +18,23 @@ export default function LabelEditor({ isNew = true, togglePlusLabelState, toggle
         setNewFontColor('');
         discriptionRef.current.value = '';
     };
-    const onSuccess = () => {
+    const onSuccessCallback = () => {
         clearInputForm();
-        message.success('레이블이 생성되었습니다.');
+        if (!isNew) toggleEditLabelState();
+        message.success(`레이블이 ${isNew ? '생성' : '수정'}되었습니다.`);
     };
-    const { mutate: createLabel } = useCreateNewLabel(onSuccess);
+    const onErrorCallback = () => {
+        message.error(`수정 실패! 다시 시도해주세요.`);
+    };
+    const { mutate: createLabel } = useCreateNewLabel({
+        onSuccessCallback,
+        enabled: !isNew,
+    });
+    const { mutate: modifyLabel } = useModifyLabel({
+        onSuccessCallback,
+        onErrorCallback,
+        enabled: !isNew,
+    });
 
     const [isPopupVisible, setIsPopupVisible] = useState(false);
     const [isNewLabelDisabled, setIsNewLabelDisabled] = useState(true);
@@ -66,7 +78,15 @@ export default function LabelEditor({ isNew = true, togglePlusLabelState, toggle
 
     const togglePopup = () => setIsPopupVisible((prevState) => !prevState);
 
-    const submitEditLabel = () => {};
+    const submitEditLabel = () => {
+        modifyLabel({
+            name: newLabelName,
+            description: discriptionRef.current.value === undefined || discriptionRef.current.value === '' ? null : discriptionRef.current.value,
+            textColor: newFontColor === 'light' ? '#fff' : '#000',
+            bgColor: newBgColor,
+            labelId: id,
+        });
+    };
 
     const submitLabel = () => {
         createLabel({
@@ -96,6 +116,7 @@ export default function LabelEditor({ isNew = true, togglePlusLabelState, toggle
         setNewBgColor(bgColor);
         setNewBgColorValue(bgColor);
         setNewLabelName(name);
+        discriptionRef.current.value = description;
         setEditDiscriptionValue(description);
     };
 

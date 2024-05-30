@@ -21,6 +21,44 @@ export const fetchLabelDetailData = async () => {
 };
 
 /**
+ * 레이블 수정
+ * @param {*String} name 
+ * @param {*String} descriptionParam 없을 경우 null
+ * @param {*String} textColor 
+ * @param {*String} bgColor 
+ * @param {*String} labelId 
+ * @returns 
+ *  - 성공: 200
+    - 데이터 바인딩(즉, 이름이나 배경 색깔이 비어져서 왔을 때) 실패: 400
+    - 유효하지 않은 배경 색깔: 400
+    - 존재하지 않는 라벨 아이디: 404
+ */
+export const fetchModifyLabel = async (name, descriptionParam, textColor, bgColor, labelId) => {
+    const description = descriptionParam || null;
+    try {
+        const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${LABEL_DEFAULT_API_URI}/${labelId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name, description, textColor, bgColor }),
+        });
+        const result = await response.json();
+
+        if (response.status === 400 || response.status === 404 || response.status === 409) {
+            throw new Error({ code: response.status, result });
+        }
+
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+        if (response.status === 200 || response.status === 201) {
+            return result;
+        }
+    } catch (error) {
+        throw error;
+    }
+};
+/**
  * 새로운 레이블 생성
  * @param {*String} name 
  * @param {*String} descriptionParam 없을 경우 null

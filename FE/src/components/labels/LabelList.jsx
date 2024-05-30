@@ -8,7 +8,6 @@ import LabelEditor from './LabelEditor';
 
 export default function LabelList({ id, name, description, textColor, bgColor, isNoList = false }) {
     const [isLabelEditState, setLabelEditState] = useState(false);
-
     const toggleEditLabelState = () => setLabelEditState((prev) => !prev);
 
     return (
