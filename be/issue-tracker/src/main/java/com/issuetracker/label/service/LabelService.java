@@ -11,6 +11,7 @@ import com.issuetracker.label.exception.LabelNotFoundException;
 import com.issuetracker.label.repository.LabelRepository;
 import com.issuetracker.label.util.BackgroundColorValidator;
 import com.issuetracker.label.util.HexColorGenerator;
+import com.issuetracker.label.util.LabelMapper;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +31,7 @@ public class LabelService {
     @Transactional(readOnly = true)
     public LabelListDto getLabelListDto() {
         long count = labelRepository.countAll();
-        List<Label> labels = (List<Label>) labelRepository.findAll();
+        List<Label> labels = labelRepository.findAll();
         return new LabelListDto(count, labels);
     }
 
@@ -41,7 +42,7 @@ public class LabelService {
     public Label createLabel(LabelDto labelDto) {
         validateBgColor(labelDto);
 
-        Label label = toLabel(labelDto);
+        Label label = LabelMapper.toLabel(labelDto);
         Label savedLabel = labelRepository.save(label);
         log.info("새로운 라벨이 생성되었습니다. - {}", savedLabel);
         return savedLabel;
@@ -54,7 +55,7 @@ public class LabelService {
     public Label modifyLabel(LabelDto labelDto, Long id) {
         validateBgColor(labelDto);
 
-        Label label = toLabel(labelDto);
+        Label label = LabelMapper.toModifiedLabel(id, labelDto);
         Label modifiedlabel = labelRepository.save(label);
         log.info("{} 라벨이 수정되었습니다. - {}", id, modifiedlabel);
         return modifiedlabel;
@@ -124,10 +125,5 @@ public class LabelService {
         if (!BackgroundColorValidator.isHex(bgColor)) {
             throw new InvalidBgColorException();
         }
-    }
-
-    private Label toLabel(LabelDto labelDto) {
-        return new Label(null, labelDto.getName(), labelDto.getDescription(), labelDto.getTextColor(),
-                labelDto.getBgColor());
     }
 }
