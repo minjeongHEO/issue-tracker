@@ -25,7 +25,7 @@ export default function labels() {
                     <NavBtnContainer>
                         <StyledLabelBtn type={'container'} size={'large'} isDisabled={false} onClick={clickLabel}>
                             <TagsOutlined />
-                            레이블({labelData?.count || ''})
+                            레이블({labelData?.count || 0})
                         </StyledLabelBtn>
                         <StyledMilestoneBtn type={'outline'} size={'large'} isDisabled={false} onClick={clickMileStone}>
                             <IconMilestone />
@@ -41,7 +41,7 @@ export default function labels() {
                 <NewLabel />
 
                 <ContentsContainer>
-                    <StyledBoxHeader>{labelData?.count || ''}개의 레이블</StyledBoxHeader>
+                    <StyledBoxHeader>{labelData?.count || 0}개의 레이블</StyledBoxHeader>
                     <StyledBoxBody>
                         {labelDataIsLoading && (
                             <StyledLoader>
