@@ -28,7 +28,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new JwtInterceptor(jwtUtil()))
                 .addPathPatterns("/api/**")
-                .excludePathPatterns("/api/login", "/api/logout", "/api/refresh",
+                .excludePathPatterns("/api/login", "/api/logout", "/api/refresh", "/api/oauth/github/callback",
                         "/api/members"); //로그아웃 및 리프레시는 액세스 토큰이 아닌 리프레시 토큰을 헤더에 담으므로 제외
     }
 
