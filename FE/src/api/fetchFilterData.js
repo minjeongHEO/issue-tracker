@@ -1,3 +1,5 @@
+import { getAccessToken } from '../utils/userUtils';
+
 const LABELS_API_URI = '/api/labels';
 const MEMBERS_API_URI = '/api/members';
 const MILESTONES_API_URI = '/api/milestones?isClosed=';
@@ -10,7 +12,11 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
  */
 export const fetchLabelsData = async () => {
     try {
-        const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${LABELS_API_URI}`);
+        const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${LABELS_API_URI}`, {
+            headers: {
+                Authorization: `Bearer ${getAccessToken()}`,
+            },
+        });
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
         if (response.status === 200) {
@@ -26,7 +32,11 @@ export const fetchLabelsData = async () => {
  */
 export const fetchMembersData = async () => {
     try {
-        const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${MEMBERS_API_URI}`);
+        const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${MEMBERS_API_URI}`, {
+            headers: {
+                Authorization: `Bearer ${getAccessToken()}`,
+            },
+        });
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
         if (response.status === 200) {
@@ -46,7 +56,11 @@ export const fetchMilestonesData = async (isClosed) => {
     try {
         // await delay(5000);
 
-        const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${MILESTONES_API_URI}${isClosed}`);
+        const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${MILESTONES_API_URI}${isClosed}`, {
+            headers: {
+                Authorization: `Bearer ${getAccessToken()}`,
+            },
+        });
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
         if (response.status === 200) {
@@ -78,7 +92,12 @@ export const fetchIssueListData = async (isClosedParam, authorIdParam, assigneeI
         const response = await fetch(
             `${
                 import.meta.env.VITE_TEAM_SERVER
-            }${ISSUE_LIST_API_URI}?isClosed=${isClosed}&authorId=${authorId}&assigneeId=${assigneeId}&labelName=${labelName}&milestoneName=${milestoneNameParam}&noValues=${noValues}`
+            }${ISSUE_LIST_API_URI}?isClosed=${isClosed}&authorId=${authorId}&assigneeId=${assigneeId}&labelName=${labelName}&milestoneName=${milestoneNameParam}&noValues=${noValues}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${getAccessToken()}`,
+                },
+            }
         );
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
