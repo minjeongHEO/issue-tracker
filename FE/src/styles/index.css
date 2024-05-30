@@ -1,0 +1,25 @@
+@import './reset.css';
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400&display=swap');
+
+@font-face {
+    font-family: 'Pretendard'; /* 사용하고 싶은 font-family명을 지정 */
+    src: url('../assets/font/PretendardVariable.ttf') format('opentype'); /* 폰트파일 불러오기 */
+    font-weight: 400;
+}
+
+:root {
+    line-height: 1.5;
+    font-weight: 400;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+    box-sizing: border-box;
+    /* outline: 1px solid gainsboro; */
+}
+
+textarea:focus {
+    outline: none;
+}
