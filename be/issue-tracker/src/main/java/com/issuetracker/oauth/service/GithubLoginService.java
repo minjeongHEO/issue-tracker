@@ -46,7 +46,7 @@ public class GithubLoginService {
     public GithubProfile getUserInfo(String accessToken) {
         return webClient.get()
                 .uri("https://api.github.com/user")
-                .header("Authorization", "token " + accessToken)
+                .header("Authorization", "Bearer " + accessToken)
                 .retrieve()
                 .bodyToMono(GithubProfile.class)
                 .doOnSuccess(profile -> log.info("Github 로그인한 사용자 정보 가져오기 성공 - {}", profile))
