@@ -1,5 +1,6 @@
 package com.issuetracker;
 
+import com.issuetracker.global.interceptor.JwtInterceptor;
 import com.issuetracker.member.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -25,11 +26,10 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        //프론트 기능구현 후 주석 제거 예정
-//        registry.addInterceptor(new JwtInterceptor(jwtUtil()))
-//                .addPathPatterns("/api/**")
-//                .excludePathPatterns("/api/login", "/api/logout", "/api/refresh",
-//                        "/api/members"); //로그아웃 및 리프레시는 액세스 토큰이 아닌 리프레시 토큰을 헤더에 담으므로 제외
+        registry.addInterceptor(new JwtInterceptor(jwtUtil()))
+                .addPathPatterns("/api/**")
+                .excludePathPatterns("/api/login", "/api/logout", "/api/refresh",
+                        "/api/members"); //로그아웃 및 리프레시는 액세스 토큰이 아닌 리프레시 토큰을 헤더에 담으므로 제외
     }
 
     @Bean
