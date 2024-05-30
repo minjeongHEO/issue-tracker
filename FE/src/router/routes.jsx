@@ -4,7 +4,7 @@ import Login from '../components/members/Login';
 import Index from '../components/Index';
 import NotFound from '../components/NotFound';
 import Milestones from '../components/milestones/Milestones';
-import Labels from '../components/labels/Labels';
+import Main from '../components/labels/Main';
 import ProtectedRoute from './ProtectedRoute';
 import NewIssue from '../components/issues/NewIssue';
 import IssueDetail from '../components/issues/IssueDetail';
@@ -16,7 +16,14 @@ export const AppRoutes = () => {
                 <Route path="/members/login" element={<Login />} />
                 <Route path="/members/join" element={<Join />} />
                 <Route path="/milestones" element={<Milestones />} />
-                <Route path="/labels" element={<Labels />} />
+                <Route
+                    path="/labels"
+                    element={
+                        <ProtectedRoute>
+                            <Main />
+                        </ProtectedRoute>
+                    }
+                />
                 <Route
                     path="/issues/new"
                     element={
