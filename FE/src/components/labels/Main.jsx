@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { useLabelDetailData } from '../../hooks/useLabelData';
 import ClipLoader from 'react-spinners/ClipLoader';
 
-export default function labels() {
+export default function LabelMain() {
     const naivgate = useNavigate();
     const clickMileStone = () => naivgate('/milestones');
     const clickLabel = () => naivgate('/labels');
