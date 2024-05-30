@@ -1,7 +1,6 @@
 import { useQueries, useQuery } from '@tanstack/react-query';
-import { fetchIssueListData, fetchLabelsData, fetchMembersData, fetchMilestonesData } from '../api/fetchFilterData';
+import { fetchIssueListData } from '../api/fetchFilterData';
 import { useFilterContext } from '../context/FilterContext';
-import labels from '../components/labels/Labels';
 import { getUserId } from '../utils/userUtils';
 
 const filterTypeIsClosed = (selectedFilters) => {
