@@ -1,6 +1,27 @@
 const LABEL_DEFAULT_API_URI = '/api/labels';
+const HOME_DEFAULT_API_URI = '/api/home/components';
+
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+/**
+ * 레이블 마일스톤 - 개수 조회
+ * @param {*String} issueId
+ * @returns {jsonObject}
+ *  - 성공: 200
+ */
+export const fetchLabelMilestoneCountData = async () => {
+    try {
+        // await delay(2000);
+        const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${HOME_DEFAULT_API_URI}`);
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+        if (response.status === 200 || response.status === 201) {
+            return await response.json();
+        }
+    } catch (error) {
+        throw error;
+    }
+};
 /**
  * 레이블 조회
  * @param {*String} issueId

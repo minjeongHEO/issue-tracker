@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '../header/Header';
 import { FlexCol, FlexRow, IndexContainer, MainContainer, StyledInput } from '../../styles/theme';
 import styled from 'styled-components';
@@ -8,7 +8,7 @@ import { TagsOutlined, PlusOutlined } from '@ant-design/icons';
 import LabelList from './LabelList';
 import LabelEditor from './LabelEditor';
 import { useNavigate } from 'react-router-dom';
-import { useLabelDetailData } from '../../hooks/useLabelData';
+import { useLabelDetailData, useLabelMilestoneCountData } from '../../hooks/useLabelData';
 import ClipLoader from 'react-spinners/ClipLoader';
 
 export default function LabelMain() {
@@ -16,9 +16,18 @@ export default function LabelMain() {
     const clickMileStone = () => naivgate('/milestones');
     const clickLabel = () => naivgate('/labels');
     const { data: labelData, isLoading: labelDataIsLoading } = useLabelDetailData();
+    const { data: countData } = useLabelMilestoneCountData();
     const [isPlusLabelState, setIsPlusLabelState] = useState(false);
+    const [labelCount, setLabelCount] = useState(0);
+    const [milestoneCount, setMilestoneCount] = useState(0);
 
     const togglePlusLabelState = () => setIsPlusLabelState((prev) => !prev);
+
+    useEffect(() => {
+        if (!countData) return;
+        setLabelCount(countData.labelCount.count);
+        setMilestoneCount(countData.milestoneCount.isOpened + countData.milestoneCount.isClosed);
+    }, [countData]);
 
     return (
         <IndexContainer>
@@ -28,11 +37,11 @@ export default function LabelMain() {
                     <NavBtnContainer>
                         <StyledLabelBtn type={'container'} size={'large'} isDisabled={false} onClick={clickLabel}>
                             <TagsOutlined />
-                            레이블({labelData?.count || 0})
+                            레이블({labelCount})
                         </StyledLabelBtn>
                         <StyledMilestoneBtn type={'outline'} size={'large'} isDisabled={false} onClick={clickMileStone}>
                             <IconMilestone />
-                            마일스톤()
+                            마일스톤({milestoneCount})
                         </StyledMilestoneBtn>
                     </NavBtnContainer>
                     <CustomButton type={'container'} size={'large'} isDisabled={isPlusLabelState} onClick={togglePlusLabelState}>
@@ -44,7 +53,7 @@ export default function LabelMain() {
                 {isPlusLabelState && <LabelEditor togglePlusLabelState={togglePlusLabelState} />}
 
                 <ContentsContainer>
-                    <StyledBoxHeader>{labelData?.count || 0}개의 레이블</StyledBoxHeader>
+                    <StyledBoxHeader>{labelCount}개의 레이블</StyledBoxHeader>
                     <StyledBoxBody>
                         {labelDataIsLoading && (
                             <StyledLoader>

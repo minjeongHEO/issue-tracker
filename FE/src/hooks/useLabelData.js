@@ -1,6 +1,18 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { fetchCreateNewLabel, fetchDeleteLabel, fetchLabelDetailData, fetchModifyLabel } from '../api/fetchLabelData';
+import { fetchCreateNewLabel, fetchDeleteLabel, fetchLabelDetailData, fetchLabelMilestoneCountData, fetchModifyLabel } from '../api/fetchLabelData';
 
+/**
+ * 레이블, 마일스톤 - 개수 조회
+ * @returns
+ */
+export const useLabelMilestoneCountData = () => {
+    return useQuery({
+        queryKey: ['label', 'milestone', 'count'],
+        queryFn: async () => await fetchLabelMilestoneCountData(),
+        staleTime: 1000 * 60 * 5, // 데이터를 신선하게 유지하는 시간
+        cacheTime: 1000 * 60 * 10, // 캐시에서 데이터를 유지하는 시간
+    });
+};
 /**
  * 레이블 - 조회
  * @returns
@@ -8,7 +20,7 @@ import { fetchCreateNewLabel, fetchDeleteLabel, fetchLabelDetailData, fetchModif
 export const useLabelDetailData = () => {
     return useQuery({
         queryKey: ['labelDetail'],
-        queryFn: () => fetchLabelDetailData(),
+        queryFn: async () => await fetchLabelDetailData(),
         staleTime: 1000 * 60 * 5, // 데이터를 신선하게 유지하는 시간
         cacheTime: 1000 * 60 * 10, // 캐시에서 데이터를 유지하는 시간
     });
@@ -28,6 +40,7 @@ export const useCreateNewLabel = ({ onSuccessCallback }) => {
         onSuccess: (res) => {
             if (onSuccessCallback) onSuccessCallback();
             queryClient.invalidateQueries({ queryKey: ['labelDetail'], refetchType: 'active' });
+            queryClient.invalidateQueries({ queryKey: ['label', 'milestone', 'count'], refetchType: 'active' });
         },
         // onError: () => {
         // },
@@ -50,6 +63,7 @@ export const useModifyLabel = ({ onSuccessCallback, onErrorCallback }) => {
         onSuccess: (res) => {
             if (onSuccessCallback) onSuccessCallback();
             queryClient.invalidateQueries({ queryKey: ['labelDetail'], refetchType: 'active' });
+            queryClient.invalidateQueries({ queryKey: ['label', 'milestone', 'count'], refetchType: 'active' });
         },
         onError: (e) => {
             onErrorCallback();
@@ -72,6 +86,7 @@ export const useDeleteLabel = ({ onSuccessCallback, onErrorCallback }) => {
         onSuccess: (res) => {
             if ((res.status === 200 || res.status === 201) && onSuccessCallback) onSuccessCallback();
             queryClient.invalidateQueries({ queryKey: ['labelDetail'], refetchType: 'active' });
+            queryClient.invalidateQueries({ queryKey: ['label', 'milestone', 'count'], refetchType: 'active' });
         },
         onError: (e) => {
             onErrorCallback();
