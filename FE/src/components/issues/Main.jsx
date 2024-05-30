@@ -8,10 +8,14 @@ import { useFilterContext } from '../../context/FilterContext';
 import NavStateType from './NavStateType';
 import NavFilterType from './NavFilterType';
 import { MainContainer } from '../../styles/theme';
+import { TagsOutlined, PlusOutlined } from '@ant-design/icons';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLabelsFilter, useMembersFilter, useMilestonesFilter } from '../../hooks/useFiltersData';
 import { usefilteredIssueData } from '../../hooks/usefilteredIssueData';
 import ClipLoader from 'react-spinners/ClipLoader';
+import { useLabelMilestoneCountData } from '../../hooks/useLabelData';
+import { CustomButton } from '../../assets/CustomButton';
+import { IconMilestone } from '../../assets/icons/IconMilestone';
 
 const stateModifyFilters = [{ title: '선택한 이슈' }];
 
@@ -67,7 +71,10 @@ export default function Main() {
     const [filterItemsByType, setFilterItemsByType] = useState(initFilterItems);
     const [issueDatas, setIssueDatas] = useState(initIssueDatas);
     const [hasFetched, setHasFetched] = useState(initFetched);
+    const [labelCount, setLabelCount] = useState(0);
+    const [milestoneCount, setMilestoneCount] = useState(0);
 
+    const { data: countData } = useLabelMilestoneCountData();
     const { data: issueList, isLoading: issueListIsLoading } = usefilteredIssueData();
     const { data: labelsFilter, isLoading: labelsFilterIsLoading } = useLabelsFilter({ enabled: hasFetched.label });
     const { data: milestonesFilter, isLoading: milestonesFilterIsLoading } = useMilestonesFilter({ enabled: hasFetched.milestone });
@@ -189,6 +196,18 @@ export default function Main() {
         setIssueDatas((prev) => ({ ...prev, list: newIssueList }));
     }, [issueList]);
 
+    useEffect(() => {
+        if (!countData) return;
+        setLabelCount(countData.labelCount.count);
+        setMilestoneCount(countData.milestoneCount.isOpened + countData.milestoneCount.isClosed);
+    }, [countData]);
+
+    // useEffect(() => {
+    //     const url = new URL(window.location.href);
+    //     const authorizationCode = url.searchParams.get('code');
+    //     console.log(authorizationCode); //인증 코드
+    // }, []);
+
     return (
         <MainContainer>
             <StyledNav>
@@ -210,11 +229,19 @@ export default function Main() {
                     </FlexRow>
 
                     <NavBtnContainer>
-                        <StyledBtn onClick={() => navigate('/labels')}>레이블()</StyledBtn>
-                        <StyledBtn onClick={() => navigate('/milestones')}>마일스톤()</StyledBtn>
-                        <StyledBtn onClick={() => navigate('/issues/new')} type="primary">
-                            + 이슈작성
-                        </StyledBtn>
+                        <StyledLabelBtn type={'outline'} size={'large'} isDisabled={false} onClick={() => navigate('/labels')}>
+                            <TagsOutlined />
+                            레이블({labelCount})
+                        </StyledLabelBtn>
+                        <StyledMilestoneBtn type={'outline'} size={'large'} isDisabled={false} onClick={() => navigate('/milestones')}>
+                            <IconMilestone />
+                            마일스톤({milestoneCount})
+                        </StyledMilestoneBtn>
+
+                        <StyledNewIssueBtn onClick={() => navigate('/issues/new')} size={'large'} isDisabled={false}>
+                            <PlusOutlined />
+                            이슈작성
+                        </StyledNewIssueBtn>
                     </NavBtnContainer>
                 </FlexRow>
 
@@ -275,6 +302,29 @@ export default function Main() {
         </MainContainer>
     );
 }
+
+const StyledNewIssueBtn = styled(CustomButton)`
+    width: 120px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #fff;
+`;
+
+const StyledMilestoneBtn = styled(CustomButton)`
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    width: 130px;
+    font-size: 15px;
+    font-weight: 500;
+`;
+const StyledLabelBtn = styled(CustomButton)`
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    width: 130px;
+    font-size: 15px;
+    font-weight: 500;
+`;
+
 const StyledLoader = styled.div`
     height: 100px;
     align-content: center;
@@ -403,6 +453,14 @@ const StyledNav = styled.nav`
     }
 `;
 
-const NavBtnContainer = styled.div`
-    width: 380px;
+const NavBtnContainer = styled(FlexRow)`
+    justify-content: end;
+    margin-left: 10px;
+
+    & .createBtn {
+        margin-left: 10px;
+    }
+    button {
+        font-size: 16px;
+    }
 `;
