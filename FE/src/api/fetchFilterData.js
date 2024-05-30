@@ -16,6 +16,7 @@ export const fetchLabelsData = async () => {
         const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${LABELS_API_URI}`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
+                credentials: 'include',
             },
         });
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -37,6 +38,7 @@ export const fetchMembersData = async () => {
         const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${MEMBERS_API_URI}`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
+                credentials: 'include',
             },
         });
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -62,6 +64,7 @@ export const fetchMilestonesData = async (isClosed) => {
         const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${MILESTONES_API_URI}${isClosed}`, {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
+                credentials: 'include',
             },
         });
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -101,6 +104,7 @@ export const fetchIssueListData = async (isClosedParam, authorIdParam, assigneeI
             {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
+                    credentials: 'include',
                 },
             }
         );
