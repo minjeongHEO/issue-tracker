@@ -54,7 +54,7 @@ jobs:
           AWS_EC2_METADATA_DISABLED: true
         run: |
           aws s3 sync \
-            build s3://issue-tracker-02 \
+            dist s3://issue-tracker-02 \
             --delete
         working-directory: ./FE
 
