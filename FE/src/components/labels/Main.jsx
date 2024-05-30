@@ -6,7 +6,7 @@ import { CustomButton } from '../../assets/CustomButton';
 import { IconMilestone } from '../../assets/icons/IconMilestone';
 import { TagsOutlined, PlusOutlined } from '@ant-design/icons';
 import LabelList from './LabelList';
-import NewLabel from './NewLabel';
+import LabelEditor from './LabelEditor';
 import { useNavigate } from 'react-router-dom';
 import { useLabelDetailData } from '../../hooks/useLabelData';
 import ClipLoader from 'react-spinners/ClipLoader';
@@ -41,7 +41,7 @@ export default function LabelMain() {
                     </CustomButton>
                 </NavContainer>
 
-                {isPlusLabelState && <NewLabel togglePlusLabelState={togglePlusLabelState} />}
+                {isPlusLabelState && <LabelEditor togglePlusLabelState={togglePlusLabelState} />}
 
                 <ContentsContainer>
                     <StyledBoxHeader>{labelData?.count || 0}개의 레이블</StyledBoxHeader>
@@ -117,6 +117,7 @@ const ContentsContainer = styled.div`
     border-color: ${(props) => props.theme.borderColor};
     background-color: ${(props) => props.theme.bgColorBody};
     color: ${(props) => props.theme.fontColor};
+    margin-top: 10px;
     /* background-color: azure; */
 `;
 

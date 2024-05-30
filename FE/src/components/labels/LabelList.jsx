@@ -1,17 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { CustomLabelBadge } from '../../assets/CustomLabelBadge';
 import { EditOutlined } from '@ant-design/icons';
 import { IconTrash } from '../../assets/icons/IconTrash';
 import { FlexRow } from '../../styles/theme';
+import LabelEditor from './LabelEditor';
 
 export default function LabelList({ id, name, description, textColor, bgColor, isNoList = false }) {
+    const [isLabelEditState, setLabelEditState] = useState(false);
+
+    const toggleEditLabelState = () => setLabelEditState((prev) => !prev);
+
     return (
         <>
             {isNoList ? (
                 <ListContainer>
                     <div className="noList">등록된 레이블이 없습니다.</div>
                 </ListContainer>
+            ) : isLabelEditState ? (
+                <LabelEditor
+                    isNew={false}
+                    toggleEditLabelState={toggleEditLabelState}
+                    id={id}
+                    bgColor={bgColor}
+                    textColor={textColor}
+                    name={name}
+                    description={description || ''}
+                />
             ) : (
                 <ListContainer id={id}>
                     <TitleContainer>
@@ -24,7 +39,7 @@ export default function LabelList({ id, name, description, textColor, bgColor, i
                     </TitleContainer>
 
                     <StyledBtnContainer>
-                        <StyledBtn>
+                        <StyledBtn onClick={toggleEditLabelState}>
                             <EditOutlined />
                             편집
                         </StyledBtn>

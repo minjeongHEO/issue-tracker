@@ -8,7 +8,7 @@ import { Radio, message } from 'antd';
 import validateColor from 'validate-color';
 import { useCreateNewLabel } from '../../hooks/useLabelData';
 
-export default function NewLabel({ togglePlusLabelState }) {
+export default function LabelEditor({ isNew = true, togglePlusLabelState, toggleEditLabelState, id, bgColor, textColor, name, description }) {
     const clearInputForm = () => {
         setNewBgColor('#');
         setNewBgColorValue('#');
@@ -26,6 +26,7 @@ export default function NewLabel({ togglePlusLabelState }) {
 
     const [isPopupVisible, setIsPopupVisible] = useState(false);
     const [isNewLabelDisabled, setIsNewLabelDisabled] = useState(true);
+    const [isEditLabelDisabled, setIsEditLabelDisabled] = useState(true);
     const [newLabelName, setNewLabelName] = useState('');
 
     const [newBgColor, setNewBgColor] = useState('#');
@@ -33,6 +34,7 @@ export default function NewLabel({ togglePlusLabelState }) {
     const [isNewBgColorValidate, setIsNewBgColorValidate] = useState(false);
 
     const [newFontColor, setNewFontColor] = useState(''); // 'light' | 'dark'
+    const [editDiscriptionValue, setEditDiscriptionValue] = useState('');
     const discriptionRef = useRef(null);
     const popupRef = useRef(null);
 
@@ -64,6 +66,8 @@ export default function NewLabel({ togglePlusLabelState }) {
 
     const togglePopup = () => setIsPopupVisible((prevState) => !prevState);
 
+    const submitEditLabel = () => {};
+
     const submitLabel = () => {
         createLabel({
             name: newLabelName,
@@ -87,14 +91,53 @@ export default function NewLabel({ togglePlusLabelState }) {
         }
     };
 
-    useEffect(() => {
+    const settingEditValues = (textColor, bgColor, name, description) => {
+        textColor === '#fff' ? setNewFontColor('light') : setNewFontColor('dark');
+        setNewBgColor(bgColor);
+        setNewBgColorValue(bgColor);
+        setNewLabelName(name);
+        setEditDiscriptionValue(description);
+    };
+
+    const handleEditDescriptionChange = () => {
+        if (isNew) return;
+        setEditDiscriptionValue(discriptionRef.current.value);
+    };
+
+    const settingEditButtonDisable = (newLabelName, newBgColorValue, newFontColor, editDiscriptionValue) => {
+        const convertTextColor = textColor === '#fff' ? 'light' : 'dark';
+        if (
+            newLabelName !== name ||
+            (newBgColorValue !== bgColor && isValidateColor(newBgColorValue)) ||
+            newFontColor !== convertTextColor ||
+            editDiscriptionValue !== description
+        )
+            setIsEditLabelDisabled(false);
+        else setIsEditLabelDisabled(true);
+    };
+
+    const settingNewButtonDisable = (newLabelName, newBgColor, newFontColor) => {
         if (newLabelName && newBgColor && newFontColor && isNewBgColorValidate) setIsNewLabelDisabled(false);
         else setIsNewLabelDisabled(true);
+    };
+
+    useEffect(() => {
+        if (isNew) return;
+        settingEditButtonDisable(newLabelName, newBgColorValue, newFontColor, editDiscriptionValue);
+    }, [newLabelName, newBgColorValue, newFontColor, editDiscriptionValue]);
+
+    useEffect(() => {
+        if (isNew) return;
+        settingEditValues(textColor, bgColor, name, description);
+    }, [textColor, bgColor, name, description]);
+
+    useEffect(() => {
+        settingNewButtonDisable(newLabelName, newBgColor, newFontColor);
     }, [newLabelName, newBgColor, newFontColor]);
 
     return (
-        <AddContainer>
-            <AddTitle>새로운 레이블 추가</AddTitle>
+        <AddContainer $isNew={isNew}>
+            <AddTitle>{isNew ? '새로운 레이블 추가' : '레이블 편집'}</AddTitle>
             <AddContents>
                 <Preview>
                     <div>
@@ -110,7 +153,7 @@ export default function NewLabel({ togglePlusLabelState }) {
                     </StyledTitle>
                     <StyledTitle>
                         <PlaceholdText className="placeholdText">설명(선택)</PlaceholdText>
-                        <ModifyInput type="text" ref={discriptionRef} />
+                        <ModifyInput type="text" ref={discriptionRef} onChange={handleEditDescriptionChange} />
                     </StyledTitle>
                     <StyledColorOption>
                         <StyledTitle className="backgroudColorOption">
@@ -118,13 +161,7 @@ export default function NewLabel({ togglePlusLabelState }) {
                             <RandomIcon onClick={setRandomColors}>
                                 <RedoOutlined />
                             </RandomIcon>
-                            <ModifyInput
-                                type="text"
-                                value={newBgColorValue}
-                                onChange={handleBgColorChange}
-                                maxLength="15"
-                                // isInvaildate={isNewBgColorValidate}
-                            />
+                            <ModifyInput type="text" value={newBgColorValue} onChange={handleBgColorChange} maxLength="15" />
                         </StyledTitle>
                         <div>
                             <StyledTextColorBtn onClick={togglePopup}>
@@ -156,12 +193,18 @@ export default function NewLabel({ togglePlusLabelState }) {
             </AddContents>
 
             <NavBtnContainer>
-                <CustomButton type={'outline'} size={'large'} isDisabled={false} onClick={togglePlusLabelState}>
+                <CustomButton type={'outline'} size={'large'} isDisabled={false} onClick={isNew ? togglePlusLabelState : toggleEditLabelState}>
                     <CloseOutlined />
                     취소
                 </CustomButton>
 
-                <CustomButton className={'createBtn'} type={'container'} size={'large'} isDisabled={isNewLabelDisabled} onClick={submitLabel}>
+                <CustomButton
+                    className={'createBtn'}
+                    type={'container'}
+                    size={'large'}
+                    isDisabled={isNew ? isNewLabelDisabled : isEditLabelDisabled}
+                    onClick={isNew ? submitLabel : submitEditLabel}
+                >
                     <PlusOutlined />
                     완료
                 </CustomButton>
@@ -245,8 +288,6 @@ const ModifyInput = styled(StyledInput)`
     color: var(--secondary-color);
 `;
 
-const AddContent = styled.div``;
-
 const InputContainer = styled(FlexCol)`
     justify-content: space-between;
     width: 100%;
@@ -288,11 +329,10 @@ const AddTitle = styled.div`
 
 const AddContainer = styled.div`
     width: 100%;
-    border-radius: 10px;
+    border-radius: ${(props) => (props.$isNew ? '10px' : 0)};
     border: 2px solid;
-    border-color: ${(props) => (props.$isfocused ? 'var(--primary-color)' : props.theme.borderColor)};
+    border-color: ${(props) => (props.$isNew ? 'var(--primary-color)' : props.theme.borderColor)};
     color: ${(props) => props.theme.fontColor};
-    margin-bottom: 10px;
     padding: 30px;
     background-color: ${(props) => props.theme.bgColorBody};
 `;
