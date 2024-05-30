@@ -11,10 +11,11 @@ const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
  * @returns {jsonObject}
  */
 export const fetchLabelsData = async () => {
+    const accessToken = getAccessToken();
     try {
         const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${LABELS_API_URI}`, {
             headers: {
-                Authorization: `Bearer ${getAccessToken()}`,
+                Authorization: `Bearer ${accessToken}`,
             },
         });
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -31,10 +32,11 @@ export const fetchLabelsData = async () => {
  * @returns {jsonObject}
  */
 export const fetchMembersData = async () => {
+    const accessToken = getAccessToken();
     try {
         const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${MEMBERS_API_URI}`, {
             headers: {
-                Authorization: `Bearer ${getAccessToken()}`,
+                Authorization: `Bearer ${accessToken}`,
             },
         });
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -53,12 +55,13 @@ export const fetchMembersData = async () => {
  * @returns {jsonObject}
  */
 export const fetchMilestonesData = async (isClosed) => {
+    const accessToken = getAccessToken();
     try {
         // await delay(5000);
 
         const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${MILESTONES_API_URI}${isClosed}`, {
             headers: {
-                Authorization: `Bearer ${getAccessToken()}`,
+                Authorization: `Bearer ${accessToken}`,
             },
         });
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -80,7 +83,9 @@ export const fetchMilestonesData = async (isClosed) => {
  * @param {*String} userId
  * @returns {jsonObject}
  */
+
 export const fetchIssueListData = async (isClosedParam, authorIdParam, assigneeIdParam, labelIdParam, milestoneNameParam, noValuesParam) => {
+    const accessToken = getAccessToken();
     const isClosed = isClosedParam ?? '';
     const authorId = authorIdParam ?? '';
     const assigneeId = assigneeIdParam ?? '';
@@ -95,7 +100,7 @@ export const fetchIssueListData = async (isClosedParam, authorIdParam, assigneeI
             }${ISSUE_LIST_API_URI}?isClosed=${isClosed}&authorId=${authorId}&assigneeId=${assigneeId}&labelName=${labelName}&milestoneName=${milestoneNameParam}&noValues=${noValues}`,
             {
                 headers: {
-                    Authorization: `Bearer ${getAccessToken()}`,
+                    Authorization: `Bearer ${accessToken}`,
                 },
             }
         );

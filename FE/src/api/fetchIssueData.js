@@ -11,12 +11,12 @@ const ISSUE_DEFAULT_FILE_URI = '/api/files';
  */
 export const fetchIssueDetailData = async (issueId) => {
     const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
+    const accessToken = getAccessToken();
     try {
         // await delay(2000);
         const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ISSUE_DEFAULT_API_URI}/${issueId}`, {
             headers: {
-                Authorization: `Bearer ${getAccessToken()}`,
+                Authorization: `Bearer ${accessToken}`,
             },
         });
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -35,12 +35,13 @@ export const fetchIssueDetailData = async (issueId) => {
  * @returns {}
  */
 export const fetchIssueStateToggle = async (toIssueState, issueIds) => {
+    const accessToken = getAccessToken();
     try {
         const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ISSUE_DEFAULT_API_URI}/${toIssueState ? 'close' : 'open'}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${getAccessToken()}`,
+                'Authorization': `Bearer ${accessToken}`,
             },
             body: JSON.stringify({ issueIds }),
         });
@@ -66,12 +67,13 @@ export const fetchIssueStateToggle = async (toIssueState, issueIds) => {
  
  */
 export const fetchDeleteIssue = async (issueId) => {
+    const accessToken = getAccessToken();
     try {
         const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ISSUE_DEFAULT_API_URI}/${issueId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${getAccessToken()}`,
+                'Authorization': `Bearer ${accessToken}`,
             },
         });
 
@@ -97,12 +99,13 @@ export const fetchDeleteIssue = async (issueId) => {
     - 서버 내부 오류시: 500
  */
 export const fetchModifyIssueTitle = async (title, issueId) => {
+    const accessToken = getAccessToken();
     try {
         const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ISSUE_DEFAULT_API_URI}/${issueId}/title`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${getAccessToken()}`,
+                'Authorization': `Bearer ${accessToken}`,
             },
             body: JSON.stringify({ title }),
         });
@@ -129,12 +132,13 @@ export const fetchModifyIssueTitle = async (title, issueId) => {
     - 서버 내부 오류시: 500
  */
 export const fetchModifyIssueContent = async (content, fileId, issueId) => {
+    const accessToken = getAccessToken();
     try {
         const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ISSUE_DEFAULT_API_URI}/${issueId}/body`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${getAccessToken()}`,
+                'Authorization': `Bearer ${accessToken}`,
             },
             body: JSON.stringify({ content, fileId }),
         });
@@ -161,12 +165,13 @@ export const fetchModifyIssueContent = async (content, fileId, issueId) => {
     - 서버 내부 오류시: 500
  */
 export const fetchModifyIssueComment = async (content, fileId, commentId) => {
+    const accessToken = getAccessToken();
     try {
         const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ISSUE_COMMENTS_DEFAULT_API_URI}/${commentId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${getAccessToken()}`,
+                'Authorization': `Bearer ${accessToken}`,
             },
             body: JSON.stringify({ content, fileId }),
         });
@@ -194,12 +199,13 @@ export const fetchModifyIssueComment = async (content, fileId, commentId) => {
     - 서버 내부 오류시: 500
  */
 export const fetchCreateIssueComment = async (writerId, content, issueId, fileId) => {
+    const accessToken = getAccessToken();
     try {
         const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ISSUE_COMMENTS_DEFAULT_API_URI}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${getAccessToken()}`,
+                'Authorization': `Bearer ${accessToken}`,
             },
             body: JSON.stringify({ writerId, content, issueId, fileId }),
         });
@@ -225,12 +231,13 @@ export const fetchCreateIssueComment = async (writerId, content, issueId, fileId
     - 서버 내부 오류시: 500
  */
 export const fetchDeleteComment = async (commentId) => {
+    const accessToken = getAccessToken();
     try {
         const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ISSUE_COMMENTS_DEFAULT_API_URI}/${commentId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${getAccessToken()}`,
+                'Authorization': `Bearer ${accessToken}`,
             },
         });
 
@@ -256,12 +263,13 @@ export const fetchDeleteComment = async (commentId) => {
     - 서버 내부 오류시: 500
  */
 export const fetchModifyIssueLabels = async (issueId, labelIds) => {
+    const accessToken = getAccessToken();
     try {
         const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ISSUE_DEFAULT_API_URI}/${issueId}/label`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${getAccessToken()}`,
+                'Authorization': `Bearer ${accessToken}`,
             },
             body: JSON.stringify({ labelIds }),
         });
@@ -288,12 +296,13 @@ export const fetchModifyIssueLabels = async (issueId, labelIds) => {
     - 서버 내부 오류시: 500
  */
 export const fetchModifyIssueAssignees = async (issueId, assigneeIds) => {
+    const accessToken = getAccessToken();
     try {
         const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ISSUE_DEFAULT_API_URI}/${issueId}/assignee`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${getAccessToken()}`,
+                'Authorization': `Bearer ${accessToken}`,
             },
             body: JSON.stringify({ assigneeIds }),
         });
@@ -320,12 +329,13 @@ export const fetchModifyIssueAssignees = async (issueId, assigneeIds) => {
     - 서버 내부 오류시: 500
  */
 export const fetchModifyIssueMilestone = async (issueId, milestoneId) => {
+    const accessToken = getAccessToken();
     try {
         const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ISSUE_DEFAULT_API_URI}/${issueId}/milestone`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${getAccessToken()}`,
+                'Authorization': `Bearer ${accessToken}`,
             },
             body: JSON.stringify({ milestoneId }),
         });
@@ -352,11 +362,12 @@ export const fetchModifyIssueMilestone = async (issueId, milestoneId) => {
  */
 //TODO: 파일 형식 미지원 시 에러 처리
 export const fetchUploadFile = async (formData) => {
+    const accessToken = getAccessToken();
     try {
         const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ISSUE_DEFAULT_FILE_URI}`, {
             method: 'POST',
             headers: {
-                Authorization: `Bearer ${getAccessToken()}`,
+                Authorization: `Bearer ${accessToken}`,
             },
             body: formData,
         });
@@ -386,13 +397,14 @@ export const fetchUploadFile = async (formData) => {
     - 서버 내부 오류시: 500
  */
 export const fetchCreateNewIssue = async (title, content, authorId, milestoneId, fileIdParam, labelIds, assigneeIds) => {
+    const accessToken = getAccessToken();
     const fileId = fileIdParam || null;
     try {
         const response = await fetch(`${import.meta.env.VITE_TEAM_SERVER}${ISSUE_DEFAULT_API_URI}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${getAccessToken()}`,
+                'Authorization': `Bearer ${accessToken}`,
             },
             body: JSON.stringify({ title, content, authorId, milestoneId, fileId, labelIds, assigneeIds }),
         });
