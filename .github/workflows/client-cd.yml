@@ -1,4 +1,4 @@
-name: Deploy Spring Application to Ec2
+name: Deploy React to S3
 
 on:
   push:
