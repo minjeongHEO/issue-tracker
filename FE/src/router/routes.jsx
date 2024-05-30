@@ -8,11 +8,13 @@ import LabelMain from '../components/labels/Main';
 import ProtectedRoute from './ProtectedRoute';
 import NewIssue from '../components/issues/NewIssue';
 import IssueDetail from '../components/issues/IssueDetail';
+import AuthLoadingPage from '../components/members/AuthLoadingPage';
 
 export const AppRoutes = () => {
     return (
         <Router>
             <Routes>
+                <Route path="/members/callback" element={<AuthLoadingPage />} />
                 <Route path="/members/login" element={<Login />} />
                 <Route path="/members/join" element={<Join />} />
                 <Route
