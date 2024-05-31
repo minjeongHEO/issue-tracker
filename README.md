@@ -49,6 +49,35 @@
 </br></br>
 
 ## ⚒️ TechStack
+### Front-End
+* HTML
+* CSS
+* JavaScript
+* React
+* Vite
+
+### Back-End
+* Java
+* SpringBoot
+* Spring Data JDBC
+* MySQL
+* Redis
+* Oauth2.0
+
+### Infra
+* GitHub Actions
+* Nginx
+* Docker
+* AWS
+  * S3
+  * EC2
+  * Route53
+  * CloudFront
+
+### Communication
+* GitHub
+* Slack
+* Notion
 
 </br></br>
 <div align="center">
