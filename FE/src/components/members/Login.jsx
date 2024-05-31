@@ -7,6 +7,7 @@ import LightLogotypeLarge from '../../assets/LightLogotypeLarge.svg';
 import { DarkModeContext } from '../../context/DarkModeContext';
 import { fetchGithubLogin, fetchLogin } from '../../api/fetchMembers';
 import { CustomButton } from '../../assets/CustomButton';
+import { message } from 'antd';
 
 export default function Login() {
     const { isDarkMode } = useContext(DarkModeContext);
@@ -56,7 +57,7 @@ export default function Login() {
         } catch (error) {
             setLoginCheck(false);
             console.error('Login Failed:', error);
-            alert('다시 로그인해주세요!');
+            message.warning('다시 로그인해주세요!');
         }
     };
 
