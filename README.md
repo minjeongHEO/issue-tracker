@@ -31,20 +31,9 @@
 
 </br></br>
 
-## 🎲 Ground Rule
-### **📋 데일리 스크럼**
-* 오전 10시 ~ 10시 30분
+## 🏗️ 시스템 아키텍쳐
 
-### 🗣️ 피드백 룰
-* 서로 웃으면서 전달해요 😊 
-* 존댓말로 얘기해요 🤓
-
-</br></br>
-
-## 🛢️ ERD
-
-![erd](https://github.com/codesquad-masters2024-team02/issue-tracker/assets/103445254/b3f5147f-24db-4f23-9460-e5e79511893d)
-
+![구조도](https://github.com/codesquad-masters2024-team02/issue-tracker/assets/103445254/e2ef76ae-a2ca-44d7-afeb-ee3036f853d8)
 
 </br></br>
 
@@ -80,6 +69,13 @@
 * Notion
 
 </br></br>
+
+## 🛢️ ERD
+
+![erd](https://github.com/codesquad-masters2024-team02/issue-tracker/assets/103445254/b3f5147f-24db-4f23-9460-e5e79511893d)
+
+</br></br>
+
 <div align="center">
 <img src="https://capsule-render.vercel.app/api?type=shark&height=280&theme=radical&section=footer" />
 </div>
