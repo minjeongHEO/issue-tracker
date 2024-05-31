@@ -228,12 +228,12 @@ export default function LabelEditor({ isNew = true, togglePlusLabelState, toggle
                     {isNew ? (
                         <>
                             <PlusOutlined />
-                            '완료'
+                            완료
                         </>
                     ) : (
                         <>
                             <IconEdit />
-                            '편집 완료'
+                            편집 완료
                         </>
                     )}
                 </CustomButton>
