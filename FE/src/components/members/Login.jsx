@@ -5,7 +5,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import DarkLogotypeLarge from '../../assets/DarkLogotypeLarge.svg';
 import LightLogotypeLarge from '../../assets/LightLogotypeLarge.svg';
 import { DarkModeContext } from '../../context/DarkModeContext';
-import { fetchGithubLogin, fetchLogin } from '../../api/fetchMembers';
+import { fetchLogin } from '../../api/fetchMembers';
+import { GithubOutlined } from '@ant-design/icons';
 import { CustomButton } from '../../assets/CustomButton';
 import { message } from 'antd';
 
@@ -87,6 +88,7 @@ export default function Login() {
             </Logo>
 
             <GithubButton onClick={handleGithubLogin} type={'container'} size={'large'} isDisabled={false}>
+                <GithubOutlined />
                 GitHub 계정으로 로그인
             </GithubButton>
             <StyledSpan style={{ marginBottom: '20px' }}>or</StyledSpan>
