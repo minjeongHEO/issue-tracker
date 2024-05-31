@@ -27,6 +27,14 @@ const mainIssueFilters = [
     { title: '닫힌 이슈', value: 'is:closed' },
 ];
 
+const dispatchTypeByInputContents = {
+    'is:open': 'SET_SELECTED_IS_OPEN_FILTER',
+    'is:closed': 'SET_SELECTED_IS_CLOSED_FILTER',
+    'assignee:@me': 'SET_SELECTED_ASSIGNEE_ME_FILTER',
+    'mentions:@me': 'SET_SELECTED_MENTIONS_ME_FILTER',
+    'author:@me': 'SET_SELECTED_AUTHOR_ME_FILTER',
+};
+
 const dispatchTypeByFilterContents = {
     'is:open': 'SET_SELECTED_IS_OPEN_FILTER',
     'is:closed': 'SET_SELECTED_IS_CLOSED_FILTER',
@@ -76,6 +84,7 @@ export default function Main() {
 
     const { data: countData } = useLabelMilestoneCountData();
     const { data: issueList, isLoading: issueListIsLoading } = usefilteredIssueData();
+
     const { data: labelsFilter, isLoading: labelsFilterIsLoading } = useLabelsFilter({ enabled: hasFetched.label });
     const { data: milestonesFilter, isLoading: milestonesFilterIsLoading } = useMilestonesFilter({ enabled: hasFetched.milestone });
     const { data: membersFilter, isLoading: membersFilterIsLoading } = useMembersFilter({ enabled: hasFetched.assignee });
@@ -137,6 +146,12 @@ export default function Main() {
         if (!hasFetched[type]) {
             useQueryByType[type](); // 마우스를 올렸을 때 쿼리 실행
             setterFechedByType[type](); //상태 업데이트
+        }
+    };
+
+    const handleInputFilter = (e) => {
+        if (e.key === 'Enter') {
+            const inputValues = e.target.value.replaceAll('"', '').split(' ');
         }
     };
 
@@ -219,7 +234,7 @@ export default function Main() {
                                 필터
                             </DropDownFilter>
                         </IssueFilter>
-                        <InputFilter value={inputFilter} onChange={(e) => setInputFilter(e.target.value)}></InputFilter>
+                        <InputFilter value={inputFilter} onKeyDown={handleInputFilter} onChange={(e) => setInputFilter(e.target.value)} />
                     </FlexRow>
 
                     <NavBtnContainer>
