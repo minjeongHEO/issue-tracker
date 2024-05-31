@@ -48,6 +48,22 @@ public class JwtInterceptor implements HandlerInterceptor {
         log.info("authorization - {}", authorization);
         log.info("accessToken - {}", accessToken);
 
+        log.info("Method - {}", request.getMethod());
+        if (request.getMethod().equals(HttpMethod.OPTIONS.name())) {
+            return true;
+        }
+
+        Iterator<String> headerNames = request.getHeaderNames().asIterator();
+        while ((headerNames.hasNext())) {
+            String next = headerNames.next();
+            String header = request.getHeader(next);
+            log.info("{} header - {}", next, header);
+        }
+
+        log.info("bearer - {}", request.getHeader("Bearer"));
+        log.info("authorization - {}", authorization);
+        log.info("accessToken - {}", accessToken);
+
         if (accessToken == null) {
             throw new UnauthorizedException();
         }
