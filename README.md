@@ -33,7 +33,8 @@
 
 ## 🏗️ 시스템 아키텍쳐
 
-![구조도](https://github.com/codesquad-masters2024-team02/issue-tracker/assets/103445254/e2ef76ae-a2ca-44d7-afeb-ee3036f853d8)
+![구조도](https://github.com/codesquad-masters2024-team02/issue-tracker/assets/103445254/e1b4c873-427f-4149-a436-790c647702ff)
+
 
 </br></br>
 
