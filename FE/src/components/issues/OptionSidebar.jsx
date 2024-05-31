@@ -22,7 +22,7 @@ const initCheckedData = {
     milestone: '',
 };
 
-export default function OptionSidebar({ filterName, filterData, issueId, children }) {
+export default function OptionSidebar({ filterName, filterData, issueId, children, isNew = false, checkedDatas, setCheckedDatas }) {
     const openIssueCount = filterData?.openIssueCount ?? 0;
     const closedIssueCount = filterData?.closedIssueCount ?? 0;
     const popupRef = useRef(null);
@@ -135,7 +135,6 @@ export default function OptionSidebar({ filterName, filterData, issueId, childre
                         </FilterContentContainer>
                     ))}
 
-
                 {filterName === 'label' && isNew && (
                     <LabelContentContainer>
                         {checkedDatas.label.map((id) => {
@@ -151,14 +150,12 @@ export default function OptionSidebar({ filterName, filterData, issueId, childre
                 {filterName === 'label' && !isNew && (
                     <LabelContentContainer>
                         {filterData?.map(({ id, name, description, textColor, bgColor }) => (
-
                             <StyledLabel key={id} backgroundColor={bgColor} color={textColor}>
                                 {name}
                             </StyledLabel>
                         ))}
                     </LabelContentContainer>
                 )}
-
 
                 {filterName === 'milestone' && isNew && openMilestonesData && closedMilestonesData && (
                     <>
@@ -190,7 +187,6 @@ export default function OptionSidebar({ filterName, filterData, issueId, childre
                                     setCheckedDatas={setCheckedDatas}
                                     issueId={issueId}
                                     isNew={isNew}
-
                                 />
                             )}
                             {filterName === 'label' && labelsData && (
@@ -202,7 +198,6 @@ export default function OptionSidebar({ filterName, filterData, issueId, childre
                                     setCheckedDatas={setCheckedDatas}
                                     issueId={issueId}
                                     isNew={isNew}
-
                                 />
                             )}
                             {filterName === 'milestone' && openMilestonesData && closedMilestonesData && (
@@ -214,7 +209,6 @@ export default function OptionSidebar({ filterName, filterData, issueId, childre
                                     setCheckedDatas={setCheckedDatas}
                                     issueId={issueId}
                                     isNew={isNew}
-
                                 />
                             )}
                         </ul>
