@@ -70,6 +70,11 @@ const initFetched = {
 };
 const resetListData = { id: null, title: null, createDate: null, milestoneName: null, author: null, assignees: null, labels: null };
 
+const initIssueCount = {
+    isOpen: 0,
+    isClosed: 0,
+};
+
 export default function Main() {
     const navigate = useNavigate();
     const { state: selectedFilters, dispatch } = useFilterContext();
@@ -81,6 +86,7 @@ export default function Main() {
     const [hasFetched, setHasFetched] = useState(initFetched);
     const [labelCount, setLabelCount] = useState(0);
     const [milestoneCount, setMilestoneCount] = useState(0);
+    const [issueCount, setIssueCount] = useState(initIssueCount);
 
     const { data: countData } = useLabelMilestoneCountData();
     const { data: issueList, isLoading: issueListIsLoading } = usefilteredIssueData();
@@ -205,6 +211,7 @@ export default function Main() {
         const newIsOpenCount = issueListCount.openedIssueCount;
         const newIsClosedCount = issueListCount.closedIssueCount;
 
+        setIssueCount({ isOpen: issueList.count.openedCount, isClosed: issueList.count.closedCount });
         const newIssueList = issueList.filteredIssues;
         setIssueDatas((prev) => ({ ...prev, count: { ...prev.count, isOpen: newIsOpenCount } }));
         setIssueDatas((prev) => ({ ...prev, count: { ...prev.count, isClosed: newIsClosedCount } }));
@@ -276,7 +283,7 @@ export default function Main() {
                         />
                     ) : (
                         <NavFilterType
-                            issueCount={issueDatas.count}
+                            issueCount={issueCount}
                             dispatchTypeByFilterContents={dispatchTypeByFilterContents}
                             imageTypeItems={filterItemsByType.members}
                             labelTypeItems={filterItemsByType.labels}
@@ -284,6 +291,8 @@ export default function Main() {
                             dispatch={dispatch}
                             ischecked={selectedFilters.issues.isClosed}
                             handleMouseEnter={handleMouseEnter}
+                            labelCount={labelCount}
+                            milestoneCount={milestoneCount}
                         />
                     )}
                 </StyledBoxHeader>

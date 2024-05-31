@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '../header/Header';
 import { FlexRow, IndexContainer, MainContainer } from '../../styles/theme';
 import { TagsOutlined, PlusOutlined } from '@ant-design/icons';
@@ -6,11 +6,22 @@ import { CustomButton } from '../../assets/CustomButton';
 import { IconMilestone } from '../../assets/icons/IconMilestone';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { useLabelMilestoneCountData } from '../../hooks/useLabelData';
 
 export default function MilestoneMain() {
     const naivgate = useNavigate();
     const clickMileStone = () => naivgate('/milestones');
     const clickLabel = () => naivgate('/labels');
+
+    const { data: countData } = useLabelMilestoneCountData();
+    const [labelCount, setLabelCount] = useState(0);
+    const [milestoneCount, setMilestoneCount] = useState(0);
+
+    useEffect(() => {
+        if (!countData) return;
+        setLabelCount(countData.labelCount.count);
+        setMilestoneCount(countData.milestoneCount.isOpened + countData.milestoneCount.isClosed);
+    }, [countData]);
 
     return (
         <IndexContainer>
@@ -18,13 +29,13 @@ export default function MilestoneMain() {
             <MainContainer>
                 <NavContainer>
                     <NavBtnContainer>
-                        <StyledLabelBtn type={'container'} size={'large'} isDisabled={false} onClick={clickLabel}>
+                        <StyledLabelBtn type={'outline'} size={'large'} isDisabled={false} onClick={clickLabel}>
                             <TagsOutlined />
-                            레이블(0)
+                            레이블({labelCount})
                         </StyledLabelBtn>
-                        <StyledMilestoneBtn type={'outline'} size={'large'} isDisabled={false} onClick={clickMileStone}>
+                        <StyledMilestoneBtn type={'container'} size={'large'} isDisabled={false} onClick={clickMileStone}>
                             <IconMilestone />
-                            마일스톤(0)
+                            마일스톤({milestoneCount})
                         </StyledMilestoneBtn>
                     </NavBtnContainer>
                     <CustomButton type={'container'} size={'large'} isDisabled={false}>
