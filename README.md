@@ -44,6 +44,8 @@
 * JavaScript
 * React
 * Vite
+* React-query
+* Styled-component
 
 ### Back-End
 * Java
